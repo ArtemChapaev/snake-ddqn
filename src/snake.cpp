@@ -2,16 +2,33 @@
 
 #include "snake.h"
 
-unsigned Position::get_x() { return x; }
+Position::Position(unsigned x, unsigned y) : x(x), y(y) {}
 
-unsigned Position::get_y() { return y; }
+bool Position::operator==(Position other) {
+    if (x == other.get_x() && y == other.get_y()) {
+        return true;
+    }
+    return false;
+}
 
-void Position::set_x(unsigned xx) { x = xx; }
+unsigned Position::get_x() {
+    return x;
+}
 
-void Position::set_y(unsigned yy) { y == yy; }
+unsigned Position::get_y() {
+    return y;
+}
 
-Snake::Snake(unsigned map_len, unsigned map_wid, float delay_coef) : length(SNAKE_LENGTH),
-                                                                     direction(right), delay_coef(delay_coef) {
+void Position::set_x(unsigned xx) {
+    x = xx;
+}
+
+void Position::set_y(unsigned yy) {
+    y == yy;
+}
+
+Snake::Snake(unsigned map_len, unsigned map_wid, float speed_coef) : length(SNAKE_LENGTH),
+                                                                     direction(right), speed_coef(speed_coef) {
     unsigned y = map_wid * STANDART_FOR_Y;
     unsigned x = 0;
 
@@ -27,7 +44,13 @@ Snake::Snake(unsigned map_len, unsigned map_wid, float delay_coef) : length(SNAK
     }
 }
 
-Position Snake::get_head() { return snake.front(); }
+Position Snake::get_head() {
+    return snake.front();
+}
+
+Position Snake::get_tail() {
+    return snake.back();
+}
 
 Position Snake::get_next() {
     Position head = get_head();
@@ -43,11 +66,17 @@ Position Snake::get_next() {
     }
 }
 
-Direction Snake::get_direction() { return direction; }
+Direction Snake::get_direction() {
+    return direction;
+}
 
-void Snake::set_direction(Direction dir) { direction = dir; }
+void Snake::set_direction(Direction dir) {
+    direction = dir;
+}
 
-unsigned Snake::get_delay_coef() { return delay_coef; }
+unsigned Snake::get_speed_coef() {
+    return speed_coef;
+}
 
 Position Snake::move() {
     Position pos_for_next = get_next();
@@ -57,7 +86,7 @@ Position Snake::move() {
         s = pos_for_next;
         pos_for_next = temp;
     }
-    return pos_for_next; // pos of last tail
+    return pos_for_next; // pos of tail
 }
 
 int Snake::increase_length(Position pos_for_tail) {

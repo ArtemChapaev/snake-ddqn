@@ -6,6 +6,8 @@
 #include "control.h"
 #include "snake.h"
 
+Control::Control(char up, char right, char down, char left): up(up), right(right), down(down), left(left) {}
+
 int Control::enable_noncanonical_input(struct termios &savetty) {
     if (!isatty(0)) {
         return 1;

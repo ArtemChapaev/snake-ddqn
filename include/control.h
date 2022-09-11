@@ -4,8 +4,7 @@
 
 class Control {
 public:
-    Control(char up = 72, char right = 77, char down = 80, char left = 75) : up(up), right(right),
-                                                                             down(down), left(left) {}
+    Control(char up = 72, char right = 77, char down = 80, char left = 75);
 
     Direction read_direction(Direction);
     bool check_direction(Direction last_dir, Direction new_dir);

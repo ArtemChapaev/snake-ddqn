@@ -1,30 +1,26 @@
-#include <Settings.h>
+#pragma once
+
+#include "snake.h"
+
+enum Cell {
+    EMPTY,
+    SNAKE,
+    WALL,
+    FRUIT
+};
 
 class MapModel {
-private:
-
-    Cell** field; // динамический двумерный массив для карты
-
-    unsigned width; // ширина карты
-
-    unsigned length; // длина карты
-
 public:
-
-    MapModel(unsigned, unsigned); // конструктор инициализации по длине ширине
-
-    void put_snake(Snake); // отметить координаты змеи на карте
-
-    void clear_cell(unsigned, unsigned); // очистка блока 
-
-    Cell check_cell(unsigned, unsigned); // проверка блока
-
-    unsigned get_width(); // ширина карты
-
-    unsigned get_length(); // длина карты
-
-    Cell get_block(unsigned, unsigned); // клетка карты по указанным координатам
-
+    MapModel(unsigned, unsigned);
     //~MapModel(); // неработающий деструктор
-
+    void put_snake(Snake);
+    void generate_fruit();
+    void clear_cell(unsigned, unsigned);
+    Cell check_cell(unsigned, unsigned);
+    unsigned get_width();
+    unsigned get_length();
+private:
+    Cell **field;
+    unsigned length;
+    unsigned width;
 };
