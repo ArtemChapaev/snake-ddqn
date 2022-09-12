@@ -4,6 +4,7 @@
 
 enum Cell {
     EMPTY,
+    SNAKE_HEAD,
     SNAKE,
     WALL,
     FRUIT

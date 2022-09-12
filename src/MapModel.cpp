@@ -29,10 +29,13 @@ MapModel::MapModel(unsigned length, unsigned width) : length(length), width(widt
 void MapModel::put_snake(Snake s) {
     auto it = s.snake.begin();
 
+    field[it->get_x()][it->get_y()] = SNAKE_HEAD;
+    ++it;
+
     while (it != s.snake.end()) {
         Position d = *it;
         field[d.get_x()][d.get_y()] = SNAKE;
-        it++;
+        ++it;
     }
 }
 

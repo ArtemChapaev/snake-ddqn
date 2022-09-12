@@ -66,13 +66,13 @@ int Game::start_game() {
             }
         }
 
-        usleep(SNAKE_SPEED / snake.get_speed_coef());
-
         console.clear_display();
         console.set_cursor(0, 0);
 
         map_model.put_snake(snake);
         map_view.print();
+
+        usleep(SNAKE_SPEED / snake.get_speed_coef());
     }
 
     control.disable_nonblock_input(flags);

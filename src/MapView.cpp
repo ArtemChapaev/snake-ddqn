@@ -14,6 +14,9 @@ void MapView::print() {
                 case SNAKE:
                     graphics->print_snake_cell();
                     break;
+                case SNAKE_HEAD:
+                    graphics->print_snake_head_cell();
+                    break;
                 case WALL:
                     graphics->print_wall_cell();
                     break;
@@ -35,8 +38,13 @@ void SymGraphics::print_empty_cell() {
 }
 
 void SymGraphics::print_snake_cell() {
+    std::cout << 'o';
+}
+
+void SymGraphics::print_snake_head_cell() {
     std::cout << 'O';
 }
+
 
 void SymGraphics::print_wall_cell() {
     std::cout << '*';
