@@ -13,7 +13,7 @@ enum Cell {
 class MapModel {
 public:
     MapModel(unsigned, unsigned);
-    //~MapModel(); // неработающий деструктор
+    ~MapModel();
     void put_snake(Snake);
     void generate_fruit();
     void clear_cell(unsigned, unsigned);

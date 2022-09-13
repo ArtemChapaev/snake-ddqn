@@ -19,12 +19,12 @@ MapModel::MapModel(unsigned length, unsigned width) : length(length), width(widt
     }
 }
 
-// MapModel::~MapModel() {
-//     for(int i = 0; i < width; i++) {
-//         delete[] field[i];
-//     }
-//     delete[] field;
-// }
+MapModel::~MapModel() {
+    for(int i = 0; i < width; i++) {
+        delete[] field[i];
+    }
+    delete[] field;
+}
 
 void MapModel::put_snake(Snake s) {
     auto it = s.snake.begin();

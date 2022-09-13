@@ -2,7 +2,7 @@
 
 #include "mapView.h"
 
-MapView::MapView(MapModel map) : map(map), graphics(new SymGraphics) {}
+MapView::MapView(MapModel &map) : map(map), graphics(new SymGraphics) {}
 
 void MapView::print() {
     for (int j = map.get_width(); j >= 0 ; j--) {

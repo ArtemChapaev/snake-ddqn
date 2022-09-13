@@ -23,11 +23,10 @@ public:
 
 class MapView {
 public:
-    MapView(MapModel map);
+    MapView(MapModel &map);
     ~MapView();
     void print();
-
 private:
-    MapModel map;
+    MapModel &map;
     Graphics *graphics;
 };
