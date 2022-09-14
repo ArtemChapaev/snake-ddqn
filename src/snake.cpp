@@ -52,6 +52,10 @@ Position Snake::get_tail() {
     return snake.back();
 }
 
+std::list<Position> Snake::get_snake() {
+    return snake;
+}
+
 Position Snake::get_next() {
     Position head = get_head();
 

@@ -5,7 +5,7 @@
 MapView::MapView(MapModel &map) : map(map), graphics(new SymGraphics) {}
 
 void MapView::print() {
-    for (int j = map.get_width(); j >= 0 ; j--) {
+    for (int j = map.get_width(); j >= 0; j--) {
         for (int i = 0; i < map.get_length(); i++) {
             switch (map.check_cell(i, j)) {
                 case EMPTY:
@@ -24,6 +24,7 @@ void MapView::print() {
                     graphics->print_fruit_cell();
                     break;
             }
+            std::cout << ' ';
         }
         std::cout << std::endl;
     }

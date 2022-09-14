@@ -4,7 +4,7 @@
 #include <list>
 
 #define SNAKE_LENGTH 5
-#define SNAKE_SPEED 600000
+#define SNAKE_SPEED 300000
 
 const float STANDART_FOR_X = 0.4;
 const float STANDART_FOR_Y = 0.6;
@@ -38,14 +38,13 @@ public:
     Snake(unsigned map_len, unsigned map_wid, float speed_coef = 1.);
     Position get_head();
     Position get_tail();
+    std::list<Position> get_snake();
     Position get_next();
     Direction get_direction();
     void set_direction(Direction dir);
     unsigned get_speed_coef();
     Position move();
     int increase_length(Position);
-
-    friend class MapModel; // метод, а не класс
 
 private:
     std::list<Position> snake;
