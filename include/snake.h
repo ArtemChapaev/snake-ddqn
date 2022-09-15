@@ -3,6 +3,8 @@
 #include <string>
 #include <list>
 
+#include "settings.h"
+
 #define SNAKE_LENGTH 5
 #define SNAKE_SPEED 300000
 
@@ -25,8 +27,6 @@ public:
     bool operator==(Position other);
     unsigned get_x();
     unsigned get_y();
-    void set_x(unsigned);
-    void set_y(unsigned);
 
 private:
     unsigned x;
@@ -35,14 +35,14 @@ private:
 
 class Snake {
 public:
-    Snake(unsigned map_len, unsigned map_wid, float speed_coef = 1.);
+    Snake(Settings);
     Position get_head();
     Position get_tail();
     std::list<Position> get_snake();
     Position get_next();
     Direction get_direction();
     void set_direction(Direction dir);
-    unsigned get_speed_coef();
+    float get_speed_coef();
     Position move();
     int increase_length(Position);
 

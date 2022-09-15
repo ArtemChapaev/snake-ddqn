@@ -19,21 +19,12 @@ unsigned Position::get_y() {
     return y;
 }
 
-void Position::set_x(unsigned xx) {
-    x = xx;
-}
-
-void Position::set_y(unsigned yy) {
-    y == yy;
-}
-
-Snake::Snake(unsigned map_len, unsigned map_wid, float speed_coef) : length(SNAKE_LENGTH),
-                                                                     direction(right), speed_coef(speed_coef) {
-    unsigned y = map_wid * STANDART_FOR_Y;
+Snake::Snake(Settings settings) : length(SNAKE_LENGTH), direction(right), speed_coef(settings.speed) {
+    unsigned y = settings.map_width * STANDART_FOR_Y;
     unsigned x = 0;
 
-    if (map_len * STANDART_FOR_X >= SNAKE_LENGTH) {
-        x = map_len * INDEX_FOR_X + SNAKE_LENGTH;
+    if (settings.map_length * STANDART_FOR_X >= SNAKE_LENGTH) {
+        x = settings.map_length * INDEX_FOR_X + SNAKE_LENGTH;
     } else {
         x = SNAKE_LENGTH;
     }
@@ -78,7 +69,7 @@ void Snake::set_direction(Direction dir) {
     direction = dir;
 }
 
-unsigned Snake::get_speed_coef() {
+float Snake::get_speed_coef() {
     return speed_coef;
 }
 

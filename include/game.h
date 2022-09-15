@@ -9,7 +9,7 @@ public:
     Game(Settings);
 //    int launcher();
 
-    int start_game();
+    int start_game(bool);
 
 //    int game_over();
 private:

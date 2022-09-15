@@ -1,3 +1,5 @@
+#include <cstdlib>
+#include <ctime>
 #include <fcntl.h>
 #include <termios.h>
 #include <unistd.h>
@@ -5,15 +7,22 @@
 #include "consoleUI.h"
 #include "control.h"
 #include "game.h"
+#include "keyboardControl.h"
 #include "mapModel.h"
 #include "mapView.h"
 #include "snake.h"
 
-Game::Game(Settings settings): settings(settings) {}
+Game::Game(Settings settings) : settings(settings) {}
 
-int Game::start_game() {
-    Snake snake(settings.map_length, settings.map_width);
-    Control control('w', 'd', 's', 'a');
+int Game::start_game(bool random_apples) {
+    if (random_apples) {
+        srand(1);
+    } else {
+        srand(time(0));
+    }
+
+    Snake snake(settings);
+    KeyboardControl control('w', 'a', 's', 'd');
     ConsoleUI console;
     MapModel map_model(settings.map_length, settings.map_width);
     MapView map_view(map_model);
@@ -26,12 +35,6 @@ int Game::start_game() {
     map_model.put_snake(snake);
     map_model.generate_fruit();
     map_view.print();
-
-    int flags = fcntl(0, F_GETFL);
-    control.enable_nonblock_input(flags);
-
-    struct termios savetty;
-    control.enable_noncanonical_input(savetty);
 
     while (!is_exit) {
         Direction last_dir = snake.get_direction();
@@ -74,8 +77,5 @@ int Game::start_game() {
 
         usleep(SNAKE_SPEED / snake.get_speed_coef());
     }
-
-    control.disable_nonblock_input(flags);
-    control.disable_noncanonical_input(savetty);
     return 0;
 }

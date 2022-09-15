@@ -1,11 +1,9 @@
 #include <cstdlib>
-#include <ctime>
 
 #include "mapModel.h"
 #include "snake.h"
 
 MapModel::MapModel(unsigned length, unsigned width) : length(length), width(width) {
-    srand(time(0));
     field = new Cell *[width];
 
     for (int i = 0; i < width; i++) {

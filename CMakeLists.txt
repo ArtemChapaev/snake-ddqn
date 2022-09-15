@@ -9,6 +9,7 @@ add_executable(snake /
         src/snake.cpp /
         src/mapModel.cpp /
         src/control.cpp /
+        src/keyboardControl.cpp /
         src/mapView.cpp /
         src/consoleUI.cpp /
         src/game.cpp /
