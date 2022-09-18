@@ -2,16 +2,19 @@
 
 #include "mapModel.h"
 #include "snake.h"
+#include "settings.h"
 
-MapModel::MapModel(unsigned length, unsigned width) : length(length), width(width) {
+MapModel::MapModel(Settings settings) : length(settings.map_length), width(settings.map_width) {
     field = new Cell *[width];
 
     for (int i = 0; i < width; i++) {
         field[i] = new Cell[length];
         for (int j = 0; j < length; j++) {
-            field[i][j] = EMPTY;
             if (i == 0 || i == width - 1 || j == 0 || j == length - 1) {
                 field[i][j] = WALL;
+            }
+            else {
+            	field[i][j] = EMPTY;
             }
         }
     }

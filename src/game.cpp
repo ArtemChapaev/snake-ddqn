@@ -10,6 +10,7 @@
 #include "keyboardControl.h"
 #include "mapModel.h"
 #include "mapView.h"
+#include "settings.cpp"
 #include "snake.h"
 
 Game::Game(Settings settings) : settings(settings) {}
@@ -24,8 +25,8 @@ int Game::start_game(bool random_apples) {
     Snake snake(settings);
     KeyboardControl control('w', 'a', 's', 'd');
     ConsoleUI console;
-    MapModel map_model(settings.map_length, settings.map_width);
-    MapView map_view(map_model);
+    MapModel map_model(settings);
+    MapView map_view(map_model, settings);
 
     bool is_exit = false;
 

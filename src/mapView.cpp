@@ -1,8 +1,21 @@
 #include <iostream>
 
 #include "mapView.h"
+#include "graphics.cpp"
 
-MapView::MapView(MapModel &map) : map(map), graphics(new SymGraphics) {}
+MapView::MapView(MapModel &map, Settings settings) : map(map), graphics(NULL) {
+	switch (settings.view_mode) {
+        case 0:
+            graphics = new SymGraphics;
+            break;
+        case 1:
+            graphics = new EscSymGraphics;
+            break;
+        case 2:
+            graphics = new EscGraphics;
+            break;
+    }
+}
 
 void MapView::print() {
     for (int j = map.get_width(); j >= 0; j--) {
@@ -23,8 +36,10 @@ void MapView::print() {
                 case FRUIT:
                     graphics->print_fruit_cell();
                     break;
+                case TELEPORT:
+                    graphics->print_teleport();
+                    break;
             }
-            std::cout << ' ';
         }
         std::cout << std::endl;
     }
@@ -32,25 +47,4 @@ void MapView::print() {
 
 MapView::~MapView() {
     delete graphics;
-}
-
-void SymGraphics::print_empty_cell() {
-    std::cout << ' ';
-}
-
-void SymGraphics::print_snake_cell() {
-    std::cout << 'o';
-}
-
-void SymGraphics::print_snake_head_cell() {
-    std::cout << 'O';
-}
-
-
-void SymGraphics::print_wall_cell() {
-    std::cout << '*';
-}
-
-void SymGraphics::print_fruit_cell() {
-    std::cout << 'X';
 }

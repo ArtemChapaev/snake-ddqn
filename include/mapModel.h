@@ -7,12 +7,13 @@ enum Cell {
     SNAKE_HEAD,
     SNAKE,
     WALL,
+    TELEPORT,
     FRUIT
 };
 
 class MapModel {
 public:
-    MapModel(unsigned, unsigned);
+    MapModel(Settings settings);
     ~MapModel();
     void put_snake(Snake);
     void generate_fruit();
