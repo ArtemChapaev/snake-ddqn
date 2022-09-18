@@ -7,6 +7,7 @@ public:
     virtual void print_snake_head_cell() = 0;
     virtual void print_wall_cell() = 0;
     virtual void print_fruit_cell() = 0;
+    virtual void print_antifruit_cell() = 0;
     virtual void print_teleport() = 0;
 };
 
@@ -18,6 +19,7 @@ public:
     void print_snake_head_cell() override;
     void print_wall_cell() override;
     void print_fruit_cell() override;
+    void print_antifruit_cell() override;
     void print_teleport() override;
 };
 
@@ -28,6 +30,7 @@ public:
     void print_snake_head_cell() override;
     void print_wall_cell() override;
     void print_fruit_cell() override;
+    void print_antifruit_cell() override;
     void print_teleport() override;
 };
 
@@ -38,5 +41,6 @@ public:
     void print_snake_head_cell() override;
     void print_wall_cell() override;
     void print_fruit_cell() override;
+    void print_antifruit_cell() override;
     void print_teleport() override;
 };

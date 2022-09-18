@@ -27,6 +27,11 @@ void SymGraphics::print_fruit_cell() {
     std::cout << ' ';
 }
 
+void SymGraphics::print_antifruit_cell() {
+    std::cout << 'W';
+    std::cout << ' ';
+}
+
 void SymGraphics::print_teleport() {
     std::cout << '*';
     std::cout << ' ';
@@ -60,6 +65,11 @@ void EscSymGraphics::print_fruit_cell() {
     std::cout << "\033[m \033[0m";
 }
 
+void EscSymGraphics::print_antifruit_cell() {
+    std::cout << "\033[1;33mW\033[0m";
+    std::cout << "\033[m \033[0m";
+}
+
 void EscSymGraphics::print_teleport() {
     std::cout << "\033[37;40m*\033[0m";
     std::cout << "\033[m \033[0m";
@@ -90,6 +100,11 @@ void EscGraphics::print_wall_cell() {
 void EscGraphics::print_fruit_cell() {
     std::cout << "\033[41m \033[0m";
     std::cout << "\033[41m \033[0m";
+}
+
+void EscGraphics::print_antifruit_cell() {
+    std::cout << "\033[43m \033[0m";
+    std::cout << "\033[43m \033[0m";
 }
 
 void EscGraphics::print_teleport() {

@@ -7,21 +7,27 @@
 MapModel::MapModel(Settings settings) : length(settings.map_length), width(settings.map_width) {
     field = new Cell *[width];
 
+    Cell wall_type;
+    if (settings.solid_wall) {
+        wall_type = WALL;
+    } else {
+        wall_type = TELEPORT;
+    }
+
     for (int i = 0; i < width; i++) {
         field[i] = new Cell[length];
         for (int j = 0; j < length; j++) {
             if (i == 0 || i == width - 1 || j == 0 || j == length - 1) {
-                field[i][j] = WALL;
-            }
-            else {
-            	field[i][j] = EMPTY;
+                field[i][j] = wall_type;
+            } else {
+                field[i][j] = EMPTY;
             }
         }
     }
 }
 
 MapModel::~MapModel() {
-    for(int i = 0; i < width; i++) {
+    for (int i = 0; i < width; i++) {
         delete[] field[i];
     }
     delete[] field;
@@ -41,13 +47,13 @@ void MapModel::put_snake(Snake s) {
     }
 }
 
-void MapModel::generate_fruit() {
+void MapModel::generate_fruit(Cell bonus) {
     bool fruit_created = false;
     while (!fruit_created) {
         unsigned x = rand() % (length - 2) + 1; // чтобы было меньше итераций цикла, из-за отсутствия WALL
         unsigned y = rand() % (width - 2) + 1;
         if (check_cell(x, y) == EMPTY) {
-            field[x][y] = FRUIT;
+            field[x][y] = bonus;
             fruit_created = true;
         }
     }
@@ -61,8 +67,8 @@ unsigned MapModel::get_length() {
     return length;
 }
 
-void MapModel::clear_cell(unsigned x, unsigned y) {
-    field[x][y] = EMPTY;
+void MapModel::clear_cell(Position pos) {
+    field[pos.get_x()][pos.get_y()] = EMPTY;
 }
 
 Cell MapModel::check_cell(unsigned x, unsigned y) {

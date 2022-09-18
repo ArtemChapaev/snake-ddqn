@@ -30,11 +30,14 @@ int Game::start_game(bool random_apples) {
 
     bool is_exit = false;
 
-    console.clear_display();
     console.set_cursor(0, 0);
+    console.clear_display();
 
     map_model.put_snake(snake);
-    map_model.generate_fruit();
+    map_model.generate_fruit(FRUIT);
+    if (settings.bonus_apples == true) {
+        map_model.generate_fruit(ANTIFRUIT);
+    }
     map_view.print();
 
     while (!is_exit) {
@@ -50,7 +53,20 @@ int Game::start_game(bool random_apples) {
             case FRUIT: {
                 Position last_tail = snake.move();
                 snake.increase_length(last_tail);
-                map_model.generate_fruit();
+                map_model.generate_fruit(FRUIT);
+                break;
+            }
+            case ANTIFRUIT: {
+                Position last_tail = snake.move();
+                map_model.clear_cell(last_tail);
+
+                last_tail = snake.decrease_length();
+                map_model.clear_cell(last_tail);
+                map_model.generate_fruit(ANTIFRUIT);
+
+                if (snake.get_snake().size() == 0) {
+                    is_exit = true;
+                }
                 break;
             }
             case SNAKE: {
@@ -58,20 +74,26 @@ int Game::start_game(bool random_apples) {
                     snake.move(); // без clear_cell, тк все равно будет в той клетке голова
                     break;
                 }
+                // если не идет по if, то проваливается в следующий case
             }
             case WALL: {
                 is_exit = true;
                 break;
             }
+            case TELEPORT: {
+                Position last_tail = snake.relocate_snake(settings);
+                map_model.clear_cell(last_tail);
+                break;
+            }
             case EMPTY: {
                 Position last_tail = snake.move();
-                map_model.clear_cell(last_tail.get_x(), last_tail.get_y());
+                map_model.clear_cell(last_tail);
                 break;
             }
         }
 
-        console.clear_display();
         console.set_cursor(0, 0);
+        console.clear_display();
 
         map_model.put_snake(snake);
         map_view.print();

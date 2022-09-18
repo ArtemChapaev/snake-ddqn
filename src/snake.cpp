@@ -50,14 +50,19 @@ std::list<Position> Snake::get_snake() {
 Position Snake::get_next() {
     Position head = get_head();
 
-    if (direction == right) {
-        return {head.get_x() + 1, head.get_y()};
-    } else if (direction == left) {
-        return {head.get_x() - 1, head.get_y()};
-    } else if (direction == up) {
-        return {head.get_x(), head.get_y() + 1};
-    } else {
-        return {head.get_x(), head.get_y() - 1};
+    switch (direction) {
+        case right: {
+            return {head.get_x() + 1, head.get_y()};
+        }
+        case left : {
+            return {head.get_x() - 1, head.get_y()};
+        }
+        case up: {
+            return {head.get_x(), head.get_y() + 1};
+        }
+        default: {
+            return {head.get_x(), head.get_y() - 1};
+        }
     }
 }
 
@@ -73,9 +78,7 @@ float Snake::get_speed_coef() {
     return speed_coef;
 }
 
-Position Snake::move() {
-    Position pos_for_next = get_next();
-
+Position Snake::move_in_cell(Position pos_for_next) {
     for (auto &s: snake) {
         auto temp = s;
         s = pos_for_next;
@@ -84,8 +87,35 @@ Position Snake::move() {
     return pos_for_next; // pos of tail
 }
 
+Position Snake::move() {
+    return move_in_cell(get_next());
+}
+
 int Snake::increase_length(Position pos_for_tail) {
     snake.push_back(pos_for_tail);
     ++length;
     return 0;
+}
+
+Position Snake::decrease_length() {
+    Position tail = snake.back();
+    snake.pop_back();
+    --length;
+    return tail;
+}
+
+Position Snake::relocate_snake(Settings settings) {
+    Position next_cell = get_next();
+    if (next_cell.get_x() == 0) {
+        return move_in_cell({settings.map_length - 2, next_cell.get_y()});
+    } else if (next_cell.get_x() == settings.map_length - 1) {
+        return move_in_cell({1, next_cell.get_y()});
+    } else if (next_cell.get_y() == 0) {
+        return move_in_cell({next_cell.get_x(), settings.map_width - 2});
+    } else if (next_cell.get_y() == settings.map_width - 1) {
+        return move_in_cell({next_cell.get_x(), 1});
+    } else {
+        // need implement
+        return 0;
+    }
 }

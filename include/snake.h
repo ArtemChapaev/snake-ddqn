@@ -45,10 +45,14 @@ public:
     float get_speed_coef();
     Position move();
     int increase_length(Position);
+    Position decrease_length();
+    Position relocate_snake(Settings);
 
 private:
     std::list<Position> snake;
     unsigned length;
     Direction direction;
     float speed_coef;
+
+    Position move_in_cell(Position);
 };

@@ -33,11 +33,14 @@ void MapView::print() {
                 case WALL:
                     graphics->print_wall_cell();
                     break;
+                case TELEPORT:
+                    graphics->print_teleport();
+                    break;
                 case FRUIT:
                     graphics->print_fruit_cell();
                     break;
-                case TELEPORT:
-                    graphics->print_teleport();
+                case ANTIFRUIT:
+                    graphics->print_antifruit_cell();
                     break;
             }
         }

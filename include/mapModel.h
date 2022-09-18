@@ -8,7 +8,8 @@ enum Cell {
     SNAKE,
     WALL,
     TELEPORT,
-    FRUIT
+    FRUIT,
+    ANTIFRUIT
 };
 
 class MapModel {
@@ -16,8 +17,8 @@ public:
     MapModel(Settings settings);
     ~MapModel();
     void put_snake(Snake);
-    void generate_fruit();
-    void clear_cell(unsigned, unsigned);
+    void generate_fruit(Cell);
+    void clear_cell(Position);
     Cell check_cell(unsigned, unsigned);
     unsigned get_width();
     unsigned get_length();
