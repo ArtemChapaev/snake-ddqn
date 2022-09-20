@@ -8,11 +8,7 @@ MapModel::MapModel(Settings settings) : length(settings.map_length), width(setti
     field = new Cell *[width];
 
     Cell wall_type;
-    if (settings.solid_wall) {
-        wall_type = WALL;
-    } else {
-        wall_type = TELEPORT;
-    }
+    settings.solid_wall ? wall_type = WALL : wall_type = TELEPORT;
 
     for (int i = 0; i < width; i++) {
         field[i] = new Cell[length];

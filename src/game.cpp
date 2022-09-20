@@ -16,12 +16,8 @@
 Game::Game(Settings settings) : settings(settings) {}
 
 int Game::start_game(bool random_apples) {
-    if (random_apples) {
-        srand(1);
-    } else {
-        srand(time(0));
-    }
-
+    random_apples ? srand(1) : srand(time(0));
+    
     Snake snake(settings);
     KeyboardControl control('w', 'a', 's', 'd');
     ConsoleUI console;
