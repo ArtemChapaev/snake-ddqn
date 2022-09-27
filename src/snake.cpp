@@ -1,5 +1,3 @@
-#include <iostream>
-
 #include "snake.h"
 
 Position::Position(unsigned x, unsigned y) : x(x), y(y) {}

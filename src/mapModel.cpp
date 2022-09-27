@@ -1,8 +1,4 @@
-#include <cstdlib>
-
 #include "mapModel.h"
-#include "snake.h"
-#include "settings.h"
 
 MapModel::MapModel(Settings settings) : length(settings.map_length), width(settings.map_width) {
     field = new Cell *[width];

@@ -1,8 +1,12 @@
 #pragma once
 
+#include <cstdlib>
+
+#include "settings.h"
 #include "snake.h"
 
 enum Cell {
+// Тип клетки
     EMPTY,
     SNAKE_HEAD,
     SNAKE,
@@ -13,6 +17,7 @@ enum Cell {
 };
 
 class MapModel {
+// Класс для отображения карты
 public:
     MapModel(Settings settings);
     ~MapModel();

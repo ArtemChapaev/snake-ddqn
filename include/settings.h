@@ -1,17 +1,30 @@
 #pragma once
 
+#include <fstream>
+#include <iostream>
+#include <string>
+
 struct Settings {
-    Settings(unsigned mL = 20, unsigned mW = 20, float sp = 1, bool sW = 0, bool sc = 0, bool r = 0, bool bA = 0,
-             unsigned vM = 1) :
-            map_length(mL), map_width(mW), speed(sp), solid_wall(sW), score(sc), record(r), bonus_apples(bA),
-            view_mode(vM) {};
+// Структура под настройки
+    Settings(unsigned mL = 20, unsigned mW = 20, float sp = 1, bool sW = 1, bool sc = 1, bool bA = 1, bool te = 0,
+             unsigned vM = 2, char kU = 'w', char kD = 's', char kR = 'd', char kL = 'a', char kP = 27) :
+            map_length(mL), map_width(mW), speed(sp), solid_wall(sW), score(sc), bonus_apples(bA),
+            teleport(te), view_mode(vM), key_up(kU), key_down(kD), key_right(kR), key_left(kL), key_pause(kP) {};
 
     unsigned map_length;
     unsigned map_width;
     float speed;
     bool solid_wall;
     bool score;
-    bool record;
     bool bonus_apples;
+    bool teleport;
     unsigned view_mode;
+    char key_up;
+    char key_down;
+    char key_right;
+    char key_left;
+    char key_pause;
 };
+
+// Объявление функции парсер
+int parser(Settings &settings);

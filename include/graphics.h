@@ -1,6 +1,9 @@
 #pragma once
 
+#include <iostream>
+
 class Graphics {
+// Bирутальный класс графики
 public:
     virtual void print_empty_cell() = 0;
     virtual void print_snake_cell() = 0;
@@ -11,6 +14,7 @@ public:
     virtual void print_teleport() = 0;
 };
 
+// Переопределения графики
 
 class SymGraphics : public Graphics {
 public:

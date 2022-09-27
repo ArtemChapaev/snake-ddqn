@@ -1,7 +1,8 @@
 #pragma once
 
-#include <string>
+#include <iostream>
 #include <list>
+#include <string>
 
 #include "settings.h"
 
@@ -22,6 +23,9 @@ enum Direction {
 
 class Position {
 public:
+    /// Класс позиции с координатами x, y.
+    /// Используется для хранения тела змеи.
+
     Position(unsigned x = 0, unsigned y = 0);
 
     bool operator==(Position other);
@@ -34,6 +38,9 @@ private:
 };
 
 class Snake {
+    /// Класс-модель, реализующий одну из главных сущностей - змею.
+    /// Хранит в себе методы взаимодействия игры со змеей.
+    /// Хранит атрибут, влияющий на скорость игры.
 public:
     Snake(Settings);
     Position get_head();

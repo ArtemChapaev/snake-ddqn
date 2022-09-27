@@ -1,25 +1,15 @@
-#include <cstdlib>
-#include <ctime>
-#include <fcntl.h>
-#include <termios.h>
-#include <unistd.h>
-
-#include "consoleUI.h"
-#include "control.h"
 #include "game.h"
-#include "keyboardControl.h"
-#include "mapModel.h"
-#include "mapView.h"
-#include "settings.cpp"
-#include "snake.h"
 
-Game::Game(Settings settings) : settings(settings) {}
+Game::Game(Settings settings) : settings(settings), highest_score(0), death_score(0) {}
 
 int Game::start_game(bool random_apples) {
+    std::clock_t start_time = std::clock();
+
     random_apples ? srand(1) : srand(time(0));
-    
+    parser(settings);
+
     Snake snake(settings);
-    KeyboardControl control('w', 'a', 's', 'd');
+    KeyboardControl control(settings.key_up, settings.key_left, settings.key_down, settings.key_right);
     ConsoleUI console;
     MapModel map_model(settings);
     MapView map_view(map_model, settings);
@@ -87,14 +77,37 @@ int Game::start_game(bool random_apples) {
                 break;
             }
         }
-
         console.set_cursor(0, 0);
         console.clear_display();
-
+        
         map_model.put_snake(snake);
         map_view.print();
 
+        if(settings.score) {
+            std::cout << "\033[" << map_model.get_length() - 4 << "CSCORE: " << snake.get_snake().size() << std::endl;
+        }
+
+        death_score = snake.get_snake().size();
+        if (death_score > highest_score) {
+            highest_score = death_score;
+        }
+
         usleep(SNAKE_SPEED / snake.get_speed_coef());
     }
+
+    game_time = (std::clock() - start_time) / (double) CLOCKS_PER_SEC;
+
     return 0;
+}
+
+int Game::deathscreen() {
+    usleep(3000);
+    ConsoleUI console;
+    console.set_cursor(0, 0);
+    console.clear_display();
+    std::cout << "Play time: " << game_time << " seconds" << std::endl;
+    if (settings.bonus_apples) {
+        std::cout << "Highest score : " << highest_score << std::endl;
+    }
+    std::cout << "Final score : " << death_score << std::endl;
 }

@@ -1,5 +1,3 @@
-#include <iostream>
-
 #include "graphics.h"
 
 void SymGraphics::print_empty_cell() {

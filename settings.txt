@@ -1,0 +1,13 @@
+map_length=20
+map_width=20
+speed=1.76
+solid_wall=1
+score=1
+bonus_apples=1
+teleport=0
+view_mode=0
+key_up=w
+key_left=a
+key_down=s
+key_right=d
+key_pause=27

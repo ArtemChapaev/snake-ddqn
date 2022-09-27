@@ -1,7 +1,4 @@
-#include <iostream>
-
 #include "mapView.h"
-#include "graphics.cpp"
 
 MapView::MapView(MapModel &map, Settings settings) : map(map), graphics(NULL) {
 	switch (settings.view_mode) {
@@ -15,6 +12,10 @@ MapView::MapView(MapModel &map, Settings settings) : map(map), graphics(NULL) {
             graphics = new EscGraphics;
             break;
     }
+}
+
+void MapView::deathscreen() {
+    
 }
 
 void MapView::print() {

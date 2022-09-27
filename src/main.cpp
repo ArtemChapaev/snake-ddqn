@@ -1,7 +1,6 @@
 #include <cstring>
 
 #include "game.h"
-#include "settings.h"
 
 int main(int argc, char **argv) {
     bool random_apples = true;
@@ -9,6 +8,8 @@ int main(int argc, char **argv) {
         random_apples = false;
     }
     Settings settings;
+    //parser(settings);
     Game game(settings);
     game.start_game(random_apples);
+    game.deathscreen();
 }

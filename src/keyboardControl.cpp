@@ -1,12 +1,7 @@
-#include <fcntl.h>
-#include <iostream>
-#include <termios.h>
-#include <unistd.h>
-
 #include "keyboardControl.h"
-#include "snake.h"
 
-KeyboardControl::KeyboardControl(char up, char left, char down, char right) : Control(up, left, down, right),
+KeyboardControl::KeyboardControl(char up, char left, char down, char right) : up(up), left(left), down(down),
+                                                                              right(right),
                                                                               original_flags(fcntl(0, F_GETFL)) {
     fcntl(0, F_SETFL, original_flags | O_NONBLOCK);
 
