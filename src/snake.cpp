@@ -113,7 +113,15 @@ Position Snake::relocate_snake(Settings settings) {
     } else if (next_cell.get_y() == settings.map_width - 1) {
         return move_in_cell({next_cell.get_x(), 1});
     } else {
-        // need implement
+        switch (get_direction()) {
+            case up:
+            case down:
+                return move_in_cell({next_cell.get_x(), settings.map_width - next_cell.get_y()});
+            case right:
+            case left:
+                return move_in_cell({settings.map_length - next_cell.get_x(), next_cell.get_y()});
+        }
+
         return 0;
     }
 }

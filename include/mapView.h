@@ -11,7 +11,6 @@ public:
     MapView(MapModel &map, Settings);
     ~MapView();
     void print();
-    void deathscreen();
 private:
     MapModel &map;
     Graphics *graphics;

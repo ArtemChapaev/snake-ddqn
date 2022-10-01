@@ -7,9 +7,7 @@ int main(int argc, char **argv) {
     if (argc > 1 && !strcmp(argv[1], "-a")) {
         random_apples = false;
     }
-    Settings settings;
-    //parser(settings);
-    Game game(settings);
+    Game game;
     game.start_game(random_apples);
     game.deathscreen();
 }

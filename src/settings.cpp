@@ -1,9 +1,4 @@
-#include <fstream>
-#include <iostream>
-#include <string>
-
 #include "settings.h"
-
 
 Settings settings;
 
@@ -41,10 +36,10 @@ int parser(Settings &settings) {
     settings.bonus_apples = stoi(bonus_apples);
     settings.teleport = stoi(teleport);
     settings.view_mode = stoi(view_mode);
-    settings.key_up = key_up[0];
-    settings.key_down = key_down[0];
-    settings.key_left = key_left[0];
-    settings.key_right = key_right[0];
+    settings.key_up = stoi(key_up);
+    settings.key_down = stoi(key_down);
+    settings.key_left = stoi(key_left);
+    settings.key_right = stoi(key_right);
     settings.key_pause = stoi(key_pause);
 
     file.close();

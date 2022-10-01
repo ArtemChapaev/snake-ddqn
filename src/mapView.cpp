@@ -14,10 +14,6 @@ MapView::MapView(MapModel &map, Settings settings) : map(map), graphics(NULL) {
     }
 }
 
-void MapView::deathscreen() {
-    
-}
-
 void MapView::print() {
     for (int j = map.get_width() - 1; j >= 0; j--) {
         for (int i = 0; i < map.get_length(); i++) {
@@ -35,13 +31,19 @@ void MapView::print() {
                     graphics->print_wall_cell();
                     break;
                 case TELEPORT:
-                    graphics->print_teleport();
+                    graphics->print_teleport_cell();
                     break;
-                case FRUIT:
-                    graphics->print_fruit_cell();
+                case BONUS:
+                    graphics->print_bonus_cell();
                     break;
-                case ANTIFRUIT:
-                    graphics->print_antifruit_cell();
+                case ANTIBONUS:
+                    graphics->print_antibonus_cell();
+                    break;
+                case SPEED_BONUS:
+                    graphics->print_speed_bonus_cell();
+                    break;
+                case SPEED_ANTIBONUS:
+                    graphics->print_speed_antibonus_cell();
                     break;
             }
         }

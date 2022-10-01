@@ -6,13 +6,12 @@
 
 #include "settings.h"
 
-#define SNAKE_LENGTH 5
-#define SNAKE_SPEED 300000
+const unsigned SNAKE_LENGTH = 5;
 
-const float STANDART_FOR_X = 0.4;
-const float STANDART_FOR_Y = 0.6;
+const double STANDART_FOR_X = 0.4;
+const double STANDART_FOR_Y = 0.6;
 
-const float INDEX_FOR_X = 1. / 7;
+const double INDEX_FOR_X = 1. / 7;
 
 enum Direction {
     up,
@@ -59,7 +58,7 @@ private:
     std::list<Position> snake;
     unsigned length;
     Direction direction;
-    float speed_coef;
+    const float speed_coef;
 
     Position move_in_cell(Position);
 };

@@ -39,14 +39,14 @@ void MapModel::put_snake(Snake s) {
     }
 }
 
-void MapModel::generate_fruit(Cell bonus) {
-    bool fruit_created = false;
-    while (!fruit_created) {
+void MapModel::generate_bonus(Cell bonus) {
+    bool bonus_created = false;
+    while (!bonus_created) {
         unsigned x = rand() % (length - 2) + 1; // чтобы было меньше итераций цикла, из-за отсутствия WALL
         unsigned y = rand() % (width - 2) + 1;
         if (check_cell(x, y) == EMPTY) {
             field[x][y] = bonus;
-            fruit_created = true;
+            bonus_created = true;
         }
     }
 }

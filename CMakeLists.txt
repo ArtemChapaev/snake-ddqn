@@ -14,4 +14,6 @@ add_executable(snake /
         src/consoleUI.cpp /
         src/game.cpp /
         src/main.cpp /
+        src/graphics.cpp /
+        src/settings.cpp /
         )
