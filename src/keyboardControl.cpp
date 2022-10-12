@@ -19,11 +19,11 @@ KeyboardControl::~KeyboardControl() {
     tcsetattr(0, TCSAFLUSH, &savetty);
 }
 
-Direction KeyboardControl::read_direction(Direction last_dir) {
+Keys KeyboardControl::read_key(Keys last_dir) {
     char ch[1];
     if (read(0, ch, 1) <= 0) {
         return last_dir;
-    } else if ((int) ch[0] == 27) {
+    } else if (ch[0] == 27) {
         char ch_2[2];
 
         if (read(0, ch_2, 2) == 2) {
@@ -46,17 +46,16 @@ Direction KeyboardControl::read_direction(Direction last_dir) {
         }
     }
 
-    Direction dir = last_dir;
     if (ch[0] == up) {
-        dir = Direction::up;
+        return Keys::up;
     } else if (ch[0] == right) {
-        dir = Direction::right;
+        return Keys::right;
     } else if (ch[0] == down) {
-        dir = Direction::down;
+        return Keys::down;
     } else if (ch[0] == left) {
-        dir = Direction::left;
+        return Keys::left;
     } else if (ch[0] == pause) {
-        // implement
+        return Keys::interruption;
     }
-    return dir;
+    return Keys::interruption;
 }

@@ -15,7 +15,7 @@ class KeyboardControl : public Control {
 public:
     KeyboardControl(Settings);
     ~KeyboardControl();
-    Direction read_direction(Direction) override;
+    Keys read_key(Keys last_dir) override;
 
 private:
     const char up;

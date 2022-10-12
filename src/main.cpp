@@ -4,10 +4,21 @@
 
 int main(int argc, char **argv) {
     bool random_apples = true;
-    if (argc > 1 && !strcmp(argv[1], "-a")) {
+    std::string filename = "settings.txt";
+
+    if (argc == 2 && !strcmp(argv[1], "-a")) {
         random_apples = false;
+    } else {
+        for (int i = 0; i < argc; ++i)
+            if (!strcmp(argv[i], "-a")) {
+                random_apples = false;
+            } else if (!strcmp(argv[i], "-f") && i + 1 < argc) {
+                filename = argv[i + 1];
+            }
     }
-    Game game;
+
+    std::cout << "\033[2J";
+    Game game(filename);
     game.start_game(random_apples);
-    game.deathscreen();
+    game.print_deathscreen();
 }

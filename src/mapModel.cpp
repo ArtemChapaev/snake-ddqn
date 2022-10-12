@@ -29,12 +29,12 @@ void MapModel::put_snake(Snake s) {
     auto snake = s.get_snake();
     auto it = snake.begin();
 
-    field[it->get_x()][it->get_y()] = SNAKE_HEAD;
+    field[it->get_y()][it->get_x()] = SNAKE_HEAD;
     ++it;
 
     while (it != snake.end()) {
         Position d = *it;
-        field[d.get_x()][d.get_y()] = SNAKE;
+        field[d.get_y()][d.get_x()] = SNAKE;
         ++it;
     }
 }
@@ -44,8 +44,8 @@ void MapModel::generate_bonus(Cell bonus) {
     while (!bonus_created) {
         unsigned x = rand() % (length - 2) + 1; // чтобы было меньше итераций цикла, из-за отсутствия WALL
         unsigned y = rand() % (width - 2) + 1;
-        if (check_cell(x, y) == EMPTY) {
-            field[x][y] = bonus;
+        if (check_cell(y, x) == EMPTY) {
+            field[y][x] = bonus;
             bonus_created = true;
         }
     }
@@ -60,9 +60,9 @@ unsigned MapModel::get_length() {
 }
 
 void MapModel::clear_cell(Position pos) {
-    field[pos.get_x()][pos.get_y()] = EMPTY;
+    field[pos.get_y()][pos.get_x()] = EMPTY;
 }
 
-Cell MapModel::check_cell(unsigned x, unsigned y) {
-    return field[x][y];
+Cell MapModel::check_cell(unsigned y, unsigned x) {
+    return field[y][x];
 }

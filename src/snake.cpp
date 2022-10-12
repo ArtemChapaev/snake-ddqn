@@ -17,21 +17,40 @@ unsigned Position::get_y() {
     return y;
 }
 
-Snake::Snake(Settings settings) : length(SNAKE_LENGTH), direction(right), speed_coef(settings.speed) {
-    unsigned y = settings.map_width * STANDART_FOR_Y;
-    unsigned x = 0;
+Snake::Snake(Settings settings, unsigned length = SNAKE_LENGTH) : length(length), direction(right),
+                                                                  speed_coef(settings.speed) {
+    if (length >= settings.map_length - 2) {
+        unsigned x = settings.map_length / 6;
 
-    if (settings.map_length * STANDART_FOR_X >= SNAKE_LENGTH) {
-        x = settings.map_length * INDEX_FOR_X + SNAKE_LENGTH;
+        for (unsigned i = 0; i <= length / settings.map_width; ++i) {
+            for (unsigned y = 1; y < settings.map_width - 1; ++y) {
+                if (i % 2) {
+                    snake.emplace_front(x + i, y);
+                } else {
+                    snake.emplace_front(x + i, settings.map_width - 1 - y);
+                }
+                if (i * (settings.map_width - 2) + y == length) {
+                    return;
+                }
+            }
+        }
     } else {
-        x = SNAKE_LENGTH;
-    }
+        unsigned y = settings.map_width * STANDART_FOR_Y;
+        unsigned x = 0;
 
-    for (int i = 0; i < SNAKE_LENGTH; ++i) {
-        snake.emplace_back(x, y);
-        --x;
+        if (settings.map_length * STANDART_FOR_X >= length) {
+            x = settings.map_length * INDEX_FOR_X + length;
+        } else {
+            x = length;
+        }
+
+        for (int i = 0; i < length; ++i) {
+            snake.emplace_back(x, y);
+            --x;
+        }
     }
 }
+
 
 Position Snake::get_head() {
     return snake.front();
@@ -64,11 +83,11 @@ Position Snake::get_next() {
     }
 }
 
-Direction Snake::get_direction() {
+Keys Snake::get_direction() {
     return direction;
 }
 
-void Snake::set_direction(Direction dir) {
+void Snake::set_direction(Keys dir) {
     direction = dir;
 }
 

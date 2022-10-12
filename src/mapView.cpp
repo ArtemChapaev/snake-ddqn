@@ -1,7 +1,7 @@
 #include "mapView.h"
 
 MapView::MapView(MapModel &map, Settings settings) : map(map), graphics(NULL) {
-	switch (settings.view_mode) {
+    switch (settings.view_mode) {
         case 0:
             graphics = new SymGraphics;
             break;
@@ -14,10 +14,22 @@ MapView::MapView(MapModel &map, Settings settings) : map(map), graphics(NULL) {
     }
 }
 
+void MapView::print_walls() {
+    for (int j = 1; j <= map.get_width(); j++) {
+        for (int i = 1; i < map.get_length(); i++) {
+            if (j == 1 || j == map.get_width() || i == 1 || i == map.get_length()) {
+                std::cout << "\033[" << i << ";" << j << "H";
+                graphics->print_wall_cell();
+            }
+        }
+    }
+}
+
+
 void MapView::print() {
     for (int j = map.get_width() - 1; j >= 0; j--) {
         for (int i = 0; i < map.get_length(); i++) {
-            switch (map.check_cell(i, j)) {
+            switch (map.check_cell(j, i)) {
                 case EMPTY:
                     graphics->print_empty_cell();
                     break;

@@ -13,11 +13,12 @@ const double STANDART_FOR_Y = 0.6;
 
 const double INDEX_FOR_X = 1. / 7;
 
-enum Direction {
+enum Keys {
     up,
     right,
     down,
-    left
+    left,
+    interruption
 };
 
 class Position {
@@ -41,13 +42,13 @@ class Snake {
     /// Хранит в себе методы взаимодействия игры со змеей.
     /// Хранит атрибут, влияющий на скорость игры.
 public:
-    Snake(Settings);
+    Snake(Settings, unsigned);
     Position get_head();
     Position get_tail();
     std::list<Position> get_snake();
     Position get_next();
-    Direction get_direction();
-    void set_direction(Direction dir);
+    Keys get_direction();
+    void set_direction(Keys dir);
     float get_speed_coef();
     Position move();
     int increase_length(Position);
@@ -57,7 +58,7 @@ public:
 private:
     std::list<Position> snake;
     unsigned length;
-    Direction direction;
+    Keys direction;
     const float speed_coef;
 
     Position move_in_cell(Position);
