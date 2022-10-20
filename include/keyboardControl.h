@@ -15,6 +15,7 @@ class KeyboardControl : public Control {
 public:
     KeyboardControl(Settings);
     ~KeyboardControl();
+
     Keys read_key(Keys last_dir) override;
 
 private:

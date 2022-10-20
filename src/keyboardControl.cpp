@@ -29,16 +29,16 @@ Keys KeyboardControl::read_key(Keys last_dir) {
         if (read(0, ch_2, 2) == 2) {
             switch (ch_2[1]) {
                 case 'A':
-                    ch[0] = 72;
+                    ch[0] = 72; // arrow up
                     break;
                 case 'D':
-                    ch[0] = 75;
+                    ch[0] = 75; // arrow left
                     break;
                 case 'B':
-                    ch[0] = 80;
+                    ch[0] = 80; // arrow down
                     break;
                 case 'C':
-                    ch[0] = 77;
+                    ch[0] = 77; // arrow right
                     break;
             }
         } else {

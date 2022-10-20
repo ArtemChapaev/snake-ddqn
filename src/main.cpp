@@ -17,7 +17,7 @@ int main(int argc, char **argv) {
             }
     }
 
-    std::cout << "\033[2J";
+    std::cout << "\033[2J"; // clear of screen
     Game game(filename);
     game.start_game(random_apples);
     game.print_deathscreen();

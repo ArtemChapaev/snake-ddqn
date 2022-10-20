@@ -43,6 +43,7 @@ class Snake {
     /// Хранит атрибут, влияющий на скорость игры.
 public:
     Snake(Settings, unsigned);
+
     Position get_head();
     Position get_tail();
     std::list<Position> get_snake();

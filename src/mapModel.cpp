@@ -42,7 +42,7 @@ void MapModel::put_snake(Snake s) {
 void MapModel::generate_bonus(Cell bonus) {
     bool bonus_created = false;
     while (!bonus_created) {
-        unsigned x = rand() % (length - 2) + 1; // чтобы было меньше итераций цикла, из-за отсутствия WALL
+        unsigned x = rand() % (length - 2) + 1; // to have fewer iterations of the loop
         unsigned y = rand() % (width - 2) + 1;
         if (check_cell(y, x) == EMPTY) {
             field[y][x] = bonus;

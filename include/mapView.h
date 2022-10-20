@@ -10,6 +10,7 @@ class MapView {
 public:
     MapView(MapModel &map, Settings);
     ~MapView();
+
     void print();
     void print_walls();
 private:

@@ -9,6 +9,7 @@ void ConsoleUI::clear_full_display() {
         std::cout << std::endl;
     }
     set_cursor(1, 1);
+    std::cout << std::flush;
 }
 
 void ConsoleUI::clear_game_field(Settings settings) {
@@ -19,10 +20,19 @@ void ConsoleUI::clear_game_field(Settings settings) {
         }
     }
     set_cursor(1, 1);
+    std::cout << std::flush;
 }
 
 void ConsoleUI::set_cursor(unsigned x, unsigned y) {
-    std::cout << "\033[" << x << ";" << y << "H";
+    std::cout << "\033[" << x << ";" << y << "H" << std::flush;
+}
+
+void ConsoleUI::off_cursor() {
+    std::cout << "\x1b[?25l" << std::flush;
+}
+
+void ConsoleUI::on_cursor() {
+    std::cout << "\x1b[?25h" << std::flush;
 }
 
 unsigned ConsoleUI::comax() {

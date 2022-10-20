@@ -1,6 +1,8 @@
 #include "game.h"
 
-Game::Game(std::string file) : filename(file), highest_score(0), death_score(0) {}
+Game::Game(std::string file) : filename(file), highest_score(0), death_score(0) {
+    ConsoleUI::off_cursor();
+}
 
 bool Game::start_level(unsigned level_number) {
     parser(settings, filename);
@@ -22,6 +24,8 @@ bool Game::start_level(unsigned level_number) {
     unsigned moves_number_after_bonus = 0;
     float speed_of_bonus = 1.0;
 
+    map_model.put_snake(snake);
+
     map_model.generate_bonus(BONUS);
     if (settings.bonus_apples) {
         map_model.generate_bonus(ANTIBONUS);
@@ -32,7 +36,6 @@ bool Game::start_level(unsigned level_number) {
     console.set_cursor(1, 1);
     console.clear_full_display();
 
-    map_model.put_snake(snake);
     map_view.print();
 
     while (!is_exit) {
@@ -52,6 +55,8 @@ bool Game::start_level(unsigned level_number) {
             case BONUS: {
                 Position last_tail = snake.move();
                 snake.increase_length(last_tail);
+
+                map_model.put_snake(snake);
                 map_model.generate_bonus(BONUS);
 
                 ++eaten_bonuses_number;
@@ -63,20 +68,22 @@ bool Game::start_level(unsigned level_number) {
 
                 last_tail = snake.decrease_length();
                 map_model.clear_cell(last_tail);
-                map_model.generate_bonus(ANTIBONUS);
 
-                console.clear_game_field(settings);
+                map_model.put_snake(snake);
+                map_model.generate_bonus(ANTIBONUS);
 
                 if (snake.get_snake().size() == 0) {
                     is_exit = true;
                 } else {
-                    ++eaten_bonuses_number; // при одновременном выполнении двух событий, уровень не будет пройденным
+                    ++eaten_bonuses_number; // if game over with len = 0, the level is not passed
                 }
                 break;
             }
             case SPEED_BONUS: {
                 Position last_tail = snake.move();
                 map_model.clear_cell(last_tail);
+
+                map_model.put_snake(snake);
                 map_model.generate_bonus(SPEED_BONUS);
 
                 moves_number_after_bonus = 0;
@@ -88,6 +95,8 @@ bool Game::start_level(unsigned level_number) {
             case SPEED_ANTIBONUS: {
                 Position last_tail = snake.move();
                 map_model.clear_cell(last_tail);
+
+                map_model.put_snake(snake);
                 map_model.generate_bonus(SPEED_ANTIBONUS);
 
                 moves_number_after_bonus = 0;
@@ -98,10 +107,11 @@ bool Game::start_level(unsigned level_number) {
             }
             case SNAKE: {
                 if (snake.get_tail() == next_cell) {
-                    snake.move(); // без clear_cell, тк все равно будет в той клетке голова
+                    snake.move(); // without clear_cell, bcs there will be the head in this cell in next move
+                    map_model.put_snake(snake);
                     break;
                 }
-                // если не идет по if, то проваливается в следующий case
+                // falls down
             }
             case WALL: {
                 is_exit = true;
@@ -110,18 +120,21 @@ bool Game::start_level(unsigned level_number) {
             case TELEPORT: {
                 Position last_tail = snake.relocate_snake(settings);
                 map_model.clear_cell(last_tail);
+
+                map_model.put_snake(snake);
                 break;
             }
             case EMPTY: {
                 Position last_tail = snake.move();
                 map_model.clear_cell(last_tail);
+
+                map_model.put_snake(snake);
                 break;
             }
         }
 
         console.set_cursor(1, 1);
 
-        map_model.put_snake(snake);
         map_view.print();
 
         death_score = (int) (snake.get_snake().size() - SNAKE_LENGTH) > 0 ? snake.get_snake().size() - SNAKE_LENGTH : 0;
@@ -129,7 +142,8 @@ bool Game::start_level(unsigned level_number) {
 
         if (settings.score) {
             unsigned score = death_score;
-            std::cout << "\033[" << map_model.get_length() - 5 << "CSCORE: " << score << std::endl; // what esc-seq???
+            std::cout << "\033[" << map_model.get_length() - 5 << "CSCORE: " << score
+                      << std::endl; // moving cursor to right
         }
 
         if (moves_number_after_bonus == MOVES_FOR_SPEED_BONUS) {
@@ -142,11 +156,9 @@ bool Game::start_level(unsigned level_number) {
         usleep(MOVE_PAUSE / snake.get_speed_coef() / speed_of_bonus / LEVEL_SPEED(level_number));
         if (eaten_bonuses_number == BONUSES_FOR_NEW_LEVEL) {
             console.clear_full_display();
-            // usleep(100);
-            console.set_cursor(settings.map_length - WIN_STRING.size() / 2, settings.map_width / 2); // don't work
-            // usleep(100);
-            std::cout << WIN_STRING;
-            // usleep(GAME_PAUSE);
+            map_view.print_walls();
+            console.set_cursor(settings.map_length / 2, settings.map_width - WIN_STRING.size() / 2);
+            std::cout << WIN_STRING << std::flush;
             return true;
         }
     }
@@ -203,4 +215,8 @@ int Game::print_deathscreen() {
 
     console.set_cursor(settings.map_length + 1, 1);
     return 0;
+}
+
+Game::~Game() {
+    ConsoleUI::on_cursor();
 }

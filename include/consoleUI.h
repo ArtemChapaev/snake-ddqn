@@ -14,8 +14,9 @@ public:
     void clear_game_field(Settings);
     void set_cursor(unsigned, unsigned);
 
+    static void off_cursor();
+    static void on_cursor();
+
     unsigned comax();
     unsigned romax();
-
-private:
 };

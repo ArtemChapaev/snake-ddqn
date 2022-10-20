@@ -23,6 +23,7 @@ class MapModel {
 public:
     MapModel(Settings settings);
     ~MapModel();
+
     void put_snake(Snake);
     void generate_bonus(Cell);
     void clear_cell(Position);

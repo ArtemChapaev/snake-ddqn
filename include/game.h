@@ -19,7 +19,7 @@
 #define LEVEL_SPEED(level_number) (1. + level_number * 0.15)
 
 const unsigned BONUSES_FOR_NEW_LEVEL = 5;
-const unsigned MOVES_FOR_SPEED_BONUS = 10;
+const unsigned MOVES_FOR_SPEED_BONUS = 15;
 
 const unsigned LEVEL_PAUSE = 1500000;
 const unsigned MOVE_PAUSE = 300000;
@@ -34,6 +34,8 @@ class Game {
     /// Через этот класс можно запустить саму игру.
 public:
     explicit Game(std::string file = "settings.txt");
+    ~Game();
+
     int start_game(bool);
     bool start_level(unsigned);
     int print_deathscreen();

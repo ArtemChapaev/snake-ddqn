@@ -3,6 +3,8 @@ project(snake)
 
 set(CMAKE_CXX_STANDARD 17)
 
+add_subdirectory(cpp-terminal)
+
 include_directories(include)
 
 add_executable(snake /
@@ -17,3 +19,5 @@ add_executable(snake /
         src/graphics.cpp /
         src/settings.cpp /
         )
+
+target_link_libraries(snake PRIVATE cpp-terminal)
