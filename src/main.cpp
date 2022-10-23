@@ -1,10 +1,11 @@
 #include <cstring>
 
 #include "game.h"
+#include "menu.h"
 
 int main(int argc, char **argv) {
     bool random_apples = true;
-    std::string filename = "settings.txt";
+    std::string filename = "../settings.txt";
 
     if (argc == 2 && !strcmp(argv[1], "-a")) {
         random_apples = false;
@@ -17,8 +18,24 @@ int main(int argc, char **argv) {
             }
     }
 
-    std::cout << "\033[2J"; // clear of screen
-    Game game(filename);
-    game.start_game(random_apples);
-    game.print_deathscreen();
+    std::cout << "\033[2J"; // clear screen
+
+    std::stack<std::unique_ptr<Menu>> menus; // stores opened menus hierarchy
+
+    int string_num = 0; // stores which menu option is selected
+    unsigned prev_string_num = string_num;
+    bool is_exit = 0;
+
+    Menu* m = new MainMenu(filename);
+    menus.push(std::unique_ptr<Menu>(m));
+    menus.top().get()->draw(string_num);
+    while(is_exit != 1) {
+        is_exit = menus.top().get()->update(string_num, menus);
+        if (string_num != prev_string_num) {
+            menus.top().get()->draw(string_num);
+            prev_string_num = string_num;
+        }
+    }
+
+    return 0;
 }

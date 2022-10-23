@@ -12,6 +12,7 @@ key_left=75
 key_down=80
 key_right=77
 key_pause=27
+key_enter=10
 snake_color=0,255,0
 empty_color=0,0,0
 wall_color=50,50,50

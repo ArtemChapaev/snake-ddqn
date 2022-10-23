@@ -24,6 +24,7 @@ private:
     const char down;
     const char right;
     const char pause;
+    const char enter;
     const int original_flags;
     struct termios savetty;
 };

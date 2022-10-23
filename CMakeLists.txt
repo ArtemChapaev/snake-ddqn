@@ -18,6 +18,8 @@ add_executable(snake /
         src/main.cpp /
         src/graphics.cpp /
         src/settings.cpp /
+        src/logos.cpp /
+        src/menu.cpp /
         )
 
 target_link_libraries(snake PRIVATE cpp-terminal)

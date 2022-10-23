@@ -17,7 +17,7 @@ int parser(Settings &settings, std::string &filename) {
     }
 
     std::string var, map_length, map_width, speed, solid_wall, score, bonus_apples, view_mode, reset_length, key_up,
-            key_down, key_left, key_right, teleport, key_pause, snake_color, empty_color, wall_color, teleport_color,
+            key_down, key_left, key_right, teleport, key_pause, key_enter, snake_color, empty_color, wall_color, teleport_color,
             bonus_color, antibonus_color, speed_bonus_color, speed_antibonus_color;
 
     while (!file.eof()) {
@@ -37,6 +37,7 @@ int parser(Settings &settings, std::string &filename) {
         if (var == "key_left") getline(file, key_left);
         if (var == "key_right") getline(file, key_right);
         if (var == "key_pause") getline(file, key_pause);
+        if (var == "key_enter") getline(file, key_enter);
         if (var == "snake_color") getline(file, snake_color);
         if (var == "empty_color") getline(file, empty_color);
         if (var == "wall_color") getline(file, wall_color);
@@ -61,6 +62,7 @@ int parser(Settings &settings, std::string &filename) {
     settings.key_left = stoi(key_left);
     settings.key_right = stoi(key_right);
     settings.key_pause = stoi(key_pause);
+    settings.key_enter = stoi(key_enter);
     settings.snake_color = rgb_parser(snake_color);
     settings.empty_color = rgb_parser(empty_color);
     settings.wall_color = rgb_parser(wall_color);

@@ -18,7 +18,8 @@ enum Keys {
     right,
     down,
     left,
-    interruption
+    interruption,
+    enter
 };
 
 class Position {

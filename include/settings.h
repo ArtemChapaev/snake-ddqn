@@ -11,6 +11,7 @@ struct Settings {
 // Структура под настройки
     Settings(unsigned mL = 20, unsigned mW = 20, float sp = 1, bool sW = 0, bool sc = 1, bool bA = 1, bool te = 0,
              unsigned vM = 1, bool rL = 0, char kU = 72, char kD = 80, char kR = 77, char kL = 75, char kP = 27,
+             char kE = 10,
 
              Term::RGB sC = Term::RGB{28, 180, 1}, Term::RGB eC = Term::RGB{0, 0, 0},
              Term::RGB wC = Term::RGB{100, 100, 100}, Term::RGB tC = Term::RGB{160, 160, 160},
@@ -19,6 +20,7 @@ struct Settings {
 
             map_length(mL), map_width(mW), speed(sp), solid_wall(sW), score(sc), bonus_apples(bA), teleport(te),
             view_mode(vM), reset_length(rL), key_up(kU), key_down(kD), key_right(kR), key_left(kL), key_pause(kP),
+            key_enter(kE),
 
             snake_color(sC), empty_color(eC), wall_color(wC), teleport_color(tC), bonus_color(bC), antibonus_color(aC),
             speed_bonus_color(sbC), speed_antibonus_color(saC) {};
@@ -37,6 +39,7 @@ struct Settings {
     char key_right;
     char key_left;
     char key_pause;
+    char key_enter;
     Term::RGB snake_color;
     Term::RGB empty_color;
     Term::RGB wall_color;

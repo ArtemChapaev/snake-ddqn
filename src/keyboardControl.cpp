@@ -2,7 +2,8 @@
 
 KeyboardControl::KeyboardControl(Settings settings) : up(settings.key_up), left(settings.key_left),
                                                       down(settings.key_down), right(settings.key_right),
-                                                      pause(settings.key_pause), original_flags(fcntl(0, F_GETFL)) {
+                                                      pause(settings.key_pause), enter(settings.key_enter),
+                                                      original_flags(fcntl(0, F_GETFL)) {
     fcntl(0, F_SETFL, original_flags | O_NONBLOCK);
 
     struct termios tty;
@@ -56,6 +57,8 @@ Keys KeyboardControl::read_key(Keys last_dir) {
         return Keys::left;
     } else if (ch[0] == pause) {
         return Keys::interruption;
+    } else if (ch[0] == enter) {
+        return Keys::enter;
     }
     return Keys::interruption;
 }
