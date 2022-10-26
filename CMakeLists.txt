@@ -14,12 +14,12 @@ add_executable(snake /
         src/keyboardControl.cpp /
         src/mapView.cpp /
         src/consoleUI.cpp /
-        src/game.cpp /
-        src/main.cpp /
         src/graphics.cpp /
         src/settings.cpp /
+        src/game.cpp /
         src/logos.cpp /
         src/menu.cpp /
+        src/main.cpp /
         )
 
 target_link_libraries(snake PRIVATE cpp-terminal)

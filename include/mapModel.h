@@ -7,15 +7,15 @@
 
 enum Cell {
 // Тип клетки
-    EMPTY,
-    SNAKE_HEAD,
-    SNAKE,
-    WALL,
-    TELEPORT,
-    BONUS,
-    ANTIBONUS,
-    SPEED_BONUS,
-    SPEED_ANTIBONUS
+    empty,
+    snake_head,
+    snake,
+    wall,
+    teleport,
+    bonus,
+    antibonus,
+    speed_bonus,
+    speed_antibonus
 };
 
 class MapModel {

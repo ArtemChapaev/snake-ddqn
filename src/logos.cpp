@@ -16,6 +16,8 @@ void MainMenu::print_logo() {
      )";
 }
 
+void PauseMenu::print_logo() {}
+
 void LeaderboardMenu::print_logo() {
     std::cout << R"(
         
@@ -61,7 +63,7 @@ void SettingsSnakeMenu::print_logo() {
          ▄████████▀    ██████████    ▄████▀      ▄████▀   █▀    ▀█   █▀    ████████▀   ▄████████▀  
                                                                                            
 
-    )"; 
+    )";
 }
 
 void SettingsMapMenu::print_logo() {
@@ -77,7 +79,7 @@ void SettingsMapMenu::print_logo() {
          ▄████████▀    ██████████    ▄████▀      ▄████▀   █▀    ▀█   █▀    ████████▀   ▄████████▀  
                                                                                            
 
-    )"; 
+    )";
 }
 
 void SettingsGraphicMenu::print_logo() {
@@ -93,7 +95,7 @@ void SettingsGraphicMenu::print_logo() {
          ▄████████▀    ██████████    ▄████▀      ▄████▀   █▀    ▀█   █▀    ████████▀   ▄████████▀  
                                                                                            
 
-    )"; 
+    )";
 }
 
 void SettingsControlMenu::print_logo() {
@@ -109,11 +111,11 @@ void SettingsControlMenu::print_logo() {
          ▄████████▀    ██████████    ▄████▀      ▄████▀   █▀    ▀█   █▀    ████████▀   ▄████████▀  
                                                                                            
 
-    )"; 
+    )";
 }
 
 void TitlesMenu::print_logo() {
-std::cout << R"(
+    std::cout << R"(
   
   ____ ___  _  _ ____ ____ ___ _ ____ _  _ ____ _       ___  ____ ____  _ ____ ____ ___                 
   |___ |  \ |  | |    |__|  |  | |  | |\ | |__| |       |__] |  | |__/  | |___ |     |                  
@@ -154,3 +156,5 @@ std::cout << R"(
 
      )" << std::endl;
 }
+
+void GameInformationMenu::print_logo() {}

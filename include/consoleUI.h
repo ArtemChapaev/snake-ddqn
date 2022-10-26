@@ -8,9 +8,10 @@
 #include "settings.h"
 
 class ConsoleUI {
-    /// Класс, который взаимодействует с консолью используя эскейп-последовательности
+    /// A class that interacts with the console using escape sequences.
 public:
     void clear_full_display();
+    void clear_score_line(Settings);
     void clear_game_field(Settings);
     void set_cursor(unsigned, unsigned);
 

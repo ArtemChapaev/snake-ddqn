@@ -12,6 +12,15 @@ void ConsoleUI::clear_full_display() {
     std::cout << std::flush;
 }
 
+void ConsoleUI::clear_score_line(Settings settings) {
+    unsigned j = settings.map_width + 1;
+    set_cursor(j, 1);
+    for (unsigned i = 1; i <= comax(); ++i) {
+        std::cout << ' ';
+    }
+
+}
+
 void ConsoleUI::clear_game_field(Settings settings) {
     for (unsigned j = 1; j <= settings.map_width + 1; ++j) { // +1 bcs score calculating
         for (unsigned i = 1; i <= settings.map_length; ++i) {

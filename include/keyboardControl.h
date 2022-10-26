@@ -10,13 +10,13 @@
 #include "snake.h"
 
 class KeyboardControl : public Control {
-    /// Потомок абстрактного класса управления Control, реализующий управление с помощью нажатия клавиш.
-    /// Также класс хранит игровые клавиши, которые можно менять.
+    /// A descendant of the abstract control class Control, which implements control by pressing keys.
+    /// The class also stores game keys.
 public:
     KeyboardControl(Settings);
     ~KeyboardControl();
 
-    Keys read_key(Keys last_dir) override;
+    Keys read_key(Keys) override;
 
 private:
     const char up;

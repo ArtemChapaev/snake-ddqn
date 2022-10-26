@@ -17,7 +17,7 @@ unsigned Position::get_y() {
     return y;
 }
 
-Snake::Snake(Settings settings, unsigned length = SNAKE_LENGTH) : length(length), direction(right),
+Snake::Snake(Settings settings, unsigned length = kSnakeLength) : length(length), direction(right),
                                                                   speed_coef(settings.speed) {
     if (length >= settings.map_length - 2) {
         unsigned x = settings.map_length / 6;
@@ -35,11 +35,11 @@ Snake::Snake(Settings settings, unsigned length = SNAKE_LENGTH) : length(length)
             }
         }
     } else {
-        unsigned y = settings.map_width * STANDART_FOR_Y;
+        unsigned y = settings.map_width * kStandartForY;
         unsigned x = 0;
 
-        if (settings.map_length * STANDART_FOR_X >= length) {
-            x = settings.map_length * INDEX_FOR_X + length;
+        if (settings.map_length * kStandartForX >= length) {
+            x = settings.map_length * kIndexForX + length;
         } else {
             x = length;
         }

@@ -4,41 +4,48 @@
 #include <ctime>
 #include <chrono>
 #include <fcntl.h>
+#include <memory>
 #include <termios.h>
+#include <stack>
 #include <string>
 #include <unistd.h>
+#include <vector>
 
 #include "consoleUI.h"
 #include "control.h"
 #include "keyboardControl.h"
 #include "mapModel.h"
 #include "mapView.h"
+#include "menu.h"
 #include "settings.h"
 #include "snake.h"
 
 #define LEVEL_SPEED(level_number) (1. + level_number * 0.15)
 
-const unsigned BONUSES_FOR_NEW_LEVEL = 5;
-const unsigned MOVES_FOR_SPEED_BONUS = 15;
+const unsigned kBonusesForNewLevel = 5;
+const unsigned kMovesForSpeedBonus = 15;
 
-const unsigned LEVEL_PAUSE = 1500000;
-const unsigned MOVE_PAUSE = 300000;
-const unsigned GAME_PAUSE = 1000000;
+const unsigned kLevelPause = 1500000;
+const unsigned kMovePause = 300000;
+const unsigned kGamePause = 1000000;
 
-const double BONUS_SPEED_FOR_SNAKE = 1.5;
+const double kBonusSpeedForSnake = 1.5;
 
-const std::string WIN_STRING = "LEVEL UP!";
+const std::string kWinString = "LEVEL UP!";
+const std::string kLeaderboardFile = "leaderboard.txt";
 
 class Game {
-    /// Класс-контроллер, который связывает модель и отображение игры.
-    /// Через этот класс можно запустить саму игру.
+    /// A controller class that connects the model and the display of the game.
+    /// Through this class, you can run the game itself.
 public:
     explicit Game(std::string file = "settings.txt");
     ~Game();
 
     int start_game(bool);
-    bool start_level(unsigned);
+    int start_level(unsigned);
+    int pause_game();
     int print_deathscreen();
+    int write_to_leaderboard();
 
 private:
     std::string filename;

@@ -6,12 +6,12 @@
 
 #include "settings.h"
 
-const unsigned SNAKE_LENGTH = 5;
+const unsigned kSnakeLength = 5;
 
-const double STANDART_FOR_X = 0.4;
-const double STANDART_FOR_Y = 0.6;
+const double kStandartForX = 0.4;
+const double kStandartForY = 0.6;
 
-const double INDEX_FOR_X = 1. / 7;
+const double kIndexForX = 1. / 7;
 
 enum Keys {
     up,
@@ -24,8 +24,8 @@ enum Keys {
 
 class Position {
 public:
-    /// Класс позиции с координатами x, y.
-    /// Используется для хранения тела змеи.
+    /// The class of the position with x, y coordinates.
+    /// It is used to store the snake's body.
 
     Position(unsigned x = 0, unsigned y = 0);
 
@@ -39,9 +39,9 @@ private:
 };
 
 class Snake {
-    /// Класс-модель, реализующий одну из главных сущностей - змею.
-    /// Хранит в себе методы взаимодействия игры со змеей.
-    /// Хранит атрибут, влияющий на скорость игры.
+    /// Class that implements one of the main entities - a snake
+    /// It stores the methods of interaction of the game with the snake.
+    /// Stores attributes that affect the direction of movement, the speed of the game.
 public:
     Snake(Settings, unsigned);
 

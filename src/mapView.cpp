@@ -32,33 +32,33 @@ void MapView::print() {
     for (int j = map.get_width() - 1; j >= 0; j--) {
         for (int i = 0; i < map.get_length(); i++) {
             switch (map.check_cell(j, i)) {
-                case EMPTY:
+                case empty:
                     graphics->print_empty_cell();
                     break;
-                case SNAKE:
+                case snake:
                     graphics->print_snake_cell(snake_shade);
                     snake_shade = (snake_shade + 1) % SHADE_NUM;
                     break;
-                case SNAKE_HEAD:
+                case snake_head:
                     graphics->print_snake_head_cell(snake_shade);
                     snake_shade = (snake_shade + 1) % SHADE_NUM;
                     break;
-                case WALL:
+                case wall:
                     graphics->print_wall_cell();
                     break;
-                case TELEPORT:
+                case teleport:
                     graphics->print_teleport_cell();
                     break;
-                case BONUS:
+                case bonus:
                     graphics->print_bonus_cell();
                     break;
-                case ANTIBONUS:
+                case antibonus:
                     graphics->print_antibonus_cell();
                     break;
-                case SPEED_BONUS:
+                case speed_bonus:
                     graphics->print_speed_bonus_cell();
                     break;
-                case SPEED_ANTIBONUS:
+                case speed_antibonus:
                     graphics->print_speed_antibonus_cell();
                     break;
             }

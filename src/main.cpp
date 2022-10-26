@@ -22,11 +22,11 @@ int main(int argc, char **argv) {
 
     std::stack<std::unique_ptr<Menu>> menus; // stores opened menus hierarchy
 
-    int string_num = 0; // stores which menu option is selected
+    unsigned string_num = 0; // stores which menu option is selected
     unsigned prev_string_num = string_num;
-    bool is_exit = 0;
+    bool is_exit = false;
 
-    Menu* m = new MainMenu(filename);
+    Menu* m = new MainMenu(filename, random_apples);
     menus.push(std::unique_ptr<Menu>(m));
     menus.top().get()->draw(string_num);
     while(is_exit != 1) {
