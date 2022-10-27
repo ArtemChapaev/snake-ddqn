@@ -53,4 +53,5 @@ private:
     unsigned highest_score;
     unsigned death_score;
     std::clock_t game_time;
+    std::clock_t pause_time;
 };

@@ -1,6 +1,6 @@
 #include "game.h"
 
-Game::Game(std::string file) : filename(file), highest_score(0), death_score(0) {
+Game::Game(std::string file) : filename(file), highest_score(0), death_score(0), pause_time(0) {
     ConsoleUI::off_cursor();
 }
 
@@ -174,6 +174,8 @@ int Game::start_level(unsigned level_number) {
 }
 
 int Game::pause_game() {
+    auto pause_start_time = std::chrono::high_resolution_clock::now();
+
     std::stack<std::unique_ptr<Menu>> menus; // stores opened menus hierarchy
 
     unsigned string_num = 0; // stores which menu option is selected
@@ -190,6 +192,10 @@ int Game::pause_game() {
             prev_string_num = string_num;
         }
     }
+
+    std::chrono::duration<float> pause_duration = std::chrono::high_resolution_clock::now() - pause_start_time;
+    pause_time += pause_duration.count();
+
     return return_code;
 }
 
@@ -280,7 +286,7 @@ int Game::print_deathscreen() {
     }
 
     console.set_cursor(settings.map_length / 2 - 1, settings.map_width / 2);
-    std::cout << "Play time: " << game_time << " seconds" << std::endl;
+    std::cout << "Play time: " << game_time - pause_time << " seconds" << std::endl;
 
     if (settings.bonus_apples) {
         console.set_cursor(settings.map_length / 2, settings.map_width / 2);

@@ -17,7 +17,7 @@ void MainMenu::pure_draw() {
     std::cout << "\033[22;33HExit" << std::endl;
 }
 
-void MainMenu::draw(unsigned _string_num) {
+void MainMenu::draw(unsigned string_num) {
     ConsoleUI::off_cursor();
     ConsoleUI console;
     console.clear_full_display();
@@ -26,7 +26,7 @@ void MainMenu::draw(unsigned _string_num) {
     print_logo();
     pure_draw();
 
-    switch (_string_num) {
+    switch (string_num) {
         case start:
             std::cout << "\033[17;33H\033[4mStart game\033[0m" << std::endl;
             break;
@@ -48,7 +48,7 @@ void MainMenu::draw(unsigned _string_num) {
     }
 }
 
-unsigned MainMenu::update(unsigned &_string_num, std::stack <std::unique_ptr<Menu>> &_menus) {
+unsigned MainMenu::update(unsigned &string_num, std::stack <std::unique_ptr<Menu>> &menus) {
     bool is_exit = false;
     KeyboardControl control(game_settings);
 
@@ -58,13 +58,13 @@ unsigned MainMenu::update(unsigned &_string_num, std::stack <std::unique_ptr<Men
         is_exit = true;
         switch (key) {
             case up:
-                _string_num > 0 ? _string_num -= 1 : _string_num = options_count;
+                string_num > 0 ? string_num -= 1 : string_num = options_count;
                 break;
             case down:
-                _string_num < options_count ? _string_num += 1 : _string_num = 0;
+                string_num < options_count ? string_num += 1 : string_num = 0;
                 break;
             case enter:
-                if (_string_num == start) {
+                if (string_num == start) {
                     int game_exit_code = 0;
                     do {
                         Game game(filename);
@@ -73,26 +73,26 @@ unsigned MainMenu::update(unsigned &_string_num, std::stack <std::unique_ptr<Men
                         sleep(3);
                     } while (game_exit_code == PauseMenu::restart_code);
 
-                    _menus.top().get()->draw(_string_num);
-                } else if (_string_num == leaderboard) {
-                    _string_num = 0;
+                    menus.top().get()->draw(string_num);
+                } else if (string_num == leaderboard) {
+                    string_num = 0;
                     Menu *m = new LeaderboardMenu(filename);
-                    _menus.push(std::unique_ptr<Menu>(m));
-                    _menus.top().get()->draw(_string_num);
-                } else if (_string_num == settings) {
-                    _string_num = 0;
+                    menus.push(std::unique_ptr<Menu>(m));
+                    menus.top().get()->draw(string_num);
+                } else if (string_num == settings) {
+                    string_num = 0;
                     Menu *m = new SettingsGeneralMenu(filename);
-                    _menus.push(std::unique_ptr<Menu>(m));
-                    _menus.top().get()->draw(_string_num);
-                } else if (_string_num == information) {
+                    menus.push(std::unique_ptr<Menu>(m));
+                    menus.top().get()->draw(string_num);
+                } else if (string_num == information) {
                     Menu *m = new GameInformationMenu(filename);
-                    _menus.push(std::unique_ptr<Menu>(m));
-                    _menus.top().get()->draw(_string_num);
-                } else if (_string_num == credits) {
+                    menus.push(std::unique_ptr<Menu>(m));
+                    menus.top().get()->draw(string_num);
+                } else if (string_num == credits) {
                     Menu *m = new TitlesMenu(filename);
-                    _menus.push(std::unique_ptr<Menu>(m));
-                    _menus.top().get()->draw(_string_num);
-                } else if (_string_num == exit) {
+                    menus.push(std::unique_ptr<Menu>(m));
+                    menus.top().get()->draw(string_num);
+                } else if (string_num == exit) {
                     ConsoleUI::on_cursor();
                     std::cout << "\033[1;1H";
                     std::cout << "\033[2J";
@@ -113,14 +113,14 @@ unsigned MainMenu::update(unsigned &_string_num, std::stack <std::unique_ptr<Men
 PauseMenu::PauseMenu(std::string file) : Menu(file), options_count(exit) {}
 
 void PauseMenu::pure_draw() {
-    std::cout << "\033[17;33HResume" << std::endl;
-    std::cout << "\033[18;33HRestart" << std::endl;
-    std::cout << "\033[19;33HSettings" << std::endl;
-    std::cout << "\033[20;33HCell information" << std::endl;
-    std::cout << "\033[21;33HExit" << std::endl;
+    std::cout << "\033[16;36HResume" << std::endl;
+    std::cout << "\033[17;36HRestart" << std::endl;
+    std::cout << "\033[18;36HSettings" << std::endl;
+    std::cout << "\033[19;36HCell information" << std::endl;
+    std::cout << "\033[20;36HExit" << std::endl;
 }
 
-void PauseMenu::draw(unsigned _string_num) {
+void PauseMenu::draw(unsigned string_num) {
     ConsoleUI::off_cursor();
     ConsoleUI console;
     console.clear_full_display();
@@ -129,26 +129,26 @@ void PauseMenu::draw(unsigned _string_num) {
     print_logo();
     pure_draw();
 
-    switch (_string_num) {
+    switch (string_num) {
         case resume:
-            std::cout << "\033[17;33H\033[4mResume\033[0m" << std::endl;
+            std::cout << "\033[16;36H\033[4mResume\033[0m" << std::endl;
             break;
         case restart:
-            std::cout << "\033[18;33H\033[4mRestart\033[0m" << std::endl;
+            std::cout << "\033[17;36H\033[4mRestart\033[0m" << std::endl;
             break;
         case settings:
-            std::cout << "\033[19;33H\033[4mSettings\033[0m" << std::endl;
+            std::cout << "\033[18;36H\033[4mSettings\033[0m" << std::endl;
             break;
         case information:
-            std::cout << "\033[20;33H\033[4mCell information\033[0m" << std::endl;
+            std::cout << "\033[19;36H\033[4mCell information\033[0m" << std::endl;
             break;
         case exit:
-            std::cout << "\033[21;33H\033[4mExit\033[0m" << std::endl;
+            std::cout << "\033[20;36H\033[4mExit\033[0m" << std::endl;
             break;
     }
 }
 
-unsigned PauseMenu::update(unsigned &_string_num, std::stack <std::unique_ptr<Menu>> &_menus) {
+unsigned PauseMenu::update(unsigned &string_num, std::stack <std::unique_ptr<Menu>> &menus) {
     bool is_exit = false;
     KeyboardControl control(game_settings);
 
@@ -157,32 +157,32 @@ unsigned PauseMenu::update(unsigned &_string_num, std::stack <std::unique_ptr<Me
         is_exit = true;
         switch (key) {
             case up:
-                _string_num > 0 ? _string_num -= 1 : _string_num = options_count;
+                string_num > 0 ? string_num -= 1 : string_num = options_count;
                 break;
             case down:
-                _string_num < options_count ? _string_num += 1 : _string_num = 0;
+                string_num < options_count ? string_num += 1 : string_num = 0;
                 break;
             case enter:
-                if (_string_num == settings) {
-                    _string_num = 0;
+                if (string_num == settings) {
+                    string_num = 0;
                     Menu *m = new SettingsGeneralMenu(filename);
-                    _menus.push(std::unique_ptr<Menu>(m));
-                    _menus.top().get()->draw(_string_num);
+                    menus.push(std::unique_ptr<Menu>(m));
+                    menus.top().get()->draw(string_num);
                     break;
                 }
-                if (_string_num == information) {
+                if (string_num == information) {
                     Menu *m = new GameInformationMenu(filename);
-                    _menus.push(std::unique_ptr<Menu>(m));
-                    _menus.top().get()->draw(_string_num);
+                    menus.push(std::unique_ptr<Menu>(m));
+                    menus.top().get()->draw(string_num);
                     break;
                 }
-                if (_string_num == resume) {
+                if (string_num == resume) {
                     return resume_code;
                 }
-                if (_string_num == restart) {
+                if (string_num == restart) {
                     return restart_code;
                 }
-                if (_string_num == exit) {
+                if (string_num == exit) {
                     return exit_code;
                 }
             default:
@@ -220,7 +220,7 @@ void LeaderboardMenu::pure_draw() {
     std::cout << "\033[" << string_num + 1 << ";32HPress enter for exit" << std::endl;
 }
 
-void LeaderboardMenu::draw(unsigned _string_num) {
+void LeaderboardMenu::draw(unsigned string_num) {
     ConsoleUI::off_cursor();
     ConsoleUI console;
     console.clear_full_display();
@@ -230,7 +230,7 @@ void LeaderboardMenu::draw(unsigned _string_num) {
     pure_draw();
 }
 
-unsigned LeaderboardMenu::update(unsigned &_string_num, std::stack <std::unique_ptr<Menu>> &_menus) {
+unsigned LeaderboardMenu::update(unsigned &string_num, std::stack <std::unique_ptr<Menu>> &menus) {
     bool is_exit = false;
     KeyboardControl control(game_settings);
 
@@ -240,9 +240,9 @@ unsigned LeaderboardMenu::update(unsigned &_string_num, std::stack <std::unique_
 
         switch (key) {
             case enter:
-                _string_num = 0;
-                _menus.pop();
-                _menus.top().get()->draw(_string_num);
+                string_num = 0;
+                menus.pop();
+                menus.top().get()->draw(string_num);
                 break;
             default:
                 is_exit = false;
@@ -265,7 +265,7 @@ void SettingsGeneralMenu::pure_draw() {
     std::cout << "\033[21;46HExit" << std::endl;
 }
 
-void SettingsGeneralMenu::draw(unsigned _string_num) {
+void SettingsGeneralMenu::draw(unsigned string_num) {
     ConsoleUI::off_cursor();
     ConsoleUI console;
     console.clear_full_display();
@@ -274,7 +274,7 @@ void SettingsGeneralMenu::draw(unsigned _string_num) {
     print_logo();
     pure_draw();
 
-    switch (_string_num) {
+    switch (string_num) {
         case snake:
             std::cout << "\033[17;46H\033[4mSnake settings\033[0m" << std::endl;
             break;
@@ -293,7 +293,7 @@ void SettingsGeneralMenu::draw(unsigned _string_num) {
     }
 }
 
-unsigned SettingsGeneralMenu::update(unsigned &_string_num, std::stack <std::unique_ptr<Menu>> &_menus) {
+unsigned SettingsGeneralMenu::update(unsigned &string_num, std::stack <std::unique_ptr<Menu>> &menus) {
     bool is_exit = false;
     KeyboardControl cntrl(game_settings);
 
@@ -303,29 +303,29 @@ unsigned SettingsGeneralMenu::update(unsigned &_string_num, std::stack <std::uni
 
         switch (key) {
             case up:
-                _string_num > 0 ? _string_num -= 1 : _string_num = options_count;
+                string_num > 0 ? string_num -= 1 : string_num = options_count;
                 break;
             case down:
-                _string_num < options_count ? _string_num += 1 : _string_num = 0;
+                string_num < options_count ? string_num += 1 : string_num = 0;
                 break;
             case enter:
-                if (_string_num == exit) {
-                    _menus.pop();
-                    _menus.top().get()->draw(_string_num);
+                if (string_num == exit) {
+                    menus.pop();
+                    menus.top().get()->draw(string_num);
                 } else {
                     Menu *m = nullptr;
-                    if (_string_num == snake) { // snake settings
+                    if (string_num == snake) { // snake settings
                         m = new SettingsSnakeMenu(filename);
-                    } else if (_string_num == map) { // map settings
+                    } else if (string_num == map) { // map settings
                         m = new SettingsMapMenu(filename);
-                    } else if (_string_num == graphic) { // graphic settings
+                    } else if (string_num == graphic) { // graphic settings
                         m = new SettingsGraphicMenu(filename);
-                    } else if (_string_num == control) { // graphic settings
+                    } else if (string_num == control) { // graphic settings
                         m = new SettingsControlMenu(filename);
                     }
-                    _string_num = 0;
-                    _menus.push(std::unique_ptr<Menu>(m));
-                    _menus.top().get()->draw(_string_num);
+                    string_num = 0;
+                    menus.push(std::unique_ptr<Menu>(m));
+                    menus.top().get()->draw(string_num);
                 }
                 break;
             default:
@@ -347,7 +347,7 @@ void SettingsSnakeMenu::pure_draw() {
     std::cout << "\033[19;46HExit" << std::endl;
 }
 
-void SettingsSnakeMenu::draw(unsigned _string_num) {
+void SettingsSnakeMenu::draw(unsigned string_num) {
     ConsoleUI::off_cursor();
     ConsoleUI console;
     console.clear_full_display();
@@ -356,7 +356,7 @@ void SettingsSnakeMenu::draw(unsigned _string_num) {
     print_logo();
     pure_draw();
 
-    switch (_string_num) {
+    switch (string_num) {
         case speed:
             std::cout << "\033[17;46H\033[4mSpeed:\033[0m" << std::endl;
             break;
@@ -369,7 +369,7 @@ void SettingsSnakeMenu::draw(unsigned _string_num) {
     }
 }
 
-unsigned SettingsSnakeMenu::update(unsigned &_string_num, std::stack <std::unique_ptr<Menu>> &_menus) {
+unsigned SettingsSnakeMenu::update(unsigned &string_num, std::stack <std::unique_ptr<Menu>> &menus) {
     bool is_exit = false;
     KeyboardControl control(game_settings);
 
@@ -379,20 +379,20 @@ unsigned SettingsSnakeMenu::update(unsigned &_string_num, std::stack <std::uniqu
 
         switch (key) {
             case up:
-                _string_num > 0 ? _string_num -= 1 : _string_num = options_count;
+                string_num > 0 ? string_num -= 1 : string_num = options_count;
                 break;
             case down:
-                _string_num < options_count ? _string_num += 1 : _string_num = 0;
+                string_num < options_count ? string_num += 1 : string_num = 0;
                 break;
             case enter:
-                if (_string_num == speed) {
+                if (string_num == speed) {
                     // TODO
-                } else if (_string_num == reset_length) {
+                } else if (string_num == reset_length) {
                     // TODO
-                } else if (_string_num == exit) {
-                    _string_num = 0;
-                    _menus.pop();
-                    _menus.top().get()->draw(_string_num);
+                } else if (string_num == exit) {
+                    string_num = 0;
+                    menus.pop();
+                    menus.top().get()->draw(string_num);
                 }
                 break;
             default:
@@ -419,7 +419,7 @@ void SettingsMapMenu::pure_draw() {
     std::cout << "\033[23;46HExit" << std::endl;
 }
 
-void SettingsMapMenu::draw(unsigned _string_num) {
+void SettingsMapMenu::draw(unsigned string_num) {
     ConsoleUI::off_cursor();
     ConsoleUI console;
     console.clear_full_display();
@@ -428,7 +428,7 @@ void SettingsMapMenu::draw(unsigned _string_num) {
     print_logo();
     pure_draw();
 
-    switch (_string_num) {
+    switch (string_num) {
         case length:
             std::cout << "\033[17;46H\033[4mMap length: \033[0m" << std::endl;
             break;
@@ -453,7 +453,7 @@ void SettingsMapMenu::draw(unsigned _string_num) {
     }
 }
 
-unsigned SettingsMapMenu::update(unsigned &_string_num, std::stack <std::unique_ptr<Menu>> &_menus) {
+unsigned SettingsMapMenu::update(unsigned &string_num, std::stack <std::unique_ptr<Menu>> &menus) {
     bool is_exit = false;
     KeyboardControl control(game_settings);
 
@@ -463,28 +463,28 @@ unsigned SettingsMapMenu::update(unsigned &_string_num, std::stack <std::unique_
 
         switch (key) {
             case up:
-                _string_num > 0 ? _string_num -= 1 : _string_num = options_count;
+                string_num > 0 ? string_num -= 1 : string_num = options_count;
                 break;
             case down:
-                _string_num < options_count ? _string_num += 1 : _string_num = 0;
+                string_num < options_count ? string_num += 1 : string_num = 0;
                 break;
             case enter:
-                if (_string_num == length) {
+                if (string_num == length) {
                     // TODO
-                } else if (_string_num == width) {
+                } else if (string_num == width) {
                     // TODO
-                } else if (_string_num == solid_walls) {
+                } else if (string_num == solid_walls) {
                     // TODO
-                } else if (_string_num == bonus_apples) {
+                } else if (string_num == bonus_apples) {
                     // TODO
-                } else if (_string_num == teleports) {
+                } else if (string_num == teleports) {
                     // TODO
-                } else if (_string_num == show_score) {
+                } else if (string_num == show_score) {
                     // TODO
-                } else if (_string_num == exit) {
-                    _string_num = 0;
-                    _menus.pop();
-                    _menus.top().get()->draw(_string_num);
+                } else if (string_num == exit) {
+                    string_num = 0;
+                    menus.pop();
+                    menus.top().get()->draw(string_num);
                 }
                 break;
             default:
@@ -510,7 +510,7 @@ void SettingsControlMenu::pure_draw() {
     std::cout << "\033[23;46HExit" << std::endl;
 }
 
-void SettingsControlMenu::draw(unsigned _string_num) {
+void SettingsControlMenu::draw(unsigned string_num) {
     ConsoleUI::off_cursor();
     ConsoleUI console;
     console.clear_full_display();
@@ -519,7 +519,7 @@ void SettingsControlMenu::draw(unsigned _string_num) {
     print_logo();
     pure_draw();
 
-    switch (_string_num) {
+    switch (string_num) {
         case up:
             std::cout << "\033[17;46H\033[4mUp key: \033[0m" << std::endl;
             break;
@@ -544,7 +544,7 @@ void SettingsControlMenu::draw(unsigned _string_num) {
     }
 }
 
-unsigned SettingsControlMenu::update(unsigned &_string_num, std::stack <std::unique_ptr<Menu>> &_menus) {
+unsigned SettingsControlMenu::update(unsigned &string_num, std::stack <std::unique_ptr<Menu>> &menus) {
     bool is_exit = false;
     KeyboardControl control(game_settings);
 
@@ -554,28 +554,28 @@ unsigned SettingsControlMenu::update(unsigned &_string_num, std::stack <std::uni
 
         switch (key) {
             case Keys::up:
-                _string_num > 0 ? _string_num -= 1 : _string_num = options_count;
+                string_num > 0 ? string_num -= 1 : string_num = options_count;
                 break;
             case Keys::down:
-                _string_num < options_count ? _string_num += 1 : _string_num = 0;
+                string_num < options_count ? string_num += 1 : string_num = 0;
                 break;
             case enter:
-                if (_string_num == up) {
+                if (string_num == up) {
                     // TODO
-                } else if (_string_num == down) {
+                } else if (string_num == down) {
                     // TODO
-                } else if (_string_num == left) {
+                } else if (string_num == left) {
                     // TODO
-                } else if (_string_num == right) {
+                } else if (string_num == right) {
                     // TODO
-                } else if (_string_num == pause) {
+                } else if (string_num == pause) {
                     // TODO
-                } else if (_string_num == enter) {
+                } else if (string_num == enter) {
                     // TODO
-                } else if (_string_num == exit) {
-                    _string_num = 0;
-                    _menus.pop();
-                    _menus.top().get()->draw(_string_num);
+                } else if (string_num == exit) {
+                    string_num = 0;
+                    menus.pop();
+                    menus.top().get()->draw(string_num);
                 }
                 break;
             default:
@@ -603,7 +603,7 @@ void SettingsGraphicMenu::pure_draw() {
     std::cout << "\033[25;46HExit" << std::endl;
 }
 
-void SettingsGraphicMenu::draw(unsigned _string_num) {
+void SettingsGraphicMenu::draw(unsigned string_num) {
     ConsoleUI::off_cursor();
     ConsoleUI console;
     console.clear_full_display();
@@ -612,7 +612,7 @@ void SettingsGraphicMenu::draw(unsigned _string_num) {
     print_logo();
     pure_draw();
 
-    switch (_string_num) {
+    switch (string_num) {
         case snake:
             std::cout << "\033[17;46H\033[4mSnake color: \033[0m" << std::endl;
             break;
@@ -643,7 +643,7 @@ void SettingsGraphicMenu::draw(unsigned _string_num) {
     }
 }
 
-unsigned SettingsGraphicMenu::update(unsigned &_string_num, std::stack <std::unique_ptr<Menu>> &_menus) {
+unsigned SettingsGraphicMenu::update(unsigned &string_num, std::stack <std::unique_ptr<Menu>> &menus) {
     bool is_exit = false;
     KeyboardControl control(game_settings);
 
@@ -653,32 +653,32 @@ unsigned SettingsGraphicMenu::update(unsigned &_string_num, std::stack <std::uni
 
         switch (key) {
             case up:
-                _string_num > 0 ? _string_num -= 1 : _string_num = options_count;
+                string_num > 0 ? string_num -= 1 : string_num = options_count;
                 break;
             case down:
-                _string_num < options_count ? _string_num += 1 : _string_num = 0;
+                string_num < options_count ? string_num += 1 : string_num = 0;
                 break;
             case enter:
-                if (_string_num == snake) {
+                if (string_num == snake) {
                     // TODO
-                } else if (_string_num == empty_block) {
+                } else if (string_num == empty_block) {
                     // TODO
-                } else if (_string_num == wall) {
+                } else if (string_num == wall) {
                     // TODO
-                } else if (_string_num == teleport) {
+                } else if (string_num == teleport) {
                     // TODO
-                } else if (_string_num == bonus) {
+                } else if (string_num == bonus) {
                     // TODO
-                } else if (_string_num == anti_bonus) {
+                } else if (string_num == anti_bonus) {
                     // TODO
-                } else if (_string_num == speed_bonus) {
+                } else if (string_num == speed_bonus) {
                     // TODO
-                } else if (_string_num == anti_speed_bonus) {
+                } else if (string_num == anti_speed_bonus) {
                     // TODO
-                } else if (_string_num == exit) {
-                    _string_num = 0;
-                    _menus.pop();
-                    _menus.top().get()->draw(_string_num);
+                } else if (string_num == exit) {
+                    string_num = 0;
+                    menus.pop();
+                    menus.top().get()->draw(string_num);
                 }
                 break;
             default:
@@ -696,7 +696,7 @@ TitlesMenu::TitlesMenu(std::string file) : Menu(file) {}
 
 void TitlesMenu::pure_draw() {}
 
-void TitlesMenu::draw(unsigned _string_num) {
+void TitlesMenu::draw(unsigned string_num) {
     ConsoleUI console;
     console.clear_full_display();
     console.set_cursor(3, 1);
@@ -704,7 +704,7 @@ void TitlesMenu::draw(unsigned _string_num) {
     print_logo();
 }
 
-unsigned TitlesMenu::update(unsigned &_string_num, std::stack <std::unique_ptr<Menu>> &_menus) {
+unsigned TitlesMenu::update(unsigned &string_num, std::stack <std::unique_ptr<Menu>> &menus) {
     bool is_exit = false;
     KeyboardControl control(game_settings);
 
@@ -714,9 +714,9 @@ unsigned TitlesMenu::update(unsigned &_string_num, std::stack <std::unique_ptr<M
 
         switch (key) {
             case enter:
-                _string_num = 0;
-                _menus.pop();
-                _menus.top().get()->draw(_string_num);
+                string_num = 0;
+                menus.pop();
+                menus.top().get()->draw(string_num);
                 break;
             default:
                 is_exit = false;
@@ -775,15 +775,16 @@ void GameInformationMenu::pure_draw() {
     std::cout << "\033[0m" << "\033[26;46HPress enter fot exit" << std::endl;
 }
 
-void GameInformationMenu::draw(unsigned _string_num) {
+void GameInformationMenu::draw(unsigned string_num) {
     ConsoleUI console;
     console.clear_full_display();
     console.set_cursor(3, 1);
 
+    print_logo();
     pure_draw();
 }
 
-unsigned GameInformationMenu::update(unsigned &_string_num, std::stack <std::unique_ptr<Menu>> &_menus) {
+unsigned GameInformationMenu::update(unsigned &string_num, std::stack <std::unique_ptr<Menu>> &menus) {
     bool is_exit = false;
     KeyboardControl control(game_settings);
 
@@ -793,9 +794,9 @@ unsigned GameInformationMenu::update(unsigned &_string_num, std::stack <std::uni
 
         switch (key) {
             case enter:
-                _string_num = 0;
-                _menus.pop();
-                _menus.top().get()->draw(_string_num);
+                string_num = 0;
+                menus.pop();
+                menus.top().get()->draw(string_num);
                 break;
             default:
                 is_exit = false;
