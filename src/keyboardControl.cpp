@@ -4,6 +4,14 @@ KeyboardControl::KeyboardControl(Settings settings) : up(settings.key_up), left(
                                                       down(settings.key_down), right(settings.key_right),
                                                       pause(settings.key_pause), enter(settings.key_enter),
                                                       original_flags(fcntl(0, F_GETFL)) {
+    enable_specific_enter();
+}
+
+KeyboardControl::~KeyboardControl() {
+    disable_specific_enter();
+}
+
+void KeyboardControl::enable_specific_enter() {
     fcntl(0, F_SETFL, original_flags | O_NONBLOCK);
 
     struct termios tty;
@@ -14,7 +22,7 @@ KeyboardControl::KeyboardControl(Settings settings) : up(settings.key_up), left(
     tcsetattr(0, TCSAFLUSH, &tty);
 }
 
-KeyboardControl::~KeyboardControl() {
+void KeyboardControl::disable_specific_enter() {
     fcntl(0, F_SETFL, original_flags);
 
     tcsetattr(0, TCSAFLUSH, &savetty);
@@ -41,9 +49,9 @@ Keys KeyboardControl::read_key(Keys last_dir) {
                 case 'C':
                     ch[0] = 77; // arrow right
                     break;
+                default:
+                    return Keys::error;
             }
-        } else {
-            ch[0] = 27;
         }
     }
 
@@ -60,5 +68,5 @@ Keys KeyboardControl::read_key(Keys last_dir) {
     } else if (ch[0] == enter) {
         return Keys::enter;
     }
-    return Keys::interruption;
+    return Keys::error;
 }

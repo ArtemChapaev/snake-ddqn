@@ -24,6 +24,7 @@
 
 const unsigned kBonusesForNewLevel = 5;
 const unsigned kMovesForSpeedBonus = 15;
+const unsigned kMovesAfterControlError = 6;
 
 const unsigned kLevelPause = 1500000;
 const unsigned kMovePause = 300000;
@@ -46,6 +47,7 @@ public:
     int pause_game();
     int print_deathscreen();
     int write_to_leaderboard();
+    void print_control_error_screen();
 
 private:
     std::string filename;

@@ -19,6 +19,8 @@ public:
     Keys read_key(Keys) override;
 
 private:
+    void enable_specific_enter();
+    void disable_specific_enter();
     const char up;
     const char left;
     const char down;

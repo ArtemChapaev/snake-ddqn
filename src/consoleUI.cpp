@@ -12,8 +12,7 @@ void ConsoleUI::clear_full_display() {
     std::cout << std::flush;
 }
 
-void ConsoleUI::clear_score_line(Settings settings) {
-    unsigned j = settings.map_width + 1;
+void ConsoleUI::clear_line(unsigned j) {
     set_cursor(j, 1);
     for (unsigned i = 1; i <= comax(); ++i) {
         std::cout << ' ';

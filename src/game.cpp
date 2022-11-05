@@ -20,8 +20,8 @@ int Game::start_level(unsigned level_number) {
     bool is_exit = false;
     unsigned eaten_bonuses_number = 0;
 
-    unsigned moves_number = 0;
     unsigned moves_number_after_bonus = 0;
+    unsigned moves_number_after_error = 0;
     float speed_of_bonus = 1.0;
 
     map_model.put_snake(snake);
@@ -41,7 +41,11 @@ int Game::start_level(unsigned level_number) {
     while (!is_exit) {
         Keys last_dir = snake.get_direction();
         Keys new_key = control.read_key(last_dir);
-        if (new_key == Keys::interruption) {
+
+        if (new_key == Keys::error || new_key == Keys::enter) {
+            moves_number_after_error = 0;
+            print_control_error_screen();
+        } else if (new_key == Keys::interruption) {
             switch (pause_game()) {
                 case PauseMenu::resume_code:
                     console.clear_full_display();
@@ -51,9 +55,7 @@ int Game::start_level(unsigned level_number) {
                 case PauseMenu::exit_code:
                     return PauseMenu::exit_code;
             }
-        }
-
-        if (last_dir != new_key && control.check_direction(last_dir, new_key)) {
+        } else if (last_dir != new_key && control.check_direction(last_dir, new_key)) {
             snake.set_direction(new_key);
         }
 
@@ -149,17 +151,21 @@ int Game::start_level(unsigned level_number) {
 
         if (settings.score) {
             unsigned score = death_score;
-            console.clear_score_line(settings);
+            console.clear_line(settings.map_width + 1);
             console.set_cursor(settings.map_width + 1, settings.map_length - 5);
-            std::cout << "SCORE: " << score<< std::endl;
+            std::cout << "SCORE: " << score << std::endl;
         }
 
         if (moves_number_after_bonus == kMovesForSpeedBonus) {
             speed_of_bonus = 1.0;
         }
 
-        ++moves_number;
+        if (moves_number_after_error == kMovesAfterControlError) {
+            console.clear_line(settings.map_width + 3);
+        }
+
         ++moves_number_after_bonus;
+        ++moves_number_after_error;
 
         usleep(kMovePause / snake.get_speed_coef() / speed_of_bonus / LEVEL_SPEED(level_number));
         if (eaten_bonuses_number == kBonusesForNewLevel) {
@@ -236,8 +242,12 @@ int Game::write_to_leaderboard() {
         out_file.close();
     }
 
-    if (leaderboard.size() == 10 && std::get<1>(leaderboard[9]) < highest_score) {
-        leaderboard.pop_back();
+    if (leaderboard.size() == 10) {
+        if (std::get<1>(leaderboard[9]) < highest_score) {
+            leaderboard.pop_back();
+        } else {
+            return 0;
+        }
     }
 
     auto now = std::chrono::system_clock::now();
@@ -304,6 +314,13 @@ int Game::print_deathscreen() {
 
     console.set_cursor(settings.map_length + 1, 1);
     return 0;
+}
+
+void Game::print_control_error_screen() {
+    ConsoleUI console;
+    console.set_cursor(settings.map_width + 3, 1);
+    std::cout << "Wrong key was pressed. Please, check controls settings" << std::endl;
+    usleep(500000);
 }
 
 Game::~Game() {
