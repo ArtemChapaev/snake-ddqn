@@ -13,8 +13,12 @@ public:
     void clear_full_display();
     void clear_line(unsigned);
     void clear_game_field(Settings);
-    void set_cursor(unsigned, unsigned);
+    void underline();
+    void print_rgb(unsigned, unsigned, unsigned);
+    static void reset();
 
+    static void set_cursor(unsigned, unsigned);
+    static void highlight(unsigned);
     static void off_cursor();
     static void on_cursor();
 

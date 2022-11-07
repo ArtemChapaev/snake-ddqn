@@ -6,7 +6,7 @@
 #include "snake.h"
 
 enum Cell {
-// Тип клетки
+// Cell types
     empty,
     snake_head,
     snake,
@@ -19,7 +19,7 @@ enum Cell {
 };
 
 class MapModel {
-// Класс для отображения карты
+// Class for map data
 public:
     MapModel(Settings settings);
     ~MapModel();

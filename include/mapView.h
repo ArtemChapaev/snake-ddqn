@@ -6,7 +6,7 @@
 #include "mapModel.h"
 
 class MapView {
-// Класс, хранящий карту
+// Class for map display
 public:
     MapView(MapModel &map, Settings);
     ~MapView();

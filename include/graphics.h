@@ -9,7 +9,7 @@ const int SHADE_NUM = 4;
 const int SHADE_DIFF = 20;
 
 class Graphics {
-// Bирутальный класс графики
+// Abstract class for gaphics
 public:
     virtual void print_empty_cell() = 0;
     virtual void print_snake_cell(int) = 0;
@@ -23,7 +23,7 @@ public:
 };
 
 class ColorGraphics : public Graphics {
-// Bирутальный класс цветной графики
+// Abstract class for colored graphics
 protected:
     explicit ColorGraphics(Settings);
 
@@ -37,7 +37,7 @@ protected:
     Term::RGB speed_antibonus_color;
 };
 
-// Переопределения графики
+// Graphic overrides
 
 class SymGraphics : public Graphics {
 public:

@@ -75,3 +75,106 @@ int parser(Settings &settings, std::string &filename) {
     file.close();
     return 0;
 }
+
+void replace_setting(std::string path, std::string erase_line, unsigned new_value) {
+    std::string option;
+    std::string value;
+    std::ifstream fin;
+    
+    fin.open(path);
+    std::ofstream temp;
+    temp.open("temp.txt");
+
+    while (getline(fin, option, '=')) {
+        getline(fin, value);
+        if (option != erase_line)
+            temp << option << "=" << value << std::endl;
+    }
+
+    temp << erase_line << "=" << new_value << std::endl;
+
+    temp.close();
+    fin.close();
+
+    const char * p = path.c_str();
+    remove(p);
+    rename("temp.txt", p);
+}
+
+void replace_float_setting(std::string path, std::string erase_line, float new_value) {
+    std::string option;
+    std::string value;
+    std::ifstream fin;
+    
+    fin.open(path);
+    std::ofstream temp;
+    temp.open("temp.txt");
+
+    while (getline(fin, option, '=')) {
+        getline(fin, value);
+        if (option != erase_line)
+            temp << option << "=" << value << std::endl;
+    }
+
+    temp << erase_line << "=" << new_value << std::endl;
+
+    temp.close();
+    fin.close();
+
+    const char * p = path.c_str();
+    remove(p);
+    rename("temp.txt", p);
+}
+
+void replace_char_setting(std::string path, std::string erase_line, char new_value) {
+    std::string option;
+    std::string value;
+    std::ifstream fin;
+    
+    fin.open(path);
+    std::ofstream temp;
+    temp.open("temp.txt");
+
+    while (getline(fin, option, '=')) {
+        getline(fin, value);
+        if (option != erase_line)
+            temp << option << "=" << value << std::endl;
+    }
+
+    temp << erase_line << "=" << (int)new_value << std::endl;
+
+    temp.close();
+    fin.close();
+
+    const char * p = path.c_str();
+    remove(p);
+    rename("temp.txt", p);
+}
+
+void replace_rgb_setting(std::string path, std::string erase_line, Term::RGB new_value) {
+    std::string option;
+    std::string value;
+    std::ifstream fin;
+    
+    fin.open(path);
+    std::ofstream temp;
+    temp.open("temp.txt");
+
+    while (getline(fin, option, '=')) {
+        getline(fin, value);
+        if (option != erase_line)
+            temp << option << "=" << value << std::endl;
+    }
+    
+    temp << erase_line << "=" << static_cast<unsigned>(new_value.r)
+                       << "," << static_cast<unsigned>(new_value.g)
+                       << "," << static_cast<unsigned>(new_value.b)
+                       << std::endl;
+
+    temp.close();
+    fin.close();
+
+    const char * p = path.c_str();
+    remove(p);
+    rename("temp.txt", p);
+}

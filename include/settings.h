@@ -8,7 +8,6 @@
 #include "cpp-terminal/base.hpp"
 
 struct Settings {
-// Структура под настройки
     Settings(unsigned mL = 20, unsigned mW = 20, float sp = 1, bool sW = 0, bool sc = 1, bool bA = 1, bool te = 0,
              unsigned vM = 1, bool rL = 0, char kU = 72, char kD = 80, char kR = 77, char kL = 75, char kP = 27,
              char kE = 10,
@@ -50,5 +49,9 @@ struct Settings {
     Term::RGB speed_antibonus_color;
 };
 
-// Объявление функции парсер
 int parser(Settings &settings, std::string& filename);
+
+void replace_setting(std::string, std::string, unsigned);
+void replace_float_setting(std::string, std::string, float);
+void replace_char_setting(std::string, std::string, char);
+void replace_rgb_setting(std::string, std::string, Term::RGB);

@@ -28,6 +28,77 @@ void KeyboardControl::disable_specific_enter() {
     tcsetattr(0, TCSAFLUSH, &savetty);
 }
 
+int KeyboardControl::read_option() {
+    KeyboardControl::disable_specific_enter();
+    
+    int input;
+    std::cin >> input;
+
+    KeyboardControl::enable_specific_enter();
+    return input;
+}
+
+char KeyboardControl::read_char_option() {
+    KeyboardControl::disable_specific_enter();
+
+    char ch[1];
+    read(0, ch, 1);
+
+    if (ch[0] == 27) {
+        char ch_2[2];
+        if (read(0, ch_2, 2) == 2) {
+            KeyboardControl::enable_specific_enter();
+            switch (ch_2[1]) {
+                case 'A':
+                    return 72; // arrow up
+                case 'D':
+                    return 75; // arrow left
+                case 'B':
+                    return 80; // arrow down
+                case 'C':
+                    return 77; // arrow right
+                case 27:
+                    return 27;
+                case 10:
+                    return 10;
+            }
+        }
+    }
+
+    KeyboardControl::enable_specific_enter();
+    return ch[0];
+}
+
+float KeyboardControl::read_float_option() {
+    KeyboardControl::disable_specific_enter();
+
+    float input;
+    std::cin >> input;
+
+    KeyboardControl::enable_specific_enter();
+    return input;
+}
+
+Term::RGB KeyboardControl::read_rgb_option() {
+    KeyboardControl::disable_specific_enter();
+
+    std::string input;
+    std::string r, g, b;
+    Term::RGB color;
+
+    getline(std::cin, r, ',');
+    getline(std::cin, g, ',');
+    getline(std::cin, b);
+
+    color.r = static_cast<uint8_t>(stoi(r));
+    color.g = static_cast<uint8_t>(stoi(g));
+    color.b = static_cast<uint8_t>(stoi(b));
+
+    KeyboardControl::enable_specific_enter();
+
+    return color;
+}
+
 Keys KeyboardControl::read_key(Keys last_dir) {
     char ch[1];
     if (read(0, ch, 1) <= 0) {

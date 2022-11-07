@@ -108,6 +108,7 @@ public:
     void draw(unsigned) override;
     unsigned update(unsigned &, std::stack<std::unique_ptr<Menu>> &) override;
     void print_logo() override;
+    void eraseFileLine(std::string, std::string, unsigned);
 private:
     enum options {
         length, width, solid_walls, bonus_apples, teleports, show_score, exit
@@ -137,6 +138,7 @@ public:
     void draw(unsigned) override;
     unsigned update(unsigned &, std::stack<std::unique_ptr<Menu>> &) override;
     void print_logo() override;
+    void print_key(char);
 private:
     enum options {
         up, down, left, right, pause, enter, exit
