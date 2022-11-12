@@ -17,8 +17,9 @@ int parser(Settings &settings, std::string &filename) {
     }
 
     std::string var, map_length, map_width, speed, solid_wall, score, bonus_apples, view_mode, reset_length, key_up,
-            key_down, key_left, key_right, teleport, key_pause, key_enter, snake_color, empty_color, wall_color, teleport_color,
-            bonus_color, antibonus_color, speed_bonus_color, speed_antibonus_color;
+            key_down, key_left, key_right, key_pause, key_enter, key_teleport, key_wall, key_empty, snake_color,
+            empty_color, wall_color, teleport_color, bonus_color, antibonus_color, speed_bonus_color,
+            speed_antibonus_color;
 
     while (!file.eof()) {
 
@@ -29,7 +30,6 @@ int parser(Settings &settings, std::string &filename) {
         if (var == "solid_wall") getline(file, solid_wall);
         if (var == "score") getline(file, score);
         if (var == "bonus_apples") getline(file, bonus_apples);
-        if (var == "teleport") getline(file, teleport);
         if (var == "view_mode") getline(file, view_mode);
         if (var == "reset_length") getline(file, reset_length);
         if (var == "key_up") getline(file, key_up);
@@ -38,6 +38,9 @@ int parser(Settings &settings, std::string &filename) {
         if (var == "key_right") getline(file, key_right);
         if (var == "key_pause") getline(file, key_pause);
         if (var == "key_enter") getline(file, key_enter);
+        if (var == "key_teleport") getline(file, key_teleport);
+        if (var == "key_wall") getline(file, key_wall);
+        if (var == "key_empty") getline(file, key_empty);
         if (var == "snake_color") getline(file, snake_color);
         if (var == "empty_color") getline(file, empty_color);
         if (var == "wall_color") getline(file, wall_color);
@@ -54,7 +57,6 @@ int parser(Settings &settings, std::string &filename) {
     settings.solid_wall = stoi(solid_wall);
     settings.score = stoi(score);
     settings.bonus_apples = stoi(bonus_apples);
-    settings.teleport = stoi(teleport);
     settings.view_mode = stoi(view_mode);
     settings.reset_length = stoi(reset_length);
     settings.key_up = stoi(key_up);
@@ -63,6 +65,9 @@ int parser(Settings &settings, std::string &filename) {
     settings.key_right = stoi(key_right);
     settings.key_pause = stoi(key_pause);
     settings.key_enter = stoi(key_enter);
+    settings.key_teleport = stoi(key_teleport);
+    settings.key_wall = stoi(key_wall);
+    settings.key_empty = stoi(key_empty);
     settings.snake_color = rgb_parser(snake_color);
     settings.empty_color = rgb_parser(empty_color);
     settings.wall_color = rgb_parser(wall_color);
@@ -80,7 +85,7 @@ void replace_setting(std::string path, std::string erase_line, unsigned new_valu
     std::string option;
     std::string value;
     std::ifstream fin;
-    
+
     fin.open(path);
     std::ofstream temp;
     temp.open("temp.txt");
@@ -96,7 +101,7 @@ void replace_setting(std::string path, std::string erase_line, unsigned new_valu
     temp.close();
     fin.close();
 
-    const char * p = path.c_str();
+    const char *p = path.c_str();
     remove(p);
     rename("temp.txt", p);
 }
@@ -105,7 +110,7 @@ void replace_float_setting(std::string path, std::string erase_line, float new_v
     std::string option;
     std::string value;
     std::ifstream fin;
-    
+
     fin.open(path);
     std::ofstream temp;
     temp.open("temp.txt");
@@ -121,7 +126,7 @@ void replace_float_setting(std::string path, std::string erase_line, float new_v
     temp.close();
     fin.close();
 
-    const char * p = path.c_str();
+    const char *p = path.c_str();
     remove(p);
     rename("temp.txt", p);
 }
@@ -130,7 +135,7 @@ void replace_char_setting(std::string path, std::string erase_line, char new_val
     std::string option;
     std::string value;
     std::ifstream fin;
-    
+
     fin.open(path);
     std::ofstream temp;
     temp.open("temp.txt");
@@ -141,12 +146,12 @@ void replace_char_setting(std::string path, std::string erase_line, char new_val
             temp << option << "=" << value << std::endl;
     }
 
-    temp << erase_line << "=" << (int)new_value << std::endl;
+    temp << erase_line << "=" << (int) new_value << std::endl;
 
     temp.close();
     fin.close();
 
-    const char * p = path.c_str();
+    const char *p = path.c_str();
     remove(p);
     rename("temp.txt", p);
 }
@@ -155,7 +160,7 @@ void replace_rgb_setting(std::string path, std::string erase_line, Term::RGB new
     std::string option;
     std::string value;
     std::ifstream fin;
-    
+
     fin.open(path);
     std::ofstream temp;
     temp.open("temp.txt");
@@ -165,16 +170,24 @@ void replace_rgb_setting(std::string path, std::string erase_line, Term::RGB new
         if (option != erase_line)
             temp << option << "=" << value << std::endl;
     }
-    
+
     temp << erase_line << "=" << static_cast<unsigned>(new_value.r)
-                       << "," << static_cast<unsigned>(new_value.g)
-                       << "," << static_cast<unsigned>(new_value.b)
-                       << std::endl;
+         << "," << static_cast<unsigned>(new_value.g)
+         << "," << static_cast<unsigned>(new_value.b)
+         << std::endl;
 
     temp.close();
     fin.close();
 
-    const char * p = path.c_str();
+    const char *p = path.c_str();
     remove(p);
     rename("temp.txt", p);
+}
+
+void copy_file(std::string from, std::string to) {
+    std::ifstream src(from);
+    std::ofstream dst(to);
+    dst << src.rdbuf();
+    src.close();
+    dst.close();
 }

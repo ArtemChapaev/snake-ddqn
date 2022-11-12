@@ -14,13 +14,7 @@ const double kStandartForY = 0.6;
 const double kIndexForX = 1. / 7;
 
 enum Keys {
-    up,
-    right,
-    down,
-    left,
-    interruption,
-    enter,
-    error
+    up, right, down, left, interruption, enter, teleport, wall, empty, error
 };
 
 class Position {

@@ -17,6 +17,8 @@ public:
     ~KeyboardControl();
 
     Keys read_key(Keys) override;
+    int read_sym();
+
     int read_option();
     float read_float_option();
     char read_char_option();
@@ -24,12 +26,16 @@ public:
 private:
     void enable_specific_enter();
     void disable_specific_enter();
+
     const char up;
     const char left;
     const char down;
     const char right;
     const char pause;
     const char enter;
+    const char teleport;
+    const char wall;
+    const char empty;
     const int original_flags;
     struct termios savetty;
 };

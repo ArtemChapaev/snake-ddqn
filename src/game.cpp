@@ -11,10 +11,11 @@ int Game::start_level(unsigned level_number) {
     if (!settings.reset_length) {
         snake_length = death_score + kSnakeLength; // bcs for last level: death_score = snake.size() - SNAKE_LENGTH
     }
+
     Snake snake(settings, snake_length);
     KeyboardControl control(settings);
     ConsoleUI console;
-    MapModel map_model(settings);
+    MapModel map_model = read_map_from_file(settings);
     MapView map_view(map_model, settings);
 
     bool is_exit = false;
@@ -26,11 +27,11 @@ int Game::start_level(unsigned level_number) {
 
     map_model.put_snake(snake);
 
-    map_model.generate_bonus(bonus);
+    map_model.generate_bonus(bonus_c);
     if (settings.bonus_apples) {
-        map_model.generate_bonus(antibonus);
-        map_model.generate_bonus(speed_bonus);
-        map_model.generate_bonus(speed_antibonus);
+        map_model.generate_bonus(antibonus_c);
+        map_model.generate_bonus(speed_bonus_c);
+        map_model.generate_bonus(speed_antibonus_c);
     }
 
     console.set_cursor(1, 1);
@@ -42,7 +43,8 @@ int Game::start_level(unsigned level_number) {
         Keys last_dir = snake.get_direction();
         Keys new_key = control.read_key(last_dir);
 
-        if (new_key == Keys::error || new_key == Keys::enter) {
+        if (new_key == Keys::error || new_key == Keys::enter || new_key == Keys::teleport || new_key == Keys::wall ||
+            new_key == Keys::empty) {
             moves_number_after_error = 0;
             print_control_error_screen();
         } else if (new_key == Keys::interruption) {
@@ -61,17 +63,17 @@ int Game::start_level(unsigned level_number) {
 
         Position next_cell = snake.get_next();
         switch (map_model.check_cell(next_cell.get_y(), next_cell.get_x())) {
-            case Cell::bonus: {
+            case Cell::bonus_c: {
                 Position last_tail = snake.move();
                 snake.increase_length(last_tail);
 
                 map_model.put_snake(snake);
-                map_model.generate_bonus(bonus);
+                map_model.generate_bonus(bonus_c);
 
                 ++eaten_bonuses_number;
                 break;
             }
-            case Cell::antibonus: {
+            case Cell::antibonus_c: {
                 Position last_tail = snake.move();
                 map_model.clear_cell(last_tail);
 
@@ -79,7 +81,7 @@ int Game::start_level(unsigned level_number) {
                 map_model.clear_cell(last_tail);
 
                 map_model.put_snake(snake);
-                map_model.generate_bonus(antibonus);
+                map_model.generate_bonus(antibonus_c);
 
                 if (snake.get_snake().size() == 0) {
                     is_exit = true;
@@ -88,12 +90,12 @@ int Game::start_level(unsigned level_number) {
                 }
                 break;
             }
-            case Cell::speed_bonus: {
+            case Cell::speed_bonus_c: {
                 Position last_tail = snake.move();
                 map_model.clear_cell(last_tail);
 
                 map_model.put_snake(snake);
-                map_model.generate_bonus(speed_bonus);
+                map_model.generate_bonus(speed_bonus_c);
 
                 moves_number_after_bonus = 0;
                 speed_of_bonus = kBonusSpeedForSnake;
@@ -101,12 +103,12 @@ int Game::start_level(unsigned level_number) {
                 ++eaten_bonuses_number;
                 break;
             }
-            case Cell::speed_antibonus: {
+            case Cell::speed_antibonus_c: {
                 Position last_tail = snake.move();
                 map_model.clear_cell(last_tail);
 
                 map_model.put_snake(snake);
-                map_model.generate_bonus(speed_antibonus);
+                map_model.generate_bonus(speed_antibonus_c);
 
                 moves_number_after_bonus = 0;
                 speed_of_bonus = 1.0 / kBonusSpeedForSnake;
@@ -114,7 +116,7 @@ int Game::start_level(unsigned level_number) {
                 ++eaten_bonuses_number;
                 break;
             }
-            case Cell::snake: {
+            case Cell::snake_c: {
                 if (snake.get_tail() == next_cell) {
                     snake.move(); // without clear_cell, bcs there will be the head in this cell in next move
                     map_model.put_snake(snake);
@@ -122,18 +124,18 @@ int Game::start_level(unsigned level_number) {
                 }
                 // falls down
             }
-            case Cell::wall: {
+            case Cell::wall_c: {
                 is_exit = true;
                 break;
             }
-            case Cell::teleport: {
+            case Cell::teleport_c: {
                 Position last_tail = snake.relocate_snake(settings);
                 map_model.clear_cell(last_tail);
 
                 map_model.put_snake(snake);
                 break;
             }
-            case Cell::empty: {
+            case Cell::empty_c: {
                 Position last_tail = snake.move();
                 map_model.clear_cell(last_tail);
 

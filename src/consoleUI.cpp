@@ -52,6 +52,7 @@ void ConsoleUI::highlight(unsigned count) {
     // argument means how many spaces to highlight (0 means all the following text)
     std::string spaces(count, ' ');
     std::cout << "\033[7m" << spaces << std::flush;
+    reset();
 }
 
 void ConsoleUI::off_cursor() {

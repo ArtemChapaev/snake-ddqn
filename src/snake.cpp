@@ -134,13 +134,18 @@ Position Snake::relocate_snake(Settings settings) {
     } else {
         switch (get_direction()) {
             case up:
+                return move_in_cell(
+                        {settings.map_length - next_cell.get_x() - 1, settings.map_width - next_cell.get_y()});
             case down:
-                return move_in_cell({next_cell.get_x(), settings.map_width - next_cell.get_y()});
+                return move_in_cell(
+                        {settings.map_length - next_cell.get_x() - 1, settings.map_width - next_cell.get_y() - 2});
             case right:
+                return move_in_cell(
+                        {settings.map_length - next_cell.get_x(), settings.map_width - next_cell.get_y() - 1});
             case left:
-                return move_in_cell({settings.map_length - next_cell.get_x(), next_cell.get_y()});
+                return move_in_cell(
+                        {settings.map_length - next_cell.get_x() - 2, settings.map_width - next_cell.get_y() - 1});
         }
-
-        return 0;
+        return 0; // unreachable code
     }
 }

@@ -115,13 +115,15 @@ void EscGraphics::print_empty_cell() {
 }
 
 void EscGraphics::print_snake_cell(int snake_shade) {
-    Term::RGB color{snake_color.r, static_cast<uint8_t>(snake_color.g - SHADE_DIFF * snake_shade), snake_color.b};
+    int green_color = (snake_color.g < 99) ? snake_color.g: snake_color.g - SHADE_DIFF * snake_shade;
+    Term::RGB color{snake_color.r, static_cast<uint8_t>(green_color), snake_color.b};
     std::cout << Term::color_bg(color) << ' ';
     std::cout << Term::color_bg(color) << ' ';
 }
 
 void EscGraphics::print_snake_head_cell(int snake_shade) {
-    Term::RGB color{snake_color.r, static_cast<uint8_t>(snake_color.g - SHADE_DIFF * snake_shade), snake_color.b};
+    int green_color = (snake_color.g < 99) ? snake_color.g: snake_color.g - SHADE_DIFF * snake_shade;
+    Term::RGB color{snake_color.r, static_cast<uint8_t>(green_color), snake_color.b};
     std::cout << Term::color_bg(color) << ' ';
     std::cout << Term::color_bg(color) << ' ';
 }

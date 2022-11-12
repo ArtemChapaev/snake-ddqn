@@ -54,7 +54,7 @@ public:
     };
 private:
     enum options {
-        resume, restart, settings, information, exit
+        resume, restart, information, exit
     };
     const unsigned options_count;
 };
@@ -80,9 +80,11 @@ public:
     void draw(unsigned) override;
     unsigned update(unsigned &, std::stack<std::unique_ptr<Menu>> &) override;
     void print_logo() override;
+
+
 private:
     enum options {
-        snake, map, graphic, control, exit
+        snake, map, graphic, control, save_sets, exit
     };
     const unsigned options_count;
 };
@@ -108,10 +110,9 @@ public:
     void draw(unsigned) override;
     unsigned update(unsigned &, std::stack<std::unique_ptr<Menu>> &) override;
     void print_logo() override;
-    void eraseFileLine(std::string, std::string, unsigned);
 private:
     enum options {
-        length, width, solid_walls, bonus_apples, teleports, show_score, exit
+        length, width, solid_walls, bonus_apples, show_score, custom_map, exit
     };
     const unsigned options_count;
 };
@@ -125,8 +126,7 @@ public:
     void print_logo() override;
 private:
     enum options {
-        snake, empty_block, wall, teleport, bonus, anti_bonus, speed_bonus,
-        anti_speed_bonus, exit
+        snake, empty_block, wall, teleport, bonus, anti_bonus, speed_bonus, anti_speed_bonus, exit
     };
     const unsigned options_count;
 };
@@ -141,9 +141,37 @@ public:
     void print_key(char);
 private:
     enum options {
-        up, down, left, right, pause, enter, exit
+        up, down, left, right, pause, enter, teleport, wall, empty, exit
     };
     const unsigned options_count;
+};
+
+class SavedSettingsMenu : public Menu {
+public:
+    explicit SavedSettingsMenu(std::string);
+    void pure_draw() override;
+    void draw(unsigned) override;
+    unsigned update(unsigned &, std::stack<std::unique_ptr<Menu>> &) override;
+    void print_logo() override;
+private:
+    enum options {
+        save1, save2, save3, read1, read2, read3, exit
+    };
+    const unsigned options_count;
+};
+
+class CustomMapSettingsMenu : public Menu {
+public:
+    explicit CustomMapSettingsMenu(std::string);
+    void pure_draw() override;
+    void draw(unsigned) override;
+    unsigned update(unsigned &, std::stack<std::unique_ptr<Menu>> &) override;
+    void print_logo() override;
+private:
+    MapModel map_model;
+    MapView map_view;
+    unsigned i;
+    unsigned j;
 };
 
 class TitlesMenu : public Menu {

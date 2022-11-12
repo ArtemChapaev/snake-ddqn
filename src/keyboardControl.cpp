@@ -3,7 +3,8 @@
 KeyboardControl::KeyboardControl(Settings settings) : up(settings.key_up), left(settings.key_left),
                                                       down(settings.key_down), right(settings.key_right),
                                                       pause(settings.key_pause), enter(settings.key_enter),
-                                                      original_flags(fcntl(0, F_GETFL)) {
+                                                      teleport(settings.key_teleport), wall(settings.key_wall),
+                                                      empty(settings.key_empty), original_flags(fcntl(0, F_GETFL)) {
     enable_specific_enter();
 }
 
@@ -28,9 +29,37 @@ void KeyboardControl::disable_specific_enter() {
     tcsetattr(0, TCSAFLUSH, &savetty);
 }
 
+Keys KeyboardControl::read_key(Keys last_dir) {
+    int ch = read_sym();
+
+    if (ch == 0) {
+        return last_dir;
+    } else if (ch == up) {
+        return Keys::up;
+    } else if (ch == right) {
+        return Keys::right;
+    } else if (ch == down) {
+        return Keys::down;
+    } else if (ch == left) {
+        return Keys::left;
+    } else if (ch == pause) {
+        return Keys::interruption;
+    } else if (ch == enter) {
+        return Keys::enter;
+    } else if (ch == teleport) {
+        return Keys::teleport;
+    } else if (ch == wall) {
+        return Keys::wall;
+    } else if (ch == empty) {
+        return Keys::empty;
+    } else {
+        return Keys::error;
+    }
+}
+
 int KeyboardControl::read_option() {
     KeyboardControl::disable_specific_enter();
-    
+
     int input;
     std::cin >> input;
 
@@ -41,32 +70,14 @@ int KeyboardControl::read_option() {
 char KeyboardControl::read_char_option() {
     KeyboardControl::disable_specific_enter();
 
-    char ch[1];
-    read(0, ch, 1);
-
-    if (ch[0] == 27) {
-        char ch_2[2];
-        if (read(0, ch_2, 2) == 2) {
-            KeyboardControl::enable_specific_enter();
-            switch (ch_2[1]) {
-                case 'A':
-                    return 72; // arrow up
-                case 'D':
-                    return 75; // arrow left
-                case 'B':
-                    return 80; // arrow down
-                case 'C':
-                    return 77; // arrow right
-                case 27:
-                    return 27;
-                case 10:
-                    return 10;
-            }
-        }
-    }
-
+    int ch = read_sym();
     KeyboardControl::enable_specific_enter();
-    return ch[0];
+
+    if (ch == -2) {
+        return 27;
+    } else {
+        return ch;
+    }
 }
 
 float KeyboardControl::read_float_option() {
@@ -99,45 +110,28 @@ Term::RGB KeyboardControl::read_rgb_option() {
     return color;
 }
 
-Keys KeyboardControl::read_key(Keys last_dir) {
-    char ch[1];
-    if (read(0, ch, 1) <= 0) {
-        return last_dir;
-    } else if (ch[0] == 27) {
-        char ch_2[2];
+int KeyboardControl::read_sym() {
+    char ch[1] = "";
+    if (read(0, ch, 1) == 0) {
+        return 0;
+    }
 
+    if (ch[0] == 27) {
+        char ch_2[2];
         if (read(0, ch_2, 2) == 2) {
             switch (ch_2[1]) {
                 case 'A':
-                    ch[0] = 72; // arrow up
-                    break;
+                    return 72; // arrow up
                 case 'D':
-                    ch[0] = 75; // arrow left
-                    break;
+                    return 75; // arrow left
                 case 'B':
-                    ch[0] = 80; // arrow down
-                    break;
+                    return 80; // arrow down
                 case 'C':
-                    ch[0] = 77; // arrow right
-                    break;
+                    return 77; // arrow right
                 default:
-                    return Keys::error;
+                    return -2; // error
             }
         }
     }
-
-    if (ch[0] == up) {
-        return Keys::up;
-    } else if (ch[0] == right) {
-        return Keys::right;
-    } else if (ch[0] == down) {
-        return Keys::down;
-    } else if (ch[0] == left) {
-        return Keys::left;
-    } else if (ch[0] == pause) {
-        return Keys::interruption;
-    } else if (ch[0] == enter) {
-        return Keys::enter;
-    }
-    return Keys::error;
+    return ch[0];
 }
