@@ -64,7 +64,8 @@ int KeyboardControl::read_option() {
     std::cin >> input;
 
     KeyboardControl::enable_specific_enter();
-    return input;
+
+    return abs(input);
 }
 
 char KeyboardControl::read_char_option() {
@@ -87,7 +88,7 @@ float KeyboardControl::read_float_option() {
     std::cin >> input;
 
     KeyboardControl::enable_specific_enter();
-    return input;
+    return abs(input);
 }
 
 Term::RGB KeyboardControl::read_rgb_option() {

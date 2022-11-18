@@ -297,21 +297,21 @@ int Game::print_deathscreen() {
         }
     }
 
-    console.set_cursor(settings.map_length / 2 - 1, settings.map_width / 2);
+    console.set_cursor(settings.map_length / 2 - 1, settings.map_width - kPlaytimeStringLength / 2);
     std::cout << "Play time: " << game_time - pause_time << " seconds" << std::endl;
 
     if (settings.bonus_apples) {
-        console.set_cursor(settings.map_length / 2, settings.map_width / 2);
+        console.set_cursor(settings.map_length / 2, settings.map_width - kHighscoreStringLength / 2);
         std::cout << "Highest score: " << highest_score << std::endl;
 
-        console.set_cursor(settings.map_length / 2 + 1, settings.map_width / 2);
+        console.set_cursor(settings.map_length / 2 + 1, settings.map_width - kFinalscoreStringLength / 2 - 1);
         std::cout << "Final score: " << death_score << std::endl;
 
         console.set_cursor(settings.map_length + 1, 1);
         return 0;
     }
 
-    console.set_cursor(settings.map_length / 2, settings.map_width / 2);
+    console.set_cursor(settings.map_length / 2, settings.map_width - kFinalscoreStringLength / 2 - 1);
     std::cout << "Final score: " << death_score << std::endl;
 
     console.set_cursor(settings.map_length + 1, 1);

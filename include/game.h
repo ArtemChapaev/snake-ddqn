@@ -32,6 +32,10 @@ const unsigned kGamePause = 1000000;
 
 const double kBonusSpeedForSnake = 1.5;
 
+const unsigned kPlaytimeStringLength = 20;
+const unsigned kHighscoreStringLength = 16;
+const unsigned kFinalscoreStringLength = 13;
+
 const std::string kWinString = "LEVEL UP!";
 const std::string kLeaderboardFile = "leaderboard.txt";
 
