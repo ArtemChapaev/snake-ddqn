@@ -9,7 +9,7 @@
 #include "cpp-terminal/base.hpp"
 
 struct Settings {
-    Settings(unsigned mL = 20, unsigned mW = 20, float sp = 1, bool sW = 0, bool sc = 1, bool bA = 1, unsigned vM = 1,
+    Settings(unsigned mL = 20, unsigned mW = 20, float sp = 1, bool sW = 0, bool sc = 1, bool bA = 1, unsigned vM = 2,
              bool rL = 0, char kU = 72, char kD = 80, char kR = 77, char kL = 75, char kP = 27, char kEn = 10,
              char kT = 116, char kW = 119, char kEm = 101,
 

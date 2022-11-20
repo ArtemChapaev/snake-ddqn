@@ -5,7 +5,7 @@
 
 int main(int argc, char **argv) {
     bool random_apples = true;
-    std::string filename = "../settings.txt";
+    std::string filename = "settings.txt";
 
     if (argc == 2 && !strcmp(argv[1], "-a")) {
         random_apples = false;

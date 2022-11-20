@@ -13,10 +13,9 @@ In development process, following were used: MVC pattern, OOP principles (encaps
 
 ````
 git clone --recurse-submodules https://github.com/ArtemChapaev/Snake
-cd snake
+cd Snake
 bash setup.sh
-cd build
-./snake
+build/snake
 ````
 
 ## Configuration

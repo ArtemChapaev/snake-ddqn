@@ -126,7 +126,7 @@ public:
     void print_logo() override;
 private:
     enum options {
-        snake, empty_block, wall, teleport, bonus, anti_bonus, speed_bonus, anti_speed_bonus, exit
+        mode, snake, empty_block, wall, teleport, bonus, anti_bonus, speed_bonus, anti_speed_bonus, exit
     };
     const unsigned options_count;
 };

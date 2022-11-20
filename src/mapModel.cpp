@@ -73,7 +73,7 @@ void MapModel::set_cell(unsigned y, unsigned x, Cell cell) {
 
 MapModel read_map_from_file(Settings settings) {
     MapModel map(settings);
-    std::ifstream file("../map.txt");
+    std::ifstream file("map.txt");
     char sym;
 
     for (unsigned j = map.get_width() - 2; j >= 1; j--) {
@@ -95,7 +95,7 @@ MapModel read_map_from_file(Settings settings) {
 }
 
 void write_map_to_file(MapModel &map) {
-    std::ofstream file("../map.txt");
+    std::ofstream file("map.txt");
     for (unsigned j = map.get_width() - 2; j >= 1; j--) {
         for (unsigned i = 1; i < map.get_length() - 1; i++) {
 
