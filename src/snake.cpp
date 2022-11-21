@@ -1,4 +1,5 @@
 #include "snake.h"
+#include "mapModel.h"
 
 Position::Position(unsigned x, unsigned y) : x(x), y(y) {}
 

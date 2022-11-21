@@ -5,7 +5,6 @@
 #include <string>
 
 #include "settings.h"
-#include "mapModel.h"
 
 const unsigned kSnakeLength = 5;
 
@@ -33,6 +32,8 @@ private:
     unsigned x;
     unsigned y;
 };
+
+class MapModel;
 
 class Snake {
     /// Class that implements one of the main entities - a snake
