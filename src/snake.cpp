@@ -121,10 +121,14 @@ Position Snake::decrease_length() {
     return tail;
 }
 
-Position Snake::relocate_snake(Settings settings) {
+Position Snake::relocate_snake(Settings settings, MapModel map) {
     Position next_cell = get_next();
+    unsigned x = 0;
+    unsigned y = 0;
     if (next_cell.get_x() == 0) {
-        return move_in_cell({settings.map_length - 2, next_cell.get_y()});
+        x = settings.map_length - 2;
+        y = next_cell.get_y();
+        return move_in_cell({x, y});
     } else if (next_cell.get_x() == settings.map_length - 1) {
         return move_in_cell({1, next_cell.get_y()});
     } else if (next_cell.get_y() == 0) {

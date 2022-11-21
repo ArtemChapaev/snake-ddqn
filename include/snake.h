@@ -5,6 +5,7 @@
 #include <string>
 
 #include "settings.h"
+#include "mapModel.h"
 
 const unsigned kSnakeLength = 5;
 
@@ -50,7 +51,7 @@ public:
     Position move();
     int increase_length(Position);
     Position decrease_length();
-    Position relocate_snake(Settings);
+    Position relocate_snake(Settings, MapModel);
 
 private:
     std::list<Position> snake;

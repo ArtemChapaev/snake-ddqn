@@ -8,8 +8,8 @@ add_subdirectory(cpp-terminal)
 include_directories(include)
 
 add_executable(snake /
-        src/snake.cpp /
         src/mapModel.cpp /
+        src/snake.cpp /
         src/control.cpp /
         src/keyboardControl.cpp /
         src/mapView.cpp /

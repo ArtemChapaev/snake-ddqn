@@ -129,7 +129,7 @@ int Game::start_level(unsigned level_number) {
                 break;
             }
             case Cell::teleport_c: {
-                Position last_tail = snake.relocate_snake(settings);
+                Position last_tail = snake.relocate_snake(settings, map_model);
                 map_model.clear_cell(last_tail);
 
                 map_model.put_snake(snake);
