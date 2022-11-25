@@ -23,6 +23,8 @@ public:
     unsigned get_width();
     unsigned get_length();
 private:
+    bool validate_teleports(unsigned, unsigned);
+
     Cell **field;
     const unsigned length;
     const unsigned width;

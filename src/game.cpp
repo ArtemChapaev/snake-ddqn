@@ -9,7 +9,7 @@ int Game::start_level(unsigned level_number) {
 
     unsigned snake_length = kSnakeLength;
     if (!settings.reset_length) {
-        snake_length = death_score + kSnakeLength; // bcs for last level: death_score = snake.size() - SNAKE_LENGTH
+        snake_length = death_score + kSnakeLength; // bcs for last level: death_score = snake.size() - kSnakeLength
     }
 
     Snake snake(settings, snake_length);
@@ -19,7 +19,6 @@ int Game::start_level(unsigned level_number) {
     MapView map_view(map_model, settings);
 
     bool is_exit = false;
-    unsigned eaten_bonuses_number = 0;
 
     unsigned moves_number_after_bonus = 0;
     unsigned moves_number_after_error = 0;
@@ -69,8 +68,6 @@ int Game::start_level(unsigned level_number) {
 
                 map_model.put_snake(snake);
                 map_model.generate_bonus(bonus_c);
-
-                ++eaten_bonuses_number;
                 break;
             }
             case Cell::antibonus_c: {
@@ -85,8 +82,6 @@ int Game::start_level(unsigned level_number) {
 
                 if (snake.get_snake().size() == 0) {
                     is_exit = true;
-                } else {
-                    ++eaten_bonuses_number; // if game over with len = 0, the level is not passed
                 }
                 break;
             }
@@ -99,8 +94,6 @@ int Game::start_level(unsigned level_number) {
 
                 moves_number_after_bonus = 0;
                 speed_of_bonus = kBonusSpeedForSnake;
-
-                ++eaten_bonuses_number;
                 break;
             }
             case Cell::speed_antibonus_c: {
@@ -112,8 +105,6 @@ int Game::start_level(unsigned level_number) {
 
                 moves_number_after_bonus = 0;
                 speed_of_bonus = 1.0 / kBonusSpeedForSnake;
-
-                ++eaten_bonuses_number;
                 break;
             }
             case Cell::snake_c: {
@@ -162,15 +153,16 @@ int Game::start_level(unsigned level_number) {
             speed_of_bonus = 1.0;
         }
 
-        if (moves_number_after_error == kMovesAfterControlError) {
+        if (moves_number_after_error == kMovesAfterControlError) { // if enough moves passed after control error
             console.clear_line(settings.map_width + 3);
         }
 
         ++moves_number_after_bonus;
         ++moves_number_after_error;
 
-        usleep(kMovePause / snake.get_speed_coef() / speed_of_bonus / LEVEL_SPEED(level_number));
-        if (eaten_bonuses_number == kBonusesForNewLevel) {
+        usleep(kMovePause / snake.get_speed_coef() / speed_of_bonus / LEVEL_SPEED(level_number - 1));
+
+        if (death_score == kBonusesForNewLevel * level_number) {
             console.clear_full_display();
             map_view.print_walls();
             console.set_cursor(settings.map_length / 2, settings.map_width - kWinString.size() / 2);
@@ -210,12 +202,13 @@ int Game::pause_game() {
 int Game::start_game(bool random_apples) {
     auto start_time = std::chrono::high_resolution_clock::now();
     int level_exit_code = 0;
-    unsigned level_number = 0;
+    unsigned level_number = 1;
 
     random_apples ? srand(time(0)) : srand(1);
 
     while (level_exit_code == 0) {
         level_exit_code = start_level(level_number);
+        ++level_number;
         usleep(kLevelPause);
     }
 

@@ -44,7 +44,7 @@ void MapModel::generate_bonus(Cell bonus) {
     while (!bonus_created) {
         unsigned x = rand() % (length - 2) + 1; // to have fewer iterations of the loop
         unsigned y = rand() % (width - 2) + 1;
-        if (check_cell(y, x) == empty_c) {
+        if (check_cell(y, x) == empty_c && validate_teleports(y, x)) {
             field[y][x] = bonus;
             bonus_created = true;
         }
@@ -69,6 +69,15 @@ Cell MapModel::check_cell(unsigned y, unsigned x) {
 
 void MapModel::set_cell(unsigned y, unsigned x, Cell cell) {
     field[y][x] = cell;
+}
+
+bool MapModel::validate_teleports(unsigned y, unsigned x) {
+    if (field[y + 1][x - 1] == teleport_c || field[y + 1][x] == teleport_c || field[y + 1][x + 1] == teleport_c ||
+        field[y][x - 1] == teleport_c || field[y][x + 1] == teleport_c ||
+        field[y - 1][x - 1] == teleport_c || field[y - 1][x] == teleport_c || field[y - 1][x + 1] == teleport_c) {
+        return false;
+    }
+    return true;
 }
 
 MapModel read_map_from_file(Settings settings) {

@@ -22,6 +22,8 @@ public:
     virtual unsigned update(unsigned &, std::stack<std::unique_ptr<Menu>> &) = 0; // handles clicks
     virtual void print_logo() = 0;
 protected:
+    void print_cell_info(unsigned); // draws info from conveyed string
+
     std::string filename;
     Settings game_settings;
 };

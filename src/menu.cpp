@@ -5,6 +5,69 @@ Menu::Menu(std::string file) : filename(file) {
     parser(game_settings, filename);
 }
 
+void Menu::print_cell_info(unsigned y) {
+    ConsoleUI console;
+
+    console.set_cursor(y++, 46);
+    std::cout << "Snake color: ";
+    console.print_rgb(game_settings.snake_color.r,
+                      game_settings.snake_color.g,
+                      game_settings.snake_color.b);
+    console.reset();
+
+    console.set_cursor(y++, 46);
+    std::cout << "Empty block color: ";
+    console.print_rgb(game_settings.empty_color.r,
+                      game_settings.empty_color.g,
+                      game_settings.empty_color.b);
+    console.reset();
+
+    console.set_cursor(y++, 46);
+    std::cout << "Wall color: ";
+    console.print_rgb(game_settings.wall_color.r,
+                      game_settings.wall_color.g,
+                      game_settings.wall_color.b);
+    console.reset();
+
+    console.set_cursor(y++, 46);
+    std::cout << "Teleport color: ";
+    console.print_rgb(game_settings.teleport_color.r,
+                      game_settings.teleport_color.g,
+                      game_settings.teleport_color.b);
+    console.reset();
+
+    console.set_cursor(y++, 46);
+    std::cout << "Bonus color: ";
+    console.print_rgb(game_settings.bonus_color.r,
+                      game_settings.bonus_color.g,
+                      game_settings.bonus_color.b);
+    console.reset();
+
+    console.set_cursor(y++, 46);
+    std::cout << "Antibonus color: ";
+    console.print_rgb(game_settings.antibonus_color.r,
+                      game_settings.antibonus_color.g,
+                      game_settings.antibonus_color.b);
+    console.reset();
+
+    console.set_cursor(y++, 46);
+    std::cout << "Speed bonus color: ";
+    console.print_rgb(game_settings.speed_bonus_color.r,
+                      game_settings.speed_bonus_color.g,
+                      game_settings.speed_bonus_color.b);
+    console.reset();
+
+    console.set_cursor(y++, 46);
+    std::cout << "Speed antibonus color: ";
+    console.print_rgb(game_settings.speed_antibonus_color.r,
+                      game_settings.speed_antibonus_color.g,
+                      game_settings.speed_antibonus_color.b);
+    console.reset();
+
+    console.set_cursor(y+1, 46);
+    std::cout << "Exit" << std::endl;
+}
+
 MainMenu::MainMenu(std::string file, bool random_apples) : Menu(file), options_count(exit),
                                                            random_apples(random_apples) {}
 
@@ -929,64 +992,7 @@ void SettingsGraphicMenu::pure_draw() {
     console.set_cursor(19, 46);
     std::cout << "Mode 2 colors: ";
 
-    console.set_cursor(20, 46);
-    std::cout << "Snake color: ";
-    console.print_rgb(game_settings.snake_color.r,
-                      game_settings.snake_color.g,
-                      game_settings.snake_color.b);
-    console.reset();
-
-    console.set_cursor(21, 46);
-    std::cout << "Empty block color: ";
-    console.print_rgb(game_settings.empty_color.r,
-                      game_settings.empty_color.g,
-                      game_settings.empty_color.b);
-    console.reset();
-
-    console.set_cursor(22, 46);
-    std::cout << "Wall color: ";
-    console.print_rgb(game_settings.wall_color.r,
-                      game_settings.wall_color.g,
-                      game_settings.wall_color.b);
-    console.reset();
-
-    console.set_cursor(23, 46);
-    std::cout << "Teleport color: ";
-    console.print_rgb(game_settings.teleport_color.r,
-                      game_settings.teleport_color.g,
-                      game_settings.teleport_color.b);
-    console.reset();
-
-    console.set_cursor(24, 46);
-    std::cout << "Bonus color: ";
-    console.print_rgb(game_settings.bonus_color.r,
-                      game_settings.bonus_color.g,
-                      game_settings.bonus_color.b);
-    console.reset();
-
-    console.set_cursor(25, 46);
-    std::cout << "Antibonus color: ";
-    console.print_rgb(game_settings.antibonus_color.r,
-                      game_settings.antibonus_color.g,
-                      game_settings.antibonus_color.b);
-    console.reset();
-
-    console.set_cursor(26, 46);
-    std::cout << "Speed bonus color: ";
-    console.print_rgb(game_settings.speed_bonus_color.r,
-                      game_settings.speed_bonus_color.g,
-                      game_settings.speed_bonus_color.b);
-    console.reset();
-
-    console.set_cursor(27, 46);
-    std::cout << "Speed antibonus color: ";
-    console.print_rgb(game_settings.speed_antibonus_color.r,
-                      game_settings.speed_antibonus_color.g,
-                      game_settings.speed_antibonus_color.b);
-    console.reset();
-
-    console.set_cursor(29, 46);
-    std::cout << "Exit" << std::endl;
+    print_cell_info(20);
 }
 
 void SettingsGraphicMenu::draw(unsigned string_num) {
@@ -1444,66 +1450,7 @@ unsigned TitlesMenu::update(unsigned &string_num, std::stack <std::unique_ptr<Me
 GameInformationMenu::GameInformationMenu(std::string file) : Menu(file) {}
 
 void GameInformationMenu::pure_draw() {
-    ConsoleUI console;
-
-    console.set_cursor(17, 46);
-    std::cout << "Snake color: ";
-    console.print_rgb(game_settings.snake_color.r,
-                      game_settings.snake_color.g,
-                      game_settings.snake_color.b);
-    console.reset();
-
-    console.set_cursor(18, 46);
-    std::cout << "Empty block color: ";
-    console.print_rgb(game_settings.empty_color.r,
-                      game_settings.empty_color.g,
-                      game_settings.empty_color.b);
-    console.reset();
-
-    console.set_cursor(19, 46);
-    std::cout << "Wall color: ";
-    console.print_rgb(game_settings.wall_color.r,
-                      game_settings.wall_color.g,
-                      game_settings.wall_color.b);
-    console.reset();
-
-    console.set_cursor(20, 46);
-    std::cout << "Teleport color: ";
-    console.print_rgb(game_settings.teleport_color.r,
-                      game_settings.teleport_color.g,
-                      game_settings.teleport_color.b);
-    console.reset();
-
-    console.set_cursor(21, 46);
-    std::cout << "Bonus color: ";
-    console.print_rgb(game_settings.bonus_color.r,
-                      game_settings.bonus_color.g,
-                      game_settings.bonus_color.b);
-    console.reset();
-
-    console.set_cursor(22, 46);
-    std::cout << "Antibonus color: ";
-    console.print_rgb(game_settings.antibonus_color.r,
-                      game_settings.antibonus_color.g,
-                      game_settings.antibonus_color.b);
-    console.reset();
-
-    console.set_cursor(23, 46);
-    std::cout << "Speed bonus color: ";
-    console.print_rgb(game_settings.speed_bonus_color.r,
-                      game_settings.speed_bonus_color.g,
-                      game_settings.speed_bonus_color.b);
-    console.reset();
-
-    console.set_cursor(24, 46);
-    std::cout << "Speed antibonus color: ";
-    console.print_rgb(game_settings.speed_antibonus_color.r,
-                      game_settings.speed_antibonus_color.g,
-                      game_settings.speed_antibonus_color.b);
-    console.reset();
-
-    console.set_cursor(26, 46);
-    std::cout << "Press enter fot exit" << std::endl;
+    print_cell_info(17);
 }
 
 void GameInformationMenu::draw(unsigned string_num) {
