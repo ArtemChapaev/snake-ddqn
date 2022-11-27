@@ -5,15 +5,12 @@
 
 #include "settings.h"
 
-const int SHADE_NUM = 4;
-const int SHADE_DIFF = 20;
-
 class Graphics {
 // Abstract class for gaphics
 public:
     virtual void print_empty_cell() = 0;
-    virtual void print_snake_cell(int) = 0;
-    virtual void print_snake_head_cell(int) = 0;
+    virtual void print_snake_cell() = 0;
+    virtual void print_snake_head_cell() = 0;
     virtual void print_wall_cell() = 0;
     virtual void print_teleport_cell() = 0;
     virtual void print_bonus_cell() = 0;
@@ -27,23 +24,43 @@ class ColorGraphics : public Graphics {
 protected:
     explicit ColorGraphics(Settings);
 
-    Term::RGB snake_color;
-    Term::RGB empty_color;
-    Term::RGB wall_color;
-    Term::RGB teleport_color;
-    Term::RGB bonus_color;
-    Term::RGB antibonus_color;
-    Term::RGB speed_bonus_color;
-    Term::RGB speed_antibonus_color;
+    Term::Color4 snake_color;
+    Term::Color4 empty_color;
+    Term::Color4 wall_color;
+    Term::Color4 teleport_color;
+    Term::Color4 bonus_color;
+    Term::Color4 antibonus_color;
+    Term::Color4 speed_bonus_color;
+    Term::Color4 speed_antibonus_color;
 };
+
+// All values of Term::Color4 and theirs unsigned int expressions
+// BLACK = 0
+// RED = 1
+// GREEN = 2
+// YELLOW = 3
+// BLUE = 4
+// MAGENTA = 5
+// CYAN = 6
+// WHITE = 7
+// GRAY = 60
+// RED_BRIGHT = 61
+// GREEN_BRIGHT = 62
+// YELLOW_BRIGHT = 63
+// BLUE_BRIGHT = 64
+// MAGENTA_BRIGHT = 65
+// CYAN_BRIGHT = 66
+// WHITE_BRIGHT = 6
+// DEFAULT = 9
+
 
 // Graphic overrides
 
 class SymGraphics : public Graphics {
 public:
     void print_empty_cell() override;
-    void print_snake_cell(int) override;
-    void print_snake_head_cell(int) override;
+    void print_snake_cell() override;
+    void print_snake_head_cell() override;
     void print_wall_cell() override;
     void print_teleport_cell() override;
     void print_bonus_cell() override;
@@ -56,8 +73,8 @@ class EscSymGraphics : public ColorGraphics {
 public:
     explicit EscSymGraphics(Settings);
     void print_empty_cell() override;
-    void print_snake_cell(int) override;
-    void print_snake_head_cell(int) override;
+    void print_snake_cell() override;
+    void print_snake_head_cell() override;
     void print_wall_cell() override;
     void print_teleport_cell() override;
     void print_bonus_cell() override;
@@ -70,8 +87,8 @@ class EscGraphics : public ColorGraphics {
 public:
     explicit EscGraphics(Settings);
     void print_empty_cell() override;
-    void print_snake_cell(int) override;
-    void print_snake_head_cell(int) override;
+    void print_snake_cell() override;
+    void print_snake_head_cell() override;
     void print_wall_cell() override;
     void print_teleport_cell() override;
     void print_bonus_cell() override;

@@ -1,15 +1,5 @@
 #include "settings.h"
 
-Term::RGB rgb_parser(std::string &string) {
-    std::istringstream input(string);
-    std::string r, g, b;
-    getline(input, r, ',');
-    getline(input, g, ',');
-    getline(input, b, ',');
-
-    return {static_cast<uint8_t>(stoi(r)), static_cast<uint8_t>(stoi(g)), static_cast<uint8_t>(stoi(b))};
-}
-
 int parser(Settings &settings, std::string &filename) {
     std::ifstream file(filename);
     if (!file.is_open()) {
@@ -68,14 +58,14 @@ int parser(Settings &settings, std::string &filename) {
     settings.key_teleport = stoi(key_teleport);
     settings.key_wall = stoi(key_wall);
     settings.key_empty = stoi(key_empty);
-    settings.snake_color = rgb_parser(snake_color);
-    settings.empty_color = rgb_parser(empty_color);
-    settings.wall_color = rgb_parser(wall_color);
-    settings.teleport_color = rgb_parser(teleport_color);
-    settings.bonus_color = rgb_parser(bonus_color);
-    settings.antibonus_color = rgb_parser(antibonus_color);
-    settings.speed_bonus_color = rgb_parser(speed_bonus_color);
-    settings.speed_antibonus_color = rgb_parser(speed_antibonus_color);
+    settings.snake_color = Term::Color4(stoi(snake_color));
+    settings.empty_color = Term::Color4(stoi(empty_color));
+    settings.wall_color = Term::Color4(stoi(wall_color));
+    settings.teleport_color = Term::Color4(stoi(teleport_color));
+    settings.bonus_color = Term::Color4(stoi(bonus_color));
+    settings.antibonus_color = Term::Color4(stoi(antibonus_color));
+    settings.speed_bonus_color = Term::Color4(stoi(speed_bonus_color));
+    settings.speed_antibonus_color = Term::Color4(stoi(speed_antibonus_color));
 
     file.close();
     return 0;
@@ -147,34 +137,6 @@ void replace_char_setting(std::string path, std::string erase_line, char new_val
     }
 
     temp << erase_line << "=" << (int) new_value << std::endl;
-
-    temp.close();
-    fin.close();
-
-    const char *p = path.c_str();
-    remove(p);
-    rename("temp.txt", p);
-}
-
-void replace_rgb_setting(std::string path, std::string erase_line, Term::RGB new_value) {
-    std::string option;
-    std::string value;
-    std::ifstream fin;
-
-    fin.open(path);
-    std::ofstream temp;
-    temp.open("temp.txt");
-
-    while (getline(fin, option, '=')) {
-        getline(fin, value);
-        if (option != erase_line)
-            temp << option << "=" << value << std::endl;
-    }
-
-    temp << erase_line << "=" << static_cast<unsigned>(new_value.r)
-         << "," << static_cast<unsigned>(new_value.g)
-         << "," << static_cast<unsigned>(new_value.b)
-         << std::endl;
 
     temp.close();
     fin.close();

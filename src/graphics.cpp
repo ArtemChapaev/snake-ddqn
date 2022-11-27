@@ -14,12 +14,12 @@ void SymGraphics::print_empty_cell() {
     std::cout << ' ';
 }
 
-void SymGraphics::print_snake_cell(int snake_shade) {
+void SymGraphics::print_snake_cell() {
     std::cout << 'o';
     std::cout << ' ';
 }
 
-void SymGraphics::print_snake_head_cell(int snake_shade) {
+void SymGraphics::print_snake_head_cell() {
     std::cout << 'O';
     std::cout << ' ';
 }
@@ -63,15 +63,13 @@ void EscSymGraphics::print_empty_cell() {
     std::cout << Term::color_fg(empty_color) << ' ';
 }
 
-void EscSymGraphics::print_snake_cell(int snake_shade) {
-    Term::RGB color{snake_color.r, static_cast<uint8_t>(snake_color.g - SHADE_DIFF * snake_shade), snake_color.b};
-    std::cout << Term::color_fg(color) << 'o';
+void EscSymGraphics::print_snake_cell() {
+    std::cout << Term::color_fg(snake_color) << 'o';
     std::cout << Term::color_fg(empty_color) << ' ';
 }
 
-void EscSymGraphics::print_snake_head_cell(int snake_shade) {
-    Term::RGB color{snake_color.r, static_cast<uint8_t>(snake_color.g - SHADE_DIFF * snake_shade), snake_color.b};
-    std::cout << Term::color_fg(color) << 'O';
+void EscSymGraphics::print_snake_head_cell() {
+    std::cout << Term::color_fg(snake_color) << 'O';
     std::cout << Term::color_fg(empty_color) << ' ';
 }
 
@@ -114,18 +112,14 @@ void EscGraphics::print_empty_cell() {
     std::cout << Term::color_bg(empty_color) << ' ';
 }
 
-void EscGraphics::print_snake_cell(int snake_shade) {
-    int green_color = (snake_color.g < 99) ? snake_color.g: snake_color.g - SHADE_DIFF * snake_shade;
-    Term::RGB color{snake_color.r, static_cast<uint8_t>(green_color), snake_color.b};
-    std::cout << Term::color_bg(color) << ' ';
-    std::cout << Term::color_bg(color) << ' ';
+void EscGraphics::print_snake_cell() {
+    std::cout << Term::color_bg(snake_color) << ' ';
+    std::cout << Term::color_bg(snake_color) << ' ';
 }
 
-void EscGraphics::print_snake_head_cell(int snake_shade) {
-    int green_color = (snake_color.g < 99) ? snake_color.g: snake_color.g - SHADE_DIFF * snake_shade;
-    Term::RGB color{snake_color.r, static_cast<uint8_t>(green_color), snake_color.b};
-    std::cout << Term::color_bg(color) << ' ';
-    std::cout << Term::color_bg(color) << ' ';
+void EscGraphics::print_snake_head_cell() {
+    std::cout << Term::color_bg(snake_color) << ' ';
+    std::cout << Term::color_bg(snake_color) << ' ';
 }
 
 void EscGraphics::print_wall_cell() {

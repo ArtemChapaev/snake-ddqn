@@ -57,7 +57,7 @@ Keys KeyboardControl::read_key(Keys last_dir) {
     }
 }
 
-int KeyboardControl::read_option() {
+unsigned KeyboardControl::read_option() {
     KeyboardControl::disable_specific_enter();
 
     int input;
@@ -89,26 +89,6 @@ float KeyboardControl::read_float_option() {
 
     KeyboardControl::enable_specific_enter();
     return std::abs(input);
-}
-
-Term::RGB KeyboardControl::read_rgb_option() {
-    KeyboardControl::disable_specific_enter();
-
-    std::string input;
-    std::string r, g, b;
-    Term::RGB color;
-
-    getline(std::cin, r, ',');
-    getline(std::cin, g, ',');
-    getline(std::cin, b);
-
-    color.r = static_cast<uint8_t>(stoi(r));
-    color.g = static_cast<uint8_t>(stoi(g));
-    color.b = static_cast<uint8_t>(stoi(b));
-
-    KeyboardControl::enable_specific_enter();
-
-    return color;
 }
 
 int KeyboardControl::read_sym() {

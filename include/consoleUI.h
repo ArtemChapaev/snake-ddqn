@@ -14,7 +14,7 @@ public:
     void clear_line(unsigned);
     void clear_game_field(Settings);
     void underline();
-    void print_rgb(unsigned, unsigned, unsigned);
+    void print_color4(unsigned);
     static void reset();
 
     static void set_cursor(unsigned, unsigned);

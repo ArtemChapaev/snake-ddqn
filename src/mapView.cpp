@@ -28,7 +28,6 @@ void MapView::print_walls() {
 
 
 void MapView::print() {
-    int snake_shade = 0;
     for (int j = map.get_width() - 1; j >= 0; j--) {
         for (int i = 0; i < map.get_length(); i++) {
             switch (map.check_cell(j, i)) {
@@ -36,12 +35,10 @@ void MapView::print() {
                     graphics->print_empty_cell();
                     break;
                 case snake_c:
-                    graphics->print_snake_cell(snake_shade);
-                    snake_shade = (snake_shade + 1) % SHADE_NUM;
+                    graphics->print_snake_cell();
                     break;
                 case snake_head_c:
-                    graphics->print_snake_head_cell(snake_shade);
-                    snake_shade = (snake_shade + 1) % SHADE_NUM;
+                    graphics->print_snake_head_cell();
                     break;
                 case wall_c:
                     graphics->print_wall_cell();

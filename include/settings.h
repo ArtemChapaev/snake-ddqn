@@ -5,7 +5,6 @@
 #include <string>
 #include <sstream>
 
-//#include "mapModel.h"
 #include "cpp-terminal/base.hpp"
 
 struct Settings {
@@ -13,10 +12,10 @@ struct Settings {
              bool rL = 0, char kU = 72, char kD = 80, char kR = 77, char kL = 75, char kP = 27, char kEn = 10,
              char kT = 116, char kW = 119, char kEm = 101,
 
-             Term::RGB sC = Term::RGB{28, 180, 1}, Term::RGB eC = Term::RGB{0, 0, 0},
-             Term::RGB wC = Term::RGB{100, 100, 100}, Term::RGB tC = Term::RGB{160, 160, 160},
-             Term::RGB bC = Term::RGB{150, 0, 0}, Term::RGB aC = Term::RGB{255, 255, 1},
-             Term::RGB sbC = Term::RGB{0, 0, 255}, Term::RGB saC = Term::RGB{255, 130, 2}) :
+             Term::Color4 sC = Term::Color4::GREEN, Term::Color4 eC = Term::Color4::BLACK,
+             Term::Color4 wC = Term::Color4::GRAY, Term::Color4 tC = Term::Color4::WHITE_BRIGHT,
+             Term::Color4 bC = Term::Color4::RED, Term::Color4 aC = Term::Color4::YELLOW,
+             Term::Color4 sbC = Term::Color4::BLUE, Term::Color4 saC = Term::Color4::MAGENTA) :
 
             map_length(mL), map_width(mW), speed(sp), solid_wall(sW), score(sc), bonus_apples(bA), view_mode(vM),
             reset_length(rL), key_up(kU), key_down(kD), key_right(kR), key_left(kL), key_pause(kP), key_enter(kEn),
@@ -42,14 +41,14 @@ struct Settings {
     char key_teleport;
     char key_wall;
     char key_empty;
-    Term::RGB snake_color;
-    Term::RGB empty_color;
-    Term::RGB wall_color;
-    Term::RGB teleport_color;
-    Term::RGB bonus_color;
-    Term::RGB antibonus_color;
-    Term::RGB speed_bonus_color;
-    Term::RGB speed_antibonus_color;
+    Term::Color4 snake_color;
+    Term::Color4 empty_color;
+    Term::Color4 wall_color;
+    Term::Color4 teleport_color;
+    Term::Color4 bonus_color;
+    Term::Color4 antibonus_color;
+    Term::Color4 speed_bonus_color;
+    Term::Color4 speed_antibonus_color;
 };
 
 int parser(Settings &settings, std::string &filename);

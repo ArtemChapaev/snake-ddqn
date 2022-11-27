@@ -140,8 +140,9 @@ public:
     void draw(unsigned) override;
     unsigned update(unsigned &, std::stack<std::unique_ptr<Menu>> &) override;
     void print_logo() override;
-    void print_key(char);
 private:
+    void print_key(char);
+
     enum options {
         up, down, left, right, pause, enter, teleport, wall, empty, exit
     };

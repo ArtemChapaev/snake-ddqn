@@ -19,10 +19,9 @@ public:
     Keys read_key(Keys) override;
     int read_sym();
 
-    int read_option();
+    unsigned read_option();
     float read_float_option();
     char read_char_option();
-    Term::RGB read_rgb_option();
 private:
     void enable_specific_enter();
     void disable_specific_enter();

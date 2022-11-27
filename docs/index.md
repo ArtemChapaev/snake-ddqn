@@ -13,7 +13,7 @@ User cannot stop the movement of snake. Program interface is implemented in UNIX
 In development process, following were used: MVC pattern, OOP principles (encapsulation, inheritance, dynamic polymorphism).
 
 ## Showcase
-<img src='https://github.com/ArtemChapaev/Snake/blob/project/docs/gameplay.gif?raw=true'/>
+<img src='https://github.com/ArtemChapaev/Snake/blob/Linux_version/docs/gameplay.gif?raw=true'/>
 
 ## Installation
 

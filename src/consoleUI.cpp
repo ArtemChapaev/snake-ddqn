@@ -35,9 +35,8 @@ void ConsoleUI::set_cursor(unsigned x, unsigned y) {
     std::cout << "\033[" << x << ";" << y << "H" << std::flush;
 }
 
-void ConsoleUI::print_rgb(unsigned r, unsigned g, unsigned b) {
-    std::cout << "\033[48;2;" + std::to_string(r) + ';' + std::to_string(g) + ';' + std::to_string(b) + 'm' 
-        << "  " << std::endl;
+void ConsoleUI::print_color4(unsigned r) {
+    std::cout << "\033[" + std::to_string(r + 40) + 'm' << "  " << std::endl;
 }
 
 void ConsoleUI::reset() {
