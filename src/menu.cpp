@@ -5,47 +5,47 @@ Menu::Menu(std::string file) : filename(file) {
     parser(game_settings, filename);
 }
 
-void Menu::print_cell_info(unsigned y) {
+void Menu::print_cell_info(unsigned y, Graphics *graphics) {
     ConsoleUI console;
 
     console.set_cursor(y++, 46);
     std::cout << "Snake color: ";
-    console.print_color4((unsigned) game_settings.snake_color);
+    graphics->print_snake_cell();
     console.reset();
 
     console.set_cursor(y++, 46);
     std::cout << "Empty block color: ";
-    console.print_color4((unsigned) game_settings.empty_color);
+    graphics->print_empty_cell();
     console.reset();
 
     console.set_cursor(y++, 46);
     std::cout << "Wall color: ";
-    console.print_color4((unsigned) game_settings.wall_color);
+    graphics->print_wall_cell();
     console.reset();
 
     console.set_cursor(y++, 46);
     std::cout << "Teleport color: ";
-    console.print_color4((unsigned) game_settings.teleport_color);
+    graphics->print_teleport_cell();
     console.reset();
 
     console.set_cursor(y++, 46);
     std::cout << "Bonus color: ";
-    console.print_color4((unsigned) game_settings.bonus_color);
+    graphics->print_bonus_cell();
     console.reset();
 
     console.set_cursor(y++, 46);
     std::cout << "Antibonus color: ";
-    console.print_color4((unsigned) game_settings.antibonus_color);
+    graphics->print_antibonus_cell();
     console.reset();
 
     console.set_cursor(y++, 46);
     std::cout << "Speed bonus color: ";
-    console.print_color4((unsigned) game_settings.speed_bonus_color);
+    graphics->print_speed_bonus_cell();
     console.reset();
 
     console.set_cursor(y++, 46);
     std::cout << "Speed antibonus color: ";
-    console.print_color4((unsigned) game_settings.speed_antibonus_color);
+    graphics->print_speed_antibonus_cell();
     console.reset();
 }
 
@@ -963,25 +963,73 @@ unsigned SettingsControlMenu::update(unsigned &string_num, std::stack <std::uniq
 
 SettingsGraphicMenu::SettingsGraphicMenu(std::string file) : Menu(file), options_count(exit) {}
 
+unsigned SettingsGraphicMenu::convert_color_number(unsigned num) {
+    switch (num) {
+        case 1:
+            return 0;
+        case 2:
+            return 1;
+        case 3:
+            return 2;
+        case 4:
+            return 3;
+        case 5:
+            return 4;
+        case 6:
+            return 5;
+        case 7:
+            return 6;
+        case 8:
+            return 7;
+        case 9:
+            return 60;
+        case 10:
+            return 61;
+        case 11:
+            return 62;
+        case 12:
+            return 63;
+        case 13:
+            return 64;
+        case 14:
+            return 65;
+        case 15:
+            return 66;
+        case 16:
+            return 67;
+    }
+    return 0; // wrong input
+}
+
 void SettingsGraphicMenu::pure_draw() {
     ConsoleUI console;
+    Graphics *graphics = new EscGraphics(game_settings);
 
     console.set_cursor(17, 46);
     std::cout << "Graphic mode: " << game_settings.view_mode;
     console.reset();
 
-    console.set_cursor(19, 46);
+    console.set_cursor(18, 46);
+    std::cout << "Possible colors";
+    console.reset();
+
+
+    console.set_cursor(20, 46);
     std::cout << "Mode 2 colors: ";
 
-    print_cell_info(20);
+    print_cell_info(21, graphics);
 
-    console.set_cursor(29, 46);
+    console.set_cursor(30, 46);
     std::cout << "Exit" << std::endl;
+
+    delete graphics;
 }
 
 void SettingsGraphicMenu::draw(unsigned string_num) {
-    ConsoleUI::off_cursor();
     ConsoleUI console;
+    Graphics *graphics = new EscGraphics(game_settings);
+
+    ConsoleUI::off_cursor();
     console.clear_full_display();
     console.set_cursor(3, 1);
 
@@ -990,65 +1038,71 @@ void SettingsGraphicMenu::draw(unsigned string_num) {
 
     switch (string_num) {
         case mode:
-            console.set_cursor(17, 46);
+            console.set_cursor(16, 46);
             console.underline();
             std::cout << "Graphic mode: " << game_settings.view_mode;
+            console.reset();
+            break;
+        case colors:
+            console.set_cursor(17, 46);
+            console.underline();
+            std::cout << "Possible colors";
             console.reset();
             break;
         case snake:
             console.set_cursor(20, 46);
             console.underline();
             std::cout << "Snake color: ";
-            console.print_color4((unsigned) game_settings.snake_color);
+            graphics->print_snake_cell();
             console.reset();
             break;
         case empty_block:
             console.set_cursor(21, 46);
             console.underline();
             std::cout << "Empty block color: ";
-            console.print_color4((unsigned) game_settings.empty_color);
+            graphics->print_empty_cell();
             console.reset();
             break;
         case wall:
             console.set_cursor(22, 46);
             console.underline();
             std::cout << "Wall color: ";
-            console.print_color4((unsigned) game_settings.wall_color);
+            graphics->print_wall_cell();
             console.reset();
             break;
         case teleport:
             console.set_cursor(23, 46);
             console.underline();
             std::cout << "Teleport color: ";
-            console.print_color4((unsigned) game_settings.teleport_color);
+            graphics->print_teleport_cell();
             console.reset();
             break;
         case bonus:
             console.set_cursor(24, 46);
             console.underline();
             std::cout << "Bonus color: ";
-            console.print_color4((unsigned) game_settings.bonus_color);
+            graphics->print_bonus_cell();
             console.reset();
             break;
-        case anti_bonus:
+        case antibonus:
             console.set_cursor(25, 46);
             console.underline();
             std::cout << "Antibonus color: ";
-            console.print_color4((unsigned) game_settings.antibonus_color);
+            graphics->print_antibonus_cell();
             console.reset();
             break;
         case speed_bonus:
             console.set_cursor(26, 46);
             console.underline();
             std::cout << "Speed bonus color: ";
-            console.print_color4((unsigned) game_settings.speed_bonus_color);
+            graphics->print_speed_bonus_cell();
             console.reset();
             break;
-        case anti_speed_bonus:
+        case speed_antibonus:
             console.set_cursor(27, 46);
             console.underline();
             std::cout << "Speed antibonus color: ";
-            console.print_color4((unsigned) game_settings.speed_antibonus_color);
+            graphics->print_speed_antibonus_cell();
             console.reset();
             break;
         case exit:
@@ -1081,7 +1135,7 @@ unsigned SettingsGraphicMenu::update(unsigned &string_num, std::stack <std::uniq
                     ConsoleUI::highlight(2);
                     ConsoleUI::set_cursor(20, 59);
                     ConsoleUI::highlight(0);
-                    game_settings.snake_color = Term::Color4(control.read_option());
+                    game_settings.snake_color = Term::Color4(convert_color_number(control.read_option()));
                     replace_setting(filename, "snake_color", (unsigned) game_settings.snake_color);
                     ConsoleUI::reset();
                 } else if (string_num == empty_block) {
@@ -1089,7 +1143,7 @@ unsigned SettingsGraphicMenu::update(unsigned &string_num, std::stack <std::uniq
                     ConsoleUI::highlight(2);
                     ConsoleUI::set_cursor(21, 65);
                     ConsoleUI::highlight(0);
-                    game_settings.empty_color = Term::Color4(control.read_option());
+                    game_settings.empty_color = Term::Color4(convert_color_number(control.read_option()));
                     replace_setting(filename, "empty_color", (unsigned) game_settings.empty_color);
                     ConsoleUI::reset();
                 } else if (string_num == wall) {
@@ -1097,7 +1151,7 @@ unsigned SettingsGraphicMenu::update(unsigned &string_num, std::stack <std::uniq
                     ConsoleUI::highlight(2);
                     ConsoleUI::set_cursor(22, 58);
                     ConsoleUI::highlight(0);
-                    game_settings.wall_color = Term::Color4(control.read_option());
+                    game_settings.wall_color = Term::Color4(convert_color_number(control.read_option()));
                     replace_setting(filename, "wall_color", (unsigned) game_settings.wall_color);
                     ConsoleUI::reset();
                 } else if (string_num == teleport) {
@@ -1105,7 +1159,7 @@ unsigned SettingsGraphicMenu::update(unsigned &string_num, std::stack <std::uniq
                     ConsoleUI::highlight(2);
                     ConsoleUI::set_cursor(23, 62);
                     ConsoleUI::highlight(0);
-                    game_settings.teleport_color = Term::Color4(control.read_option());
+                    game_settings.teleport_color = Term::Color4(convert_color_number(control.read_option()));
                     replace_setting(filename, "teleport_color", (unsigned) game_settings.teleport_color);
                     ConsoleUI::reset();
                 } else if (string_num == bonus) {
@@ -1113,15 +1167,15 @@ unsigned SettingsGraphicMenu::update(unsigned &string_num, std::stack <std::uniq
                     ConsoleUI::highlight(2);
                     ConsoleUI::set_cursor(24, 59);
                     ConsoleUI::highlight(0);
-                    game_settings.bonus_color = Term::Color4(control.read_option());
+                    game_settings.bonus_color = Term::Color4(convert_color_number(control.read_option()));
                     replace_setting(filename, "bonus_color", (unsigned) game_settings.bonus_color);
                     ConsoleUI::reset();
-                } else if (string_num == anti_bonus) {
+                } else if (string_num == antibonus) {
                     ConsoleUI::set_cursor(25, 63);
                     ConsoleUI::highlight(2);
                     ConsoleUI::set_cursor(25, 63);
                     ConsoleUI::highlight(0);
-                    game_settings.antibonus_color = Term::Color4(control.read_option());
+                    game_settings.antibonus_color = Term::Color4(convert_color_number(control.read_option()));
                     replace_setting(filename, "antibonus_color", (unsigned) game_settings.antibonus_color);
                     ConsoleUI::reset();
                 } else if (string_num == speed_bonus) {
@@ -1129,21 +1183,21 @@ unsigned SettingsGraphicMenu::update(unsigned &string_num, std::stack <std::uniq
                     ConsoleUI::highlight(2);
                     ConsoleUI::set_cursor(26, 65);
                     ConsoleUI::highlight(0);
-                    game_settings.speed_bonus_color = Term::Color4(control.read_option());
+                    game_settings.speed_bonus_color = Term::Color4(convert_color_number(control.read_option()));
                     replace_setting(filename, "speed_bonus_color", (unsigned) game_settings.speed_bonus_color);
                     ConsoleUI::reset();
-                } else if (string_num == anti_speed_bonus) {
+                } else if (string_num == speed_antibonus) {
                     ConsoleUI::set_cursor(27, 69);
                     ConsoleUI::highlight(2);
                     ConsoleUI::set_cursor(27, 69);
                     ConsoleUI::highlight(0);
-                    game_settings.speed_antibonus_color = Term::Color4(control.read_option());
+                    game_settings.speed_antibonus_color = Term::Color4(convert_color_number(control.read_option()));
                     replace_setting(filename, "speed_antibonus_color", (unsigned) game_settings.speed_antibonus_color);
                     ConsoleUI::reset();
                 } else if (string_num == mode) {
-                    ConsoleUI::set_cursor(17, 60);
+                    ConsoleUI::set_cursor(16, 60);
                     ConsoleUI::highlight(1);
-                    ConsoleUI::set_cursor(17, 60);
+                    ConsoleUI::set_cursor(16, 60);
                     ConsoleUI::highlight(0);
                     unsigned new_mode = control.read_option();
                     if (new_mode > 2) {
@@ -1151,6 +1205,11 @@ unsigned SettingsGraphicMenu::update(unsigned &string_num, std::stack <std::uniq
                     }
                     game_settings.view_mode = new_mode;
                     replace_setting(filename, "view_mode", game_settings.view_mode);
+                } else if (string_num == colors) {
+                    Menu *m = new ColorsMenu(filename);
+                    string_num = 0;
+                    menus.push(std::unique_ptr<Menu>(m));
+                    menus.top().get()->draw(string_num);
                 } else if (string_num == exit) {
                     string_num = 0;
                     menus.pop();
@@ -1378,6 +1437,105 @@ unsigned CustomMapSettingsMenu::update(unsigned &string_num, std::stack <std::un
 //************//
 
 
+ColorsMenu::ColorsMenu(std::string file) : Menu(file) {}
+
+void ColorsMenu::pure_draw() {
+    ConsoleUI console;
+
+    console.set_cursor(17, 39);
+    std::cout << "Black: 1 :" << Term::color_bg(Term::Color4::BLACK) << "  " << std::endl;
+    console.reset();
+    console.set_cursor(17, 56);
+    std::cout << "Grey: 9 :" << Term::color_bg(Term::Color4::GRAY) << "  " << std::endl;
+    console.reset();
+
+    console.set_cursor(18, 39);
+    std::cout << "Red: 2 :" << Term::color_bg(Term::Color4::RED) << "  " << std::endl;
+    console.reset();
+    console.set_cursor(18, 56);
+    std::cout << "Red bright: 10 :" << Term::color_bg(Term::Color4::RED_BRIGHT) << "  " << std::endl;
+    console.reset();
+
+    console.set_cursor(19, 39);
+    std::cout << "Green: 3 :" << Term::color_bg(Term::Color4::GREEN) << "  " << std::endl;
+    console.reset();
+    console.set_cursor(19, 56);
+    std::cout << "Green bright: 11 :" << Term::color_bg(Term::Color4::GREEN_BRIGHT) << "  " << std::endl;
+    console.reset();
+
+    console.set_cursor(20, 39);
+    std::cout << "Yellow: 4 :" << Term::color_bg(Term::Color4::YELLOW) << "  " << std::endl;
+    console.reset();
+    console.set_cursor(20, 56);
+    std::cout << "Yellow bright: 12 :" << Term::color_bg(Term::Color4::YELLOW_BRIGHT) << "  " << std::endl;
+    console.reset();
+
+    console.set_cursor(21, 39);
+    std::cout << "Blue: 5 :" << Term::color_bg(Term::Color4::BLUE) << "  " << std::endl;
+    console.reset();
+    console.set_cursor(21, 56);
+    std::cout << "Blue bright: 13 :" << Term::color_bg(Term::Color4::BLUE_BRIGHT) << "  " << std::endl;
+    console.reset();
+
+    console.set_cursor(22, 39);
+    std::cout << "Magenta: 6 :" << Term::color_bg(Term::Color4::MAGENTA) << "  " << std::endl;
+    console.reset();
+    console.set_cursor(22, 56);
+    std::cout << "Magenta bright: 14 :" << Term::color_bg(Term::Color4::MAGENTA_BRIGHT) << "  " << std::endl;
+    console.reset();
+
+    console.set_cursor(23, 39);
+    std::cout << "Cyan: 7 :" << Term::color_bg(Term::Color4::CYAN) << "  " << std::endl;
+    console.reset();
+    console.set_cursor(23, 56);
+    std::cout << "Cyan bright: 15 :" << Term::color_bg(Term::Color4::CYAN_BRIGHT) << "  " << std::endl;
+    console.reset();
+
+    console.set_cursor(24, 39);
+    std::cout << "White: 8 :" << Term::color_bg(Term::Color4::WHITE) << "  " << std::endl;
+    console.reset();
+    console.set_cursor(24, 56);
+    std::cout << "White bright: 16 :" << Term::color_bg(Term::Color4::WHITE_BRIGHT) << "  " << std::endl;
+    console.reset();
+
+    console.set_cursor(26, 46);
+    std::cout << "Press enter for exit" << std::endl;
+}
+
+void ColorsMenu::draw(unsigned string_num) {
+    ConsoleUI console;
+    console.clear_full_display();
+    console.set_cursor(3, 1);
+
+    print_logo();
+    pure_draw();
+}
+
+unsigned ColorsMenu::update(unsigned &string_num, std::stack <std::unique_ptr<Menu>> &menus) {
+    bool is_exit = false;
+    KeyboardControl control(game_settings);
+
+    while (!is_exit) {
+        Keys key = control.read_key(Keys::interruption);
+        is_exit = true;
+
+        switch (key) {
+            case enter:
+                string_num = 0;
+                menus.pop();
+                menus.top().get()->draw(string_num);
+                break;
+            default:
+                is_exit = false;
+                usleep(kSleepTime);
+        }
+    }
+    return 0;
+}
+
+//************//
+
+
 TitlesMenu::TitlesMenu(std::string file) : Menu(file) {}
 
 void TitlesMenu::pure_draw() {}
@@ -1419,11 +1577,24 @@ GameInformationMenu::GameInformationMenu(std::string file) : Menu(file) {}
 
 void GameInformationMenu::pure_draw() {
     ConsoleUI console;
+    Graphics *graphics = new EscGraphics(game_settings);
+    switch (game_settings.view_mode) {
+        case 0:
+            graphics = new SymGraphics;
+            break;
+        case 1:
+            graphics = new EscSymGraphics(game_settings);
+            break;
+        case 2:
+            graphics = new EscGraphics(game_settings);
+            break;
+    }
 
-    print_cell_info(17);
+    print_cell_info(17, graphics);
 
     console.set_cursor(26, 46);
     std::cout << "Press enter for exit" << std::endl;
+    delete graphics;
 }
 
 void GameInformationMenu::draw(unsigned string_num) {

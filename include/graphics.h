@@ -6,7 +6,7 @@
 #include "settings.h"
 
 class Graphics {
-// Abstract class for gaphics
+// Abstract class for graphics
 public:
     virtual void print_empty_cell() = 0;
     virtual void print_snake_cell() = 0;
@@ -50,7 +50,7 @@ protected:
 // BLUE_BRIGHT = 64
 // MAGENTA_BRIGHT = 65
 // CYAN_BRIGHT = 66
-// WHITE_BRIGHT = 6
+// WHITE_BRIGHT = 67
 // DEFAULT = 9
 
 
