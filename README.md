@@ -1,3 +1,9 @@
+---
+layout: default
+title: Snake
+permalink: /
+---
+
 ## Introduction
 Snake game was developed as an educational project for OOP practice at Bauman Moscow State Technical University.
 
@@ -33,6 +39,8 @@ Right in game you can configure:
 - snake (speed, length change on a new level)
 - control buttons
 - create your own map (map constructor)
+
+You can read more about settings on this [page](settings)
 
 Also implemented:
 - menu
