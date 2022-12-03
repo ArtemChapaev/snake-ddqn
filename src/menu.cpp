@@ -843,7 +843,7 @@ void SettingsControlMenu::draw(unsigned string_num) {
         case empty:
             console.set_cursor(25, 46);
             console.underline();
-            std::cout << "Wall key: ";
+            std::cout << "Empty key: ";
             SettingsControlMenu::print_key(game_settings.key_empty);
             console.reset();
             break;
@@ -871,7 +871,7 @@ unsigned SettingsControlMenu::update(unsigned &string_num, std::stack <std::uniq
             case Keys::down:
                 string_num < options_count ? string_num += 1 : string_num = 0;
                 break;
-            case enter:
+            case Keys::enter:
                 if (string_num == up) {
                     ConsoleUI::set_cursor(17, 54);
                     ConsoleUI::highlight(1);

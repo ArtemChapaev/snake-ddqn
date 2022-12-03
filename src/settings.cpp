@@ -10,7 +10,9 @@ int parser(Settings &settings, std::string &filename) {
             key_down, key_left, key_right, key_pause, key_enter, key_teleport, key_wall, key_empty, snake_color,
             empty_color, wall_color, teleport_color, bonus_color, antibonus_color, speed_bonus_color,
             speed_antibonus_color;
-
+    
+    try
+    {
     while (!file.eof()) {
 
         getline(file, var, '=');
@@ -68,6 +70,46 @@ int parser(Settings &settings, std::string &filename) {
     settings.speed_antibonus_color = Term::Color4(stoi(speed_antibonus_color));
 
     file.close();
+    }
+    catch (const std::exception ex)
+    {
+        std::ofstream temp;
+        temp.open("temp.txt");
+
+        temp<<R"(map_length=20
+map_width=20
+solid_wall=0
+score=1
+bonus_apples=1
+view_mode=2
+reset_length=0
+key_up=72
+key_left=75
+key_down=80
+key_right=77
+key_pause=27
+key_enter=10
+key_teleport=116
+key_wall=119
+key_empty=101
+snake_color=2
+empty_color=0
+wall_color=60
+teleport_color=67
+bonus_color=1
+antibonus_color=3
+speed_bonus_color=4
+speed_antibonus_color=5
+speed=2
+)";
+
+        temp.close();
+        file.close();
+        
+        const char *p = filename.c_str();
+        remove(p);
+        rename("temp.txt", p);
+    }
     return 0;
 }
 

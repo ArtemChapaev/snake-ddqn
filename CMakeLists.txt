@@ -23,3 +23,5 @@ add_executable(snake /
         )
 
 target_link_libraries(snake PRIVATE cpp-terminal)
+
+add_compile_options(-Wall -Wextra -pedantic -Werror)

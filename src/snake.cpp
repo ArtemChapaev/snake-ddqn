@@ -145,6 +145,8 @@ Position Snake::relocate_snake(Settings settings) {
             case left:
                 return move_in_cell(
                         {settings.map_length - next_cell.get_x() - 2, settings.map_width - next_cell.get_y() - 1});
+            default:
+                break;
         }
         return 0; // unreachable code
     }

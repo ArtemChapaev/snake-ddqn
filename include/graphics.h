@@ -17,6 +17,7 @@ public:
     virtual void print_antibonus_cell() = 0;
     virtual void print_speed_bonus_cell() = 0;
     virtual void print_speed_antibonus_cell() = 0;
+    virtual ~Graphics() = default;
 };
 
 class ColorGraphics : public Graphics {

@@ -1,9 +1,3 @@
----
-layout: default
-title: Snake
-permalink: /
----
-
 ## Introduction
 Snake game was developed as an educational project for OOP practice at Bauman Moscow State Technical University.
 

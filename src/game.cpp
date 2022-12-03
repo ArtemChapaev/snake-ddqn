@@ -133,6 +133,8 @@ int Game::start_level(unsigned level_number) {
                 map_model.put_snake(snake);
                 break;
             }
+            default:
+                break;
         }
 
         console.set_cursor(1, 1);
