@@ -18,7 +18,7 @@ int main(int argc, char** argv) {
             }
     }
 
-    std::cout << "\033[2J";  // clear screen
+    std::cout << "\033[3J\033[H\033[2J";
 
     std::stack<std::unique_ptr<Menu>> menus;  // stores opened menus hierarchy
 
@@ -36,6 +36,8 @@ int main(int argc, char** argv) {
             prev_string_num = string_num;
         }
     }
+
+    std::cout << "\033[3J\033[H\033[2J";
 
     return 0;
 }
