@@ -1,3 +1,9 @@
 cmake-*/
 build/
 .vscode
+settings.txt
+Makefile
+rebuild.sh
+.idea/
+presets
+map.txt

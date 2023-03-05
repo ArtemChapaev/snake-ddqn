@@ -1,10 +1,11 @@
 #pragma once
 
+#include <unistd.h>
+
 #include <cstring>
 #include <iostream>
 #include <memory>
 #include <stack>
-#include <unistd.h>
 
 #include "consoleUI.h"
 #include "game.h"
@@ -15,166 +16,168 @@ const unsigned kSleepTime = 200;
 
 class Menu {
     /// Abstract class for menu, all menu types inherit from it
-public:
+   public:
     explicit Menu(std::string);
-    virtual void draw(unsigned) = 0; // after pure_draw() call draws selected underlined string
-    virtual unsigned update(unsigned &, std::stack<std::unique_ptr<Menu>> &) = 0; // handles clicks
-protected:
-    virtual void pure_draw() = 0; // draws pure menu without option selection (without underlines)
+    virtual void draw(unsigned) = 0;  // after pure_draw() call draws selected underlined string
+    virtual unsigned update(unsigned &, std::stack<std::unique_ptr<Menu>> &) = 0;  // handles clicks
+   protected:
+    virtual void pure_draw() = 0;  // draws pure menu without option selection (without underlines)
     virtual void print_logo() = 0;
-    void print_cell_info(unsigned, Graphics*); // draws info from conveyed string
+    void print_cell_info(unsigned, Graphics *);  // draws info from conveyed string
 
     std::string filename;
     Settings game_settings;
 };
 
 class MainMenu : public Menu {
-public:
+   public:
     MainMenu(std::string, bool);
     void draw(unsigned) override;
     unsigned update(unsigned &, std::stack<std::unique_ptr<Menu>> &) override;
-private:
+
+   private:
     void pure_draw() override;
     void print_logo() override;
 
-    enum options {
-        start, leaderboard, settings, information, credits, exit
-    };
+    enum options { start, leaderboard, settings, information, credits, exit };
     const unsigned options_count;
     const bool random_apples;
 };
 
 class PauseMenu : public Menu {
-public:
+   public:
     explicit PauseMenu(std::string);
     void draw(unsigned) override;
     unsigned update(unsigned &, std::stack<std::unique_ptr<Menu>> &) override;
-    enum pause_exit_codes {
-        resume_code = 1, restart_code, exit_code
-    };
-private:
+    enum pause_exit_codes { resume_code = 1, restart_code, exit_code };
+
+   private:
     void pure_draw() override;
     void print_logo() override;
 
-    enum options {
-        resume, restart, information, exit
-    };
+    enum options { resume, restart, information, exit };
     const unsigned options_count;
 };
 
 class LeaderboardMenu : public Menu {
-public:
+   public:
     explicit LeaderboardMenu(std::string);
     void draw(unsigned) override;
     unsigned update(unsigned &, std::stack<std::unique_ptr<Menu>> &) override;
-private:
+
+   private:
     void pure_draw() override;
     void print_logo() override;
 
-    enum options {
-        tbu, exit
-    };
+    enum options { tbu, exit };
     const unsigned options_count;
 };
 
 class SettingsGeneralMenu : public Menu {
-public:
+   public:
     explicit SettingsGeneralMenu(std::string);
     void draw(unsigned) override;
     unsigned update(unsigned &, std::stack<std::unique_ptr<Menu>> &) override;
-private:
+
+   private:
     void pure_draw() override;
     void print_logo() override;
 
-    enum options {
-        snake, map, graphic, control, save_sets, exit
-    };
+    enum options { snake, map, graphic, control, save_sets, exit };
     const unsigned options_count;
 };
 
 class SettingsSnakeMenu : public Menu {
-public:
+   public:
     explicit SettingsSnakeMenu(std::string);
     void draw(unsigned) override;
     unsigned update(unsigned &, std::stack<std::unique_ptr<Menu>> &) override;
-private:
+
+   private:
     void pure_draw() override;
     void print_logo() override;
 
-    enum options {
-        speed, reset_length, exit
-    };
+    enum options { ai_mode, speed, reset_length, exit };
     const unsigned options_count;
 };
 
 class SettingsMapMenu : public Menu {
-public:
+   public:
     explicit SettingsMapMenu(std::string);
     void draw(unsigned) override;
     unsigned update(unsigned &, std::stack<std::unique_ptr<Menu>> &) override;
-private:
+
+   private:
     void pure_draw() override;
     void print_logo() override;
 
-    enum options {
-        length, width, solid_walls, bonus_apples, show_score, custom_map, exit
-    };
+    enum options { length, width, solid_walls, bonus_apples, show_score, custom_map, exit };
     const unsigned options_count;
 };
 
 class SettingsGraphicMenu : public Menu {
-public:
+   public:
     explicit SettingsGraphicMenu(std::string);
     void draw(unsigned) override;
     unsigned update(unsigned &, std::stack<std::unique_ptr<Menu>> &) override;
-private:
+
+   private:
     unsigned convert_color_number(unsigned);
     void pure_draw() override;
     void print_logo() override;
 
     enum options {
-        mode, colors, snake, empty_block, wall, teleport, bonus, antibonus, speed_bonus, speed_antibonus, exit
+        mode,
+        colors,
+        snake,
+        empty_block,
+        wall,
+        teleport,
+        bonus,
+        antibonus,
+        speed_bonus,
+        speed_antibonus,
+        exit
     };
     const unsigned options_count;
 };
 
 class SettingsControlMenu : public Menu {
-public:
+   public:
     explicit SettingsControlMenu(std::string);
     void draw(unsigned) override;
     unsigned update(unsigned &, std::stack<std::unique_ptr<Menu>> &) override;
-private:
+
+   private:
     void pure_draw() override;
     void print_logo() override;
     void print_key(char);
 
-    enum options {
-        up, down, left, right, pause, enter, teleport, wall, empty, exit
-    };
+    enum options { up, down, left, right, pause, enter, teleport, wall, empty, exit };
     const unsigned options_count;
 };
 
 class SavedSettingsMenu : public Menu {
-public:
+   public:
     explicit SavedSettingsMenu(std::string);
     void draw(unsigned) override;
     unsigned update(unsigned &, std::stack<std::unique_ptr<Menu>> &) override;
-private:
+
+   private:
     void pure_draw() override;
     void print_logo() override;
 
-    enum options {
-        save1, save2, save3, read1, read2, read3, exit
-    };
+    enum options { save1, save2, save3, read1, read2, read3, exit };
     const unsigned options_count;
 };
 
 class CustomMapSettingsMenu : public Menu {
-public:
+   public:
     explicit CustomMapSettingsMenu(std::string);
     void draw(unsigned) override;
     unsigned update(unsigned &, std::stack<std::unique_ptr<Menu>> &) override;
-private:
+
+   private:
     void pure_draw() override;
     void print_logo() override;
 
@@ -185,31 +188,34 @@ private:
 };
 
 class ColorsMenu : public Menu {
-public:
+   public:
     explicit ColorsMenu(std::string);
     void draw(unsigned) override;
     unsigned update(unsigned &, std::stack<std::unique_ptr<Menu>> &) override;
-private:
+
+   private:
     void pure_draw() override;
     void print_logo() override;
 };
 
 class TitlesMenu : public Menu {
-public:
+   public:
     explicit TitlesMenu(std::string);
     void draw(unsigned) override;
     unsigned update(unsigned &, std::stack<std::unique_ptr<Menu>> &) override;
-private:
+
+   private:
     void pure_draw() override;
     void print_logo() override;
 };
 
 class GameInformationMenu : public Menu {
-public:
+   public:
     explicit GameInformationMenu(std::string);
     void draw(unsigned) override;
     unsigned update(unsigned &, std::stack<std::unique_ptr<Menu>> &) override;
-private:
+
+   private:
     void pure_draw() override;
     void print_logo() override;
 };

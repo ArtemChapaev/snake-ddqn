@@ -1,13 +1,14 @@
 #include "graphics.h"
 
-ColorGraphics::ColorGraphics(Settings settings) : snake_color(settings.snake_color),
-                                                  empty_color(settings.empty_color),
-                                                  wall_color(settings.wall_color),
-                                                  teleport_color(settings.teleport_color),
-                                                  bonus_color(settings.bonus_color),
-                                                  antibonus_color(settings.antibonus_color),
-                                                  speed_bonus_color(settings.speed_bonus_color),
-                                                  speed_antibonus_color(settings.speed_antibonus_color) {}
+ColorGraphics::ColorGraphics(Settings settings)
+    : snake_color(settings.snake_color),
+      empty_color(settings.empty_color),
+      wall_color(settings.wall_color),
+      teleport_color(settings.teleport_color),
+      bonus_color(settings.bonus_color),
+      antibonus_color(settings.antibonus_color),
+      speed_bonus_color(settings.speed_bonus_color),
+      speed_antibonus_color(settings.speed_antibonus_color) {}
 
 void SymGraphics::print_empty_cell() {
     std::cout << ' ';
@@ -102,7 +103,6 @@ void EscSymGraphics::print_speed_antibonus_cell() {
     std::cout << Term::color_fg(speed_antibonus_color) << 's';
     std::cout << Term::color_fg(empty_color) << ' ';
 }
-
 
 ///
 EscGraphics::EscGraphics(Settings settings) : ColorGraphics(settings) {}

@@ -6,14 +6,15 @@
 #include "mapModel.h"
 
 class MapView {
-// Class for map display
-public:
+    // Class for map display
+   public:
     MapView(MapModel &map, Settings);
     ~MapView();
 
     void print();
     void print_walls();
-private:
+
+   private:
     MapModel &map;
     Graphics *graphics;
 };

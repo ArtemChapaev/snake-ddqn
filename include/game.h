@@ -1,14 +1,15 @@
 #pragma once
 
+#include <fcntl.h>
+#include <termios.h>
+#include <unistd.h>
+
+#include <chrono>
 #include <cstdlib>
 #include <ctime>
-#include <chrono>
-#include <fcntl.h>
 #include <memory>
-#include <termios.h>
 #include <stack>
 #include <string>
-#include <unistd.h>
 #include <vector>
 
 #include "consoleUI.h"
@@ -41,7 +42,7 @@ const std::string kLeaderboardFile = "build/leaderboard.txt";
 class Game {
     /// A controller class that connects the model and the display of the game.
     /// Through this class, you can run the game itself.
-public:
+   public:
     explicit Game(std::string file = "settings.txt");
     ~Game();
 
@@ -51,8 +52,9 @@ public:
     int print_deathscreen();
     int write_to_leaderboard();
     void print_control_error_screen();
+    int get_ai_mode();
 
-private:
+   private:
     std::string filename;
     Settings settings;
     unsigned highest_score;

@@ -9,16 +9,12 @@ bool Position::operator==(Position other) {
     return false;
 }
 
-unsigned Position::get_x() {
-    return x;
-}
+unsigned Position::get_x() { return x; }
 
-unsigned Position::get_y() {
-    return y;
-}
+unsigned Position::get_y() { return y; }
 
-Snake::Snake(Settings settings, unsigned length = kSnakeLength) : length(length), direction(right),
-                                                                  speed_coef(settings.speed) {
+Snake::Snake(Settings settings, unsigned length = kSnakeLength)
+    : length(length), direction(right), speed_coef(settings.speed) {
     if (length >= settings.map_length - 2) {
         unsigned x = settings.map_length / 6;
 
@@ -51,18 +47,11 @@ Snake::Snake(Settings settings, unsigned length = kSnakeLength) : length(length)
     }
 }
 
+Position Snake::get_head() { return snake.front(); }
 
-Position Snake::get_head() {
-    return snake.front();
-}
+Position Snake::get_tail() { return snake.back(); }
 
-Position Snake::get_tail() {
-    return snake.back();
-}
-
-std::list<Position> Snake::get_snake() {
-    return snake;
-}
+std::list<Position> Snake::get_snake() { return snake; }
 
 Position Snake::get_next() {
     Position head = get_head();
@@ -71,7 +60,7 @@ Position Snake::get_next() {
         case right: {
             return {head.get_x() + 1, head.get_y()};
         }
-        case left : {
+        case left: {
             return {head.get_x() - 1, head.get_y()};
         }
         case up: {
@@ -83,30 +72,22 @@ Position Snake::get_next() {
     }
 }
 
-Keys Snake::get_direction() {
-    return direction;
-}
+Keys Snake::get_direction() { return direction; }
 
-void Snake::set_direction(Keys dir) {
-    direction = dir;
-}
+void Snake::set_direction(Keys dir) { direction = dir; }
 
-float Snake::get_speed_coef() {
-    return speed_coef;
-}
+float Snake::get_speed_coef() { return speed_coef; }
 
 Position Snake::move_in_cell(Position pos_for_next) {
-    for (auto &s: snake) {
+    for (auto &s : snake) {
         auto temp = s;
         s = pos_for_next;
         pos_for_next = temp;
     }
-    return pos_for_next; // pos of tail
+    return pos_for_next;  // pos of tail
 }
 
-Position Snake::move() {
-    return move_in_cell(get_next());
-}
+Position Snake::move() { return move_in_cell(get_next()); }
 
 int Snake::increase_length(Position pos_for_tail) {
     snake.push_back(pos_for_tail);
@@ -135,19 +116,19 @@ Position Snake::relocate_snake(Settings settings) {
         switch (get_direction()) {
             case up:
                 return move_in_cell(
-                        {settings.map_length - next_cell.get_x() - 1, settings.map_width - next_cell.get_y()});
+                    {settings.map_length - next_cell.get_x() - 1, settings.map_width - next_cell.get_y()});
             case down:
-                return move_in_cell(
-                        {settings.map_length - next_cell.get_x() - 1, settings.map_width - next_cell.get_y() - 2});
+                return move_in_cell({settings.map_length - next_cell.get_x() - 1,
+                                     settings.map_width - next_cell.get_y() - 2});
             case right:
                 return move_in_cell(
-                        {settings.map_length - next_cell.get_x(), settings.map_width - next_cell.get_y() - 1});
+                    {settings.map_length - next_cell.get_x(), settings.map_width - next_cell.get_y() - 1});
             case left:
-                return move_in_cell(
-                        {settings.map_length - next_cell.get_x() - 2, settings.map_width - next_cell.get_y() - 1});
+                return move_in_cell({settings.map_length - next_cell.get_x() - 2,
+                                     settings.map_width - next_cell.get_y() - 1});
             default:
                 break;
         }
-        return 0; // unreachable code
+        return 0;  // unreachable code
     }
 }

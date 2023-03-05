@@ -42,7 +42,7 @@ void MapModel::put_snake(Snake s) {
 void MapModel::generate_bonus(Cell bonus) {
     bool bonus_created = false;
     while (!bonus_created) {
-        unsigned x = rand() % (length - 2) + 1; // to have fewer iterations of the loop
+        unsigned x = rand() % (length - 2) + 1;  // to have fewer iterations of the loop
         unsigned y = rand() % (width - 2) + 1;
         if (check_cell(y, x) == empty_c && validate_teleports(y, x)) {
             field[y][x] = bonus;
@@ -51,30 +51,21 @@ void MapModel::generate_bonus(Cell bonus) {
     }
 }
 
-unsigned MapModel::get_width() {
-    return width;
-}
+unsigned MapModel::get_width() { return width; }
 
-unsigned MapModel::get_length() {
-    return length;
-}
+unsigned MapModel::get_length() { return length; }
 
-void MapModel::clear_cell(Position pos) {
-    field[pos.get_y()][pos.get_x()] = Cell::empty_c;
-}
+void MapModel::clear_cell(Position pos) { field[pos.get_y()][pos.get_x()] = Cell::empty_c; }
 
-Cell MapModel::check_cell(unsigned y, unsigned x) {
-    return field[y][x];
-}
+Cell MapModel::check_cell(unsigned y, unsigned x) { return field[y][x]; }
 
-void MapModel::set_cell(unsigned y, unsigned x, Cell cell) {
-    field[y][x] = cell;
-}
+void MapModel::set_cell(unsigned y, unsigned x, Cell cell) { field[y][x] = cell; }
 
 bool MapModel::validate_teleports(unsigned y, unsigned x) {
-    if (field[y + 1][x - 1] == teleport_c || field[y + 1][x] == teleport_c || field[y + 1][x + 1] == teleport_c ||
-        field[y][x - 1] == teleport_c || field[y][x + 1] == teleport_c ||
-        field[y - 1][x - 1] == teleport_c || field[y - 1][x] == teleport_c || field[y - 1][x + 1] == teleport_c) {
+    if (field[y + 1][x - 1] == teleport_c || field[y + 1][x] == teleport_c ||
+        field[y + 1][x + 1] == teleport_c || field[y][x - 1] == teleport_c || field[y][x + 1] == teleport_c ||
+        field[y - 1][x - 1] == teleport_c || field[y - 1][x] == teleport_c ||
+        field[y - 1][x + 1] == teleport_c) {
         return false;
     }
     return true;
@@ -87,7 +78,6 @@ MapModel read_map_from_file(Settings settings) {
 
     for (unsigned j = map.get_width() - 2; j >= 1; j--) {
         for (unsigned i = 1; i < map.get_length() - 1; i++) {
-
             file >> sym;
             if (sym == 'W') {
                 map.set_cell(j, i, wall_c);
@@ -107,7 +97,6 @@ void write_map_to_file(MapModel &map) {
     std::ofstream file("map.txt");
     for (unsigned j = map.get_width() - 2; j >= 1; j--) {
         for (unsigned i = 1; i < map.get_length() - 1; i++) {
-
             Cell cell = map.check_cell(j, i);
             if (cell == wall_c) {
                 file << 'W';

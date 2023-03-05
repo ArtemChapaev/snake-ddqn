@@ -13,12 +13,10 @@ const double kStandartForY = 0.6;
 
 const double kIndexForX = 1. / 7;
 
-enum Keys {
-    up, right, down, left, interruption, enter, teleport, wall, empty, error
-};
+enum Keys { up, right, down, left, interruption, enter, teleport, wall, empty, error };
 
 class Position {
-public:
+   public:
     /// The class of the position with x, y coordinates.
     /// It is used to store the snake's body.
 
@@ -28,7 +26,7 @@ public:
     unsigned get_x();
     unsigned get_y();
 
-private:
+   private:
     unsigned x;
     unsigned y;
 };
@@ -37,7 +35,7 @@ class Snake {
     /// Class that implements one of the main entities - a snake
     /// It stores the methods of interaction of the game with the snake.
     /// Stores attributes that affect the direction of movement, the speed of the game.
-public:
+   public:
     Snake(Settings, unsigned);
 
     Position get_head();
@@ -52,7 +50,7 @@ public:
     Position decrease_length();
     Position relocate_snake(Settings);
 
-private:
+   private:
     std::list<Position> snake;
     unsigned length;
     Keys direction;

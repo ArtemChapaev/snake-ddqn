@@ -1,16 +1,20 @@
 #include "keyboardControl.h"
 
-KeyboardControl::KeyboardControl(Settings settings) : up(settings.key_up), left(settings.key_left),
-                                                      down(settings.key_down), right(settings.key_right),
-                                                      pause(settings.key_pause), enter(settings.key_enter),
-                                                      teleport(settings.key_teleport), wall(settings.key_wall),
-                                                      empty(settings.key_empty), original_flags(fcntl(0, F_GETFL)) {
+KeyboardControl::KeyboardControl(Settings settings)
+    : up(settings.key_up),
+      left(settings.key_left),
+      down(settings.key_down),
+      right(settings.key_right),
+      pause(settings.key_pause),
+      enter(settings.key_enter),
+      teleport(settings.key_teleport),
+      wall(settings.key_wall),
+      empty(settings.key_empty),
+      original_flags(fcntl(0, F_GETFL)) {
     enable_specific_enter();
 }
 
-KeyboardControl::~KeyboardControl() {
-    disable_specific_enter();
-}
+KeyboardControl::~KeyboardControl() { disable_specific_enter(); }
 
 void KeyboardControl::enable_specific_enter() {
     fcntl(0, F_SETFL, original_flags | O_NONBLOCK);
@@ -102,15 +106,15 @@ int KeyboardControl::read_sym() {
         if (read(0, ch_2, 2) == 2) {
             switch (ch_2[1]) {
                 case 'A':
-                    return 72; // arrow up
+                    return 72;  // arrow up
                 case 'D':
-                    return 75; // arrow left
+                    return 75;  // arrow left
                 case 'B':
-                    return 80; // arrow down
+                    return 80;  // arrow down
                 case 'C':
-                    return 77; // arrow right
+                    return 77;  // arrow right
                 default:
-                    return -2; // error
+                    return -2;  // error
             }
         }
     }

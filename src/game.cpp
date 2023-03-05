@@ -5,11 +5,10 @@ Game::Game(std::string file) : filename(file), highest_score(0), death_score(0),
 }
 
 int Game::start_level(unsigned level_number) {
-    parser(settings, filename);
-
     unsigned snake_length = kSnakeLength;
     if (!settings.reset_length) {
-        snake_length = death_score + kSnakeLength; // bcs for last level: death_score = snake.size() - kSnakeLength
+        snake_length =
+            death_score + kSnakeLength;  // bcs for last level: death_score = snake.size() - kSnakeLength
     }
 
     Snake snake(settings, snake_length);
@@ -19,7 +18,6 @@ int Game::start_level(unsigned level_number) {
     MapView map_view(map_model, settings);
 
     bool is_exit = false;
-
     unsigned moves_number_after_bonus = 0;
     unsigned moves_number_after_error = 0;
     float speed_of_bonus = 1.0;
@@ -42,8 +40,8 @@ int Game::start_level(unsigned level_number) {
         Keys last_dir = snake.get_direction();
         Keys new_key = control.read_key(last_dir);
 
-        if (new_key == Keys::error || new_key == Keys::enter || new_key == Keys::teleport || new_key == Keys::wall ||
-            new_key == Keys::empty) {
+        if (new_key == Keys::error || new_key == Keys::enter || new_key == Keys::teleport ||
+            new_key == Keys::wall || new_key == Keys::empty) {
             moves_number_after_error = 0;
             print_control_error_screen();
         } else if (new_key == Keys::interruption) {
@@ -109,7 +107,7 @@ int Game::start_level(unsigned level_number) {
             }
             case Cell::snake_c: {
                 if (snake.get_tail() == next_cell) {
-                    snake.move(); // without clear_cell, bcs there will be the head in this cell in next move
+                    snake.move();  // without clear_cell, bcs there will be the head in this cell in next move
                     map_model.put_snake(snake);
                     break;
                 }
@@ -141,7 +139,8 @@ int Game::start_level(unsigned level_number) {
 
         map_view.print();
 
-        death_score = (int) (snake.get_snake().size() - kSnakeLength) > 0 ? snake.get_snake().size() - kSnakeLength : 0;
+        death_score =
+            (int)(snake.get_snake().size() - kSnakeLength) > 0 ? snake.get_snake().size() - kSnakeLength : 0;
         highest_score = death_score > highest_score ? death_score : highest_score;
 
         if (settings.score) {
@@ -155,7 +154,8 @@ int Game::start_level(unsigned level_number) {
             speed_of_bonus = 1.0;
         }
 
-        if (moves_number_after_error == kMovesAfterControlError) { // if enough moves passed after control error
+        if (moves_number_after_error ==
+            kMovesAfterControlError) {  // if enough moves passed after control error
             console.clear_line(settings.map_width + 3);
         }
 
@@ -178,9 +178,9 @@ int Game::start_level(unsigned level_number) {
 int Game::pause_game() {
     auto pause_start_time = std::chrono::high_resolution_clock::now();
 
-    std::stack<std::unique_ptr<Menu>> menus; // stores opened menus hierarchy
+    std::stack<std::unique_ptr<Menu>> menus;  // stores opened menus hierarchy
 
-    unsigned string_num = 0; // stores which menu option is selected
+    unsigned string_num = 0;  // stores which menu option is selected
     unsigned prev_string_num = string_num;
     int return_code = 0;
 
@@ -195,7 +195,8 @@ int Game::pause_game() {
         }
     }
 
-    std::chrono::duration<float> pause_duration = std::chrono::high_resolution_clock::now() - pause_start_time;
+    std::chrono::duration<float> pause_duration =
+        std::chrono::high_resolution_clock::now() - pause_start_time;
     pause_time += pause_duration.count();
 
     return return_code;
@@ -206,10 +207,18 @@ int Game::start_game(bool random_apples) {
     int level_exit_code = 0;
     unsigned level_number = 1;
 
+    parser(settings, filename);
+
     random_apples ? srand(time(0)) : srand(1);
 
     while (level_exit_code == 0) {
-        level_exit_code = start_level(level_number);
+        if (settings.ai_mode == 0) {
+            level_exit_code = start_level(level_number);
+        } else if (settings.ai_mode == 1) {
+            level_exit_code = 1;
+        } else if (settings.ai_mode == 2) {
+            level_exit_code = 1;
+        }
         ++level_number;
         usleep(kLevelPause);
     }
@@ -218,6 +227,8 @@ int Game::start_game(bool random_apples) {
     game_time = duration.count();
 
     write_to_leaderboard();
+    print_deathscreen();
+    sleep(3);
     return level_exit_code;
 }
 
@@ -255,7 +266,8 @@ int Game::write_to_leaderboard() {
     auto temp = std::make_tuple(data, highest_score);
 
     int i = 0;
-    while (i < leaderboard.size() && std::get<1>(leaderboard[i]) >= highest_score) { // finding the right place
+    while (i < leaderboard.size() &&
+           std::get<1>(leaderboard[i]) >= highest_score) {  // finding the right place
         ++i;
     }
 
@@ -271,7 +283,7 @@ int Game::write_to_leaderboard() {
         return -1;
     }
 
-    for (auto entry: leaderboard) {
+    for (auto entry : leaderboard) {
         in_file << std::get<0>(entry) << ';' << std::to_string(std::get<1>(entry)) << '\n';
     }
     in_file.close();
@@ -320,6 +332,6 @@ void Game::print_control_error_screen() {
     usleep(500000);
 }
 
-Game::~Game() {
-    ConsoleUI::on_cursor();
-}
+int Game::get_ai_mode() { return settings.ai_mode; }
+
+Game::~Game() { ConsoleUI::on_cursor(); }

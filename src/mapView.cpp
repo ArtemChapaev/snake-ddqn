@@ -26,7 +26,6 @@ void MapView::print_walls() {
     std::cout << "\033[0m" << std::flush;
 }
 
-
 void MapView::print() {
     for (int j = map.get_width() - 1; j >= 0; j--) {
         for (int i = 0; i < map.get_length(); i++) {
@@ -65,6 +64,4 @@ void MapView::print() {
     std::cout << "\033[0m" << std::flush;
 }
 
-MapView::~MapView() {
-    delete graphics;
-}
+MapView::~MapView() { delete graphics; }

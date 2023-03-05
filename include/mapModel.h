@@ -6,12 +6,20 @@
 #include "snake.h"
 
 enum Cell {
-    empty_c, snake_head_c, snake_c, wall_c, teleport_c, bonus_c, antibonus_c, speed_bonus_c, speed_antibonus_c
+    empty_c,
+    snake_head_c,
+    snake_c,
+    wall_c,
+    teleport_c,
+    bonus_c,
+    antibonus_c,
+    speed_bonus_c,
+    speed_antibonus_c
 };
 
 class MapModel {
-// Class for map data
-public:
+    // Class for map data
+   public:
     MapModel(Settings);
     ~MapModel();
 
@@ -22,7 +30,8 @@ public:
     void set_cell(unsigned, unsigned, Cell);
     unsigned get_width();
     unsigned get_length();
-private:
+
+   private:
     bool validate_teleports(unsigned, unsigned);
 
     Cell **field;
@@ -31,4 +40,4 @@ private:
 };
 
 MapModel read_map_from_file(Settings);
-void write_map_to_file(MapModel&);
+void write_map_to_file(MapModel &);

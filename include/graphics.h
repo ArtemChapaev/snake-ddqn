@@ -1,13 +1,13 @@
 #pragma once
 
 #include <iostream>
-#include "cpp-terminal/base.hpp"
 
+#include "cpp-terminal/base.hpp"
 #include "settings.h"
 
 class Graphics {
-// Abstract class for graphics
-public:
+    // Abstract class for graphics
+   public:
     virtual void print_empty_cell() = 0;
     virtual void print_snake_cell() = 0;
     virtual void print_snake_head_cell() = 0;
@@ -21,8 +21,8 @@ public:
 };
 
 class ColorGraphics : public Graphics {
-// Abstract class for colored graphics
-protected:
+    // Abstract class for colored graphics
+   protected:
     explicit ColorGraphics(Settings);
 
     Term::Color4 snake_color;
@@ -54,11 +54,10 @@ protected:
 // WHITE_BRIGHT = 67
 // DEFAULT = 9
 
-
 // Graphic overrides
 
 class SymGraphics : public Graphics {
-public:
+   public:
     void print_empty_cell() override;
     void print_snake_cell() override;
     void print_snake_head_cell() override;
@@ -71,7 +70,7 @@ public:
 };
 
 class EscSymGraphics : public ColorGraphics {
-public:
+   public:
     explicit EscSymGraphics(Settings);
     void print_empty_cell() override;
     void print_snake_cell() override;
@@ -85,7 +84,7 @@ public:
 };
 
 class EscGraphics : public ColorGraphics {
-public:
+   public:
     explicit EscGraphics(Settings);
     void print_empty_cell() override;
     void print_snake_cell() override;

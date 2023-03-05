@@ -49,8 +49,8 @@ void Menu::print_cell_info(unsigned y, Graphics *graphics) {
     console.reset();
 }
 
-MainMenu::MainMenu(std::string file, bool random_apples) : Menu(file), options_count(exit),
-                                                           random_apples(random_apples) {}
+MainMenu::MainMenu(std::string file, bool random_apples)
+    : Menu(file), options_count(exit), random_apples(random_apples) {}
 
 void MainMenu::pure_draw() {
     ConsoleUI console;
@@ -118,7 +118,7 @@ void MainMenu::draw(unsigned string_num) {
     }
 }
 
-unsigned MainMenu::update(unsigned &string_num, std::stack <std::unique_ptr<Menu>> &menus) {
+unsigned MainMenu::update(unsigned &string_num, std::stack<std::unique_ptr<Menu>> &menus) {
     bool is_exit = false;
     KeyboardControl control(game_settings);
 
@@ -138,9 +138,12 @@ unsigned MainMenu::update(unsigned &string_num, std::stack <std::unique_ptr<Menu
                     int game_exit_code = 0;
                     do {
                         Game game(filename);
-                        game_exit_code = game.start_game(random_apples);
-                        game.print_deathscreen();
-                        sleep(3);
+                        unsigned ai_mode = game.get_ai_mode();
+                        if (ai_mode == 0) {
+                            game_exit_code = game.start_game(random_apples);
+                        } else if (ai_mode == 1) {
+                        } else {
+                        }
                     } while (game_exit_code == PauseMenu::restart_code);
 
                     menus.top().get()->draw(string_num);
@@ -164,8 +167,7 @@ unsigned MainMenu::update(unsigned &string_num, std::stack <std::unique_ptr<Menu
                     menus.top().get()->draw(string_num);
                 } else if (string_num == exit) {
                     ConsoleUI::on_cursor();
-                    std::cout << "\033[1;1H";
-                    std::cout << "\033[2J";
+                    std::cout << "\033[3J\033[H\033[2J";
                     return 1;
                 }
                 break;
@@ -178,7 +180,6 @@ unsigned MainMenu::update(unsigned &string_num, std::stack <std::unique_ptr<Menu
 }
 
 //************//
-
 
 PauseMenu::PauseMenu(std::string file) : Menu(file), options_count(exit) {}
 
@@ -232,7 +233,7 @@ void PauseMenu::draw(unsigned string_num) {
     }
 }
 
-unsigned PauseMenu::update(unsigned &string_num, std::stack <std::unique_ptr<Menu>> &menus) {
+unsigned PauseMenu::update(unsigned &string_num, std::stack<std::unique_ptr<Menu>> &menus) {
     bool is_exit = false;
     KeyboardControl control(game_settings);
 
@@ -271,7 +272,6 @@ unsigned PauseMenu::update(unsigned &string_num, std::stack <std::unique_ptr<Men
 }
 
 //************//
-
 
 LeaderboardMenu::LeaderboardMenu(std::string file) : Menu(file), options_count(exit) {}
 
@@ -312,7 +312,7 @@ void LeaderboardMenu::draw(unsigned string_num) {
     pure_draw();
 }
 
-unsigned LeaderboardMenu::update(unsigned &string_num, std::stack <std::unique_ptr<Menu>> &menus) {
+unsigned LeaderboardMenu::update(unsigned &string_num, std::stack<std::unique_ptr<Menu>> &menus) {
     bool is_exit = false;
     KeyboardControl control(game_settings);
 
@@ -335,7 +335,6 @@ unsigned LeaderboardMenu::update(unsigned &string_num, std::stack <std::unique_p
 }
 
 //************//
-
 
 SettingsGeneralMenu::SettingsGeneralMenu(std::string file) : Menu(file), options_count(exit) {}
 
@@ -404,7 +403,7 @@ void SettingsGeneralMenu::draw(unsigned string_num) {
     }
 }
 
-unsigned SettingsGeneralMenu::update(unsigned &string_num, std::stack <std::unique_ptr<Menu>> &menus) {
+unsigned SettingsGeneralMenu::update(unsigned &string_num, std::stack<std::unique_ptr<Menu>> &menus) {
     bool is_exit = false;
     KeyboardControl cntrl(game_settings);
 
@@ -451,16 +450,17 @@ unsigned SettingsGeneralMenu::update(unsigned &string_num, std::stack <std::uniq
 
 //************//
 
-
 SettingsSnakeMenu::SettingsSnakeMenu(std::string file) : Menu(file), options_count(exit) {}
 
 void SettingsSnakeMenu::pure_draw() {
     ConsoleUI console;
     console.set_cursor(17, 46);
-    std::cout << "Speed: " << game_settings.speed << std::endl;
+    std::cout << "AI mode: " << game_settings.ai_mode << std::endl;
     console.set_cursor(18, 46);
+    std::cout << "Speed: " << game_settings.speed << std::endl;
+    console.set_cursor(19, 46);
     std::cout << "Reset length at new level: " << game_settings.reset_length << std::endl;
-    console.set_cursor(20, 46);
+    console.set_cursor(21, 46);
     std::cout << "Exit" << std::endl;
 }
 
@@ -474,20 +474,26 @@ void SettingsSnakeMenu::draw(unsigned string_num) {
     pure_draw();
 
     switch (string_num) {
-        case speed:
+        case ai_mode:
             console.set_cursor(17, 46);
+            console.underline();
+            std::cout << "AI mode: " << game_settings.ai_mode << std::endl;
+            console.reset();
+            break;
+        case speed:
+            console.set_cursor(18, 46);
             console.underline();
             std::cout << "Speed: " << game_settings.speed << std::endl;
             console.reset();
             break;
         case reset_length:
-            console.set_cursor(18, 46);
+            console.set_cursor(19, 46);
             console.underline();
             std::cout << "Reset length at new level: " << game_settings.reset_length << std::endl;
             console.reset();
             break;
         case exit:
-            console.set_cursor(20, 46);
+            console.set_cursor(21, 46);
             console.underline();
             std::cout << "Exit" << std::endl;
             console.reset();
@@ -495,7 +501,7 @@ void SettingsSnakeMenu::draw(unsigned string_num) {
     }
 }
 
-unsigned SettingsSnakeMenu::update(unsigned &string_num, std::stack <std::unique_ptr<Menu>> &menus) {
+unsigned SettingsSnakeMenu::update(unsigned &string_num, std::stack<std::unique_ptr<Menu>> &menus) {
     bool is_exit = false;
     KeyboardControl control(game_settings);
 
@@ -511,18 +517,29 @@ unsigned SettingsSnakeMenu::update(unsigned &string_num, std::stack <std::unique
                 string_num < options_count ? string_num += 1 : string_num = 0;
                 break;
             case enter:
-                if (string_num == speed) {
-                    ConsoleUI::set_cursor(17, 53);
+                if (string_num == ai_mode) {
+                    ConsoleUI::set_cursor(17, 55);
+                    ConsoleUI::highlight(1);
+                    ConsoleUI::set_cursor(17, 55);
+                    ConsoleUI::highlight(0);
+                    game_settings.ai_mode = control.read_option();
+                    if (game_settings.ai_mode > 2) {
+                        game_settings.ai_mode = 0;
+                    }
+                    replace_float_setting(filename, "ai_mode", game_settings.ai_mode);
+                    ConsoleUI::reset();
+                } else if (string_num == speed) {
+                    ConsoleUI::set_cursor(18, 53);
                     ConsoleUI::highlight(3);
-                    ConsoleUI::set_cursor(17, 53);
+                    ConsoleUI::set_cursor(18, 53);
                     ConsoleUI::highlight(0);
                     game_settings.speed = control.read_float_option();
                     replace_float_setting(filename, "speed", game_settings.speed);
                     ConsoleUI::reset();
                 } else if (string_num == reset_length) {
-                    ConsoleUI::set_cursor(18, 73);
+                    ConsoleUI::set_cursor(19, 73);
                     ConsoleUI::highlight(1);
-                    ConsoleUI::set_cursor(18, 73);
+                    ConsoleUI::set_cursor(19, 73);
                     ConsoleUI::highlight(0);
                     game_settings.reset_length = control.read_option();
                     replace_setting(filename, "reset_length", game_settings.reset_length);
@@ -543,7 +560,6 @@ unsigned SettingsSnakeMenu::update(unsigned &string_num, std::stack <std::unique
 }
 
 //************//
-
 
 SettingsMapMenu::SettingsMapMenu(std::string file) : Menu(file), options_count(exit) {}
 
@@ -620,7 +636,7 @@ void SettingsMapMenu::draw(unsigned string_num) {
     }
 }
 
-unsigned SettingsMapMenu::update(unsigned &string_num, std::stack <std::unique_ptr<Menu>> &menus) {
+unsigned SettingsMapMenu::update(unsigned &string_num, std::stack<std::unique_ptr<Menu>> &menus) {
     bool is_exit = false;
     KeyboardControl control(game_settings);
 
@@ -645,7 +661,7 @@ unsigned SettingsMapMenu::update(unsigned &string_num, std::stack <std::unique_p
                     replace_setting(filename, "map_length", game_settings.map_length);
                     ConsoleUI::reset();
 
-                    MapModel map(game_settings); // for update map.txt
+                    MapModel map(game_settings);  // for update map.txt
                     write_map_to_file(map);
                 } else if (string_num == width) {
                     ConsoleUI::set_cursor(18, 57);
@@ -656,7 +672,7 @@ unsigned SettingsMapMenu::update(unsigned &string_num, std::stack <std::unique_p
                     replace_setting(filename, "map_width", game_settings.map_width);
                     ConsoleUI::reset();
 
-                    MapModel map(game_settings); // for update map.txt
+                    MapModel map(game_settings);  // for update map.txt
                     write_map_to_file(map);
                 } else if (string_num == solid_walls) {
                     ConsoleUI::set_cursor(19, 66);
@@ -702,7 +718,6 @@ unsigned SettingsMapMenu::update(unsigned &string_num, std::stack <std::unique_p
 }
 
 //************//
-
 
 SettingsControlMenu::SettingsControlMenu(std::string file) : Menu(file), options_count(exit) {}
 
@@ -856,7 +871,7 @@ void SettingsControlMenu::draw(unsigned string_num) {
     }
 }
 
-unsigned SettingsControlMenu::update(unsigned &string_num, std::stack <std::unique_ptr<Menu>> &menus) {
+unsigned SettingsControlMenu::update(unsigned &string_num, std::stack<std::unique_ptr<Menu>> &menus) {
     bool is_exit = false;
     KeyboardControl control(game_settings);
 
@@ -960,7 +975,6 @@ unsigned SettingsControlMenu::update(unsigned &string_num, std::stack <std::uniq
 
 //************//
 
-
 SettingsGraphicMenu::SettingsGraphicMenu(std::string file) : Menu(file), options_count(exit) {}
 
 unsigned SettingsGraphicMenu::convert_color_number(unsigned num) {
@@ -998,7 +1012,7 @@ unsigned SettingsGraphicMenu::convert_color_number(unsigned num) {
         case 16:
             return 67;
     }
-    return 0; // wrong input
+    return 0;  // wrong input
 }
 
 void SettingsGraphicMenu::pure_draw() {
@@ -1012,7 +1026,6 @@ void SettingsGraphicMenu::pure_draw() {
     console.set_cursor(18, 46);
     std::cout << "Possible colors";
     console.reset();
-
 
     console.set_cursor(20, 46);
     std::cout << "Mode 2 colors: ";
@@ -1114,7 +1127,7 @@ void SettingsGraphicMenu::draw(unsigned string_num) {
     }
 }
 
-unsigned SettingsGraphicMenu::update(unsigned &string_num, std::stack <std::unique_ptr<Menu>> &menus) {
+unsigned SettingsGraphicMenu::update(unsigned &string_num, std::stack<std::unique_ptr<Menu>> &menus) {
     bool is_exit = false;
     KeyboardControl control(game_settings);
 
@@ -1136,7 +1149,7 @@ unsigned SettingsGraphicMenu::update(unsigned &string_num, std::stack <std::uniq
                     ConsoleUI::set_cursor(20, 59);
                     ConsoleUI::highlight(0);
                     game_settings.snake_color = Term::Color4(convert_color_number(control.read_option()));
-                    replace_setting(filename, "snake_color", (unsigned) game_settings.snake_color);
+                    replace_setting(filename, "snake_color", (unsigned)game_settings.snake_color);
                     ConsoleUI::reset();
                 } else if (string_num == empty_block) {
                     ConsoleUI::set_cursor(21, 65);
@@ -1144,7 +1157,7 @@ unsigned SettingsGraphicMenu::update(unsigned &string_num, std::stack <std::uniq
                     ConsoleUI::set_cursor(21, 65);
                     ConsoleUI::highlight(0);
                     game_settings.empty_color = Term::Color4(convert_color_number(control.read_option()));
-                    replace_setting(filename, "empty_color", (unsigned) game_settings.empty_color);
+                    replace_setting(filename, "empty_color", (unsigned)game_settings.empty_color);
                     ConsoleUI::reset();
                 } else if (string_num == wall) {
                     ConsoleUI::set_cursor(22, 58);
@@ -1152,7 +1165,7 @@ unsigned SettingsGraphicMenu::update(unsigned &string_num, std::stack <std::uniq
                     ConsoleUI::set_cursor(22, 58);
                     ConsoleUI::highlight(0);
                     game_settings.wall_color = Term::Color4(convert_color_number(control.read_option()));
-                    replace_setting(filename, "wall_color", (unsigned) game_settings.wall_color);
+                    replace_setting(filename, "wall_color", (unsigned)game_settings.wall_color);
                     ConsoleUI::reset();
                 } else if (string_num == teleport) {
                     ConsoleUI::set_cursor(23, 62);
@@ -1160,7 +1173,7 @@ unsigned SettingsGraphicMenu::update(unsigned &string_num, std::stack <std::uniq
                     ConsoleUI::set_cursor(23, 62);
                     ConsoleUI::highlight(0);
                     game_settings.teleport_color = Term::Color4(convert_color_number(control.read_option()));
-                    replace_setting(filename, "teleport_color", (unsigned) game_settings.teleport_color);
+                    replace_setting(filename, "teleport_color", (unsigned)game_settings.teleport_color);
                     ConsoleUI::reset();
                 } else if (string_num == bonus) {
                     ConsoleUI::set_cursor(24, 59);
@@ -1168,7 +1181,7 @@ unsigned SettingsGraphicMenu::update(unsigned &string_num, std::stack <std::uniq
                     ConsoleUI::set_cursor(24, 59);
                     ConsoleUI::highlight(0);
                     game_settings.bonus_color = Term::Color4(convert_color_number(control.read_option()));
-                    replace_setting(filename, "bonus_color", (unsigned) game_settings.bonus_color);
+                    replace_setting(filename, "bonus_color", (unsigned)game_settings.bonus_color);
                     ConsoleUI::reset();
                 } else if (string_num == antibonus) {
                     ConsoleUI::set_cursor(25, 63);
@@ -1176,23 +1189,26 @@ unsigned SettingsGraphicMenu::update(unsigned &string_num, std::stack <std::uniq
                     ConsoleUI::set_cursor(25, 63);
                     ConsoleUI::highlight(0);
                     game_settings.antibonus_color = Term::Color4(convert_color_number(control.read_option()));
-                    replace_setting(filename, "antibonus_color", (unsigned) game_settings.antibonus_color);
+                    replace_setting(filename, "antibonus_color", (unsigned)game_settings.antibonus_color);
                     ConsoleUI::reset();
                 } else if (string_num == speed_bonus) {
                     ConsoleUI::set_cursor(26, 65);
                     ConsoleUI::highlight(2);
                     ConsoleUI::set_cursor(26, 65);
                     ConsoleUI::highlight(0);
-                    game_settings.speed_bonus_color = Term::Color4(convert_color_number(control.read_option()));
-                    replace_setting(filename, "speed_bonus_color", (unsigned) game_settings.speed_bonus_color);
+                    game_settings.speed_bonus_color =
+                        Term::Color4(convert_color_number(control.read_option()));
+                    replace_setting(filename, "speed_bonus_color", (unsigned)game_settings.speed_bonus_color);
                     ConsoleUI::reset();
                 } else if (string_num == speed_antibonus) {
                     ConsoleUI::set_cursor(27, 69);
                     ConsoleUI::highlight(2);
                     ConsoleUI::set_cursor(27, 69);
                     ConsoleUI::highlight(0);
-                    game_settings.speed_antibonus_color = Term::Color4(convert_color_number(control.read_option()));
-                    replace_setting(filename, "speed_antibonus_color", (unsigned) game_settings.speed_antibonus_color);
+                    game_settings.speed_antibonus_color =
+                        Term::Color4(convert_color_number(control.read_option()));
+                    replace_setting(filename, "speed_antibonus_color",
+                                    (unsigned)game_settings.speed_antibonus_color);
                     ConsoleUI::reset();
                 } else if (string_num == mode) {
                     ConsoleUI::set_cursor(16, 60);
@@ -1225,7 +1241,6 @@ unsigned SettingsGraphicMenu::update(unsigned &string_num, std::stack <std::uniq
 }
 
 //************//
-
 
 SavedSettingsMenu::SavedSettingsMenu(std::string file) : Menu(file), options_count(exit) {}
 
@@ -1302,7 +1317,7 @@ void SavedSettingsMenu::draw(unsigned string_num) {
     }
 }
 
-unsigned SavedSettingsMenu::update(unsigned int &string_num, std::stack <std::unique_ptr<Menu>> &menus) {
+unsigned SavedSettingsMenu::update(unsigned int &string_num, std::stack<std::unique_ptr<Menu>> &menus) {
     bool is_exit = false;
     KeyboardControl control(game_settings);
 
@@ -1353,10 +1368,12 @@ unsigned SavedSettingsMenu::update(unsigned int &string_num, std::stack <std::un
 
 //************//
 
-
-CustomMapSettingsMenu::CustomMapSettingsMenu(std::string file) : Menu(file),
-                                                                 map_model(read_map_from_file(game_settings)),
-                                                                 map_view(map_model, game_settings), i(2), j(2) {}
+CustomMapSettingsMenu::CustomMapSettingsMenu(std::string file)
+    : Menu(file),
+      map_model(read_map_from_file(game_settings)),
+      map_view(map_model, game_settings),
+      i(2),
+      j(2) {}
 
 void CustomMapSettingsMenu::pure_draw() {
     ConsoleUI console;
@@ -1368,11 +1385,9 @@ void CustomMapSettingsMenu::pure_draw() {
     std::cout << "Press enter for quit" << std::endl;
 }
 
-void CustomMapSettingsMenu::draw(unsigned string_num) {
-    pure_draw();
-}
+void CustomMapSettingsMenu::draw(unsigned string_num) { pure_draw(); }
 
-unsigned CustomMapSettingsMenu::update(unsigned &string_num, std::stack <std::unique_ptr<Menu>> &menus) {
+unsigned CustomMapSettingsMenu::update(unsigned &string_num, std::stack<std::unique_ptr<Menu>> &menus) {
     bool is_exit = false;
     KeyboardControl control(game_settings);
     ConsoleUI::set_cursor(i, j * 2 - 1);
@@ -1435,7 +1450,6 @@ unsigned CustomMapSettingsMenu::update(unsigned &string_num, std::stack <std::un
 }
 
 //************//
-
 
 ColorsMenu::ColorsMenu(std::string file) : Menu(file) {}
 
@@ -1511,7 +1525,7 @@ void ColorsMenu::draw(unsigned string_num) {
     pure_draw();
 }
 
-unsigned ColorsMenu::update(unsigned &string_num, std::stack <std::unique_ptr<Menu>> &menus) {
+unsigned ColorsMenu::update(unsigned &string_num, std::stack<std::unique_ptr<Menu>> &menus) {
     bool is_exit = false;
     KeyboardControl control(game_settings);
 
@@ -1534,7 +1548,6 @@ unsigned ColorsMenu::update(unsigned &string_num, std::stack <std::unique_ptr<Me
 }
 
 //************//
-
 
 TitlesMenu::TitlesMenu(std::string file) : Menu(file) {}
 
@@ -1548,7 +1561,7 @@ void TitlesMenu::draw(unsigned string_num) {
     print_logo();
 }
 
-unsigned TitlesMenu::update(unsigned &string_num, std::stack <std::unique_ptr<Menu>> &menus) {
+unsigned TitlesMenu::update(unsigned &string_num, std::stack<std::unique_ptr<Menu>> &menus) {
     bool is_exit = false;
     KeyboardControl control(game_settings);
 
@@ -1571,7 +1584,6 @@ unsigned TitlesMenu::update(unsigned &string_num, std::stack <std::unique_ptr<Me
 }
 
 //************//
-
 
 GameInformationMenu::GameInformationMenu(std::string file) : Menu(file) {}
 
@@ -1606,7 +1618,7 @@ void GameInformationMenu::draw(unsigned string_num) {
     pure_draw();
 }
 
-unsigned GameInformationMenu::update(unsigned &string_num, std::stack <std::unique_ptr<Menu>> &menus) {
+unsigned GameInformationMenu::update(unsigned &string_num, std::stack<std::unique_ptr<Menu>> &menus) {
     bool is_exit = false;
     KeyboardControl control(game_settings);
 

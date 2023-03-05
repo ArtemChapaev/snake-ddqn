@@ -1,15 +1,16 @@
 #pragma once
 
-#include <iostream>
 #include <sys/ioctl.h>
-#include <sstream>
 #include <unistd.h>
+
+#include <iostream>
+#include <sstream>
 
 #include "settings.h"
 
 class ConsoleUI {
     /// A class that interacts with the console using escape sequences.
-public:
+   public:
     void clear_full_display();
     void clear_line(unsigned);
     void clear_game_field(Settings);
