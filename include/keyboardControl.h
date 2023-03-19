@@ -17,7 +17,7 @@ class KeyboardControl : public Control {
     KeyboardControl(Settings);
     ~KeyboardControl();
 
-    Keys read_key(Keys) override;
+    Keys read_key(Keys);
     int read_sym();
 
     unsigned read_option();

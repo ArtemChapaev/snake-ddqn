@@ -12,6 +12,7 @@
 #include <string>
 #include <vector>
 
+#include "aiControl.h"
 #include "consoleUI.h"
 #include "control.h"
 #include "keyboardControl.h"
@@ -48,6 +49,7 @@ class Game {
 
     int start_game(bool);
     int start_level(unsigned);
+    int start_learning(unsigned);
     int pause_game();
     int print_deathscreen();
     int write_to_leaderboard();

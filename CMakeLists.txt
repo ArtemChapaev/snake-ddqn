@@ -20,6 +20,7 @@ add_executable(snake /
         src/logos.cpp /
         src/menu.cpp /
         src/main.cpp /
+        src/aiControl.cpp /
         )
 
 target_link_libraries(snake PRIVATE cpp-terminal)
