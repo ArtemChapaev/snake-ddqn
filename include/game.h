@@ -38,7 +38,7 @@ const unsigned kHighscoreStringLength = 16;
 const unsigned kFinalscoreStringLength = 13;
 
 const std::string kWinString = "LEVEL UP!";
-const std::string kLeaderboardFile = "build/leaderboard.txt";
+const std::string kLeaderboardFile = "leaderboard.txt";
 
 class Game {
     /// A controller class that connects the model and the display of the game.

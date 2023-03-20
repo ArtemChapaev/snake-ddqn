@@ -43,9 +43,9 @@ int Game::start_learning(unsigned episodes_total) {
     while (!is_exit) {
         Keys last_dir = snake.get_direction();
 
-        Keys pressed_key = control.read_key(last_dir);  // for pause
-        Keys new_key = ai.get_direction(0, 0, 0, 0);    // for AI
-        
+        Keys pressed_key = control.read_key(last_dir);                   // for pause
+        Keys new_key = ai.get_direction(0, static_cast<Keys>(0), 0, 0);  // for AI
+
         if (new_key == Keys::error || new_key == Keys::enter || new_key == Keys::teleport ||
             new_key == Keys::wall || new_key == Keys::empty) {
             moves_number_after_error = 0;
@@ -189,8 +189,8 @@ int Game::start_learning(unsigned episodes_total) {
 int Game::start_level(unsigned level_number) {
     unsigned snake_length = kSnakeLength;
     if (!settings.reset_length) {
-        snake_length =
-            death_score + kSnakeLength;  // bcs for last level: death_score = snake.size() - kSnakeLength
+        // bcs for last level: death_score = snake.size() - kSnakeLength
+        snake_length = death_score + kSnakeLength;
     }
 
     Snake snake(settings, snake_length);
@@ -321,8 +321,10 @@ int Game::start_level(unsigned level_number) {
 
         map_view.print();
 
-        death_score =
-            (int)(snake.get_snake().size() - kSnakeLength) > 0 ? snake.get_snake().size() - kSnakeLength : 0;
+        death_score = static_cast<int>(snake.get_snake().size() - kSnakeLength) > 0
+                          ? snake.get_snake().size() - kSnakeLength
+                          : 0;
+
         highest_score = death_score > highest_score ? death_score : highest_score;
 
         if (settings.score) {

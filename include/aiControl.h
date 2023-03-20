@@ -1,10 +1,15 @@
 #pragma once
 
 #include "control.h"
-#include "settings.h"
 #include "snake.h"
 
 class aiControl : public Control {
    public:
-    Keys get_direction(unsigned, unsigned, unsigned, unsigned);
+    aiControl() : epsilon(0.5) {}
+
+    Keys get_direction(unsigned, Keys, unsigned, unsigned);
+
+   private:
+    double epsilon;
+    // Network network;
 };

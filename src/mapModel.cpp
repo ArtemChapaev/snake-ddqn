@@ -63,8 +63,8 @@ void MapModel::set_cell(unsigned y, unsigned x, Cell cell) { field[y][x] = cell;
 
 bool MapModel::validate_teleports(unsigned y, unsigned x) {
     if (field[y + 1][x - 1] == teleport_c || field[y + 1][x] == teleport_c ||
-        field[y + 1][x + 1] == teleport_c || field[y][x - 1] == teleport_c || field[y][x + 1] == teleport_c ||
-        field[y - 1][x - 1] == teleport_c || field[y - 1][x] == teleport_c ||
+        field[y - 1][x - 1] == teleport_c || field[y - 1][x] == teleport_c || field[y][x + 1] == teleport_c ||
+        field[y][x - 1] == teleport_c || field[y + 1][x + 1] == teleport_c ||
         field[y - 1][x + 1] == teleport_c) {
         return false;
     }
@@ -73,9 +73,14 @@ bool MapModel::validate_teleports(unsigned y, unsigned x) {
 
 MapModel read_map_from_file(Settings settings) {
     MapModel map(settings);
-    std::ifstream file("map.txt");
-    char sym;
+    std::ifstream file(kMapFile);
+    if (!file.is_open()) {
+        // use default map
+        write_map_to_file(map);
+        return map;
+    }
 
+    char sym;
     for (unsigned j = map.get_width() - 2; j >= 1; j--) {
         for (unsigned i = 1; i < map.get_length() - 1; i++) {
             file >> sym;
@@ -94,7 +99,7 @@ MapModel read_map_from_file(Settings settings) {
 }
 
 void write_map_to_file(MapModel &map) {
-    std::ofstream file("map.txt");
+    std::ofstream file(kMapFile);
     for (unsigned j = map.get_width() - 2; j >= 1; j--) {
         for (unsigned i = 1; i < map.get_length() - 1; i++) {
             Cell cell = map.check_cell(j, i);

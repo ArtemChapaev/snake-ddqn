@@ -7,6 +7,9 @@
 
 #include "cpp-terminal/base.hpp"
 
+const std::string kMapFile = "map.txt";
+const std::string kSettingsFile = "map.txt";
+
 struct Settings {
     Settings(unsigned mL = 20, unsigned mW = 20, float sp = 1, bool sW = 0, bool sc = 1, bool bA = 1,
              unsigned vM = 2, bool rL = 0, char kU = 72, char kD = 80, char kR = 77, char kL = 75,
@@ -74,10 +77,14 @@ struct Settings {
     Term::Color4 speed_antibonus_color;
 };
 
-int parser(Settings &settings, std::string &filename);
+void parser(Settings &settings, std::string &filename);
 
 void replace_setting(std::string, std::string, unsigned);
 void replace_float_setting(std::string, std::string, float);
 void replace_char_setting(std::string, std::string, char);
 void replace_rgb_setting(std::string, std::string, Term::RGB);
+
+void create_settings_file();
+void create_map_file();
+
 void copy_file(std::string, std::string);

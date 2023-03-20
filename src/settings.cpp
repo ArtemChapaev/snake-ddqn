@@ -1,9 +1,10 @@
 #include "settings.h"
 
-int parser(Settings &settings, std::string &filename) {
+void parser(Settings &settings, std::string &filename) {
     std::ifstream file(filename);
     if (!file.is_open()) {
-        return -1;
+        create_settings_file();
+        file.open(filename);
     }
 
     std::string var, map_length, map_width, speed, solid_wall, score, bonus_apples, view_mode, reset_length,
@@ -71,45 +72,9 @@ int parser(Settings &settings, std::string &filename) {
 
         file.close();
     } catch (const std::exception ex) {
-        std::ofstream temp;
-        temp.open("temp.txt");
-
-        temp << R"(map_length=20
-map_width=20
-solid_wall=0
-score=1
-bonus_apples=1
-view_mode=2
-reset_length=0
-key_up=72
-key_left=75
-key_down=80
-key_right=77
-key_pause=27
-key_enter=10
-key_teleport=116
-key_wall=119
-key_empty=101
-ai_mode=0
-snake_color=2
-empty_color=0
-wall_color=60
-teleport_color=67
-bonus_color=1
-antibonus_color=3
-speed_bonus_color=4
-speed_antibonus_color=5
-speed=2
-)";
-
-        temp.close();
         file.close();
-
-        const char *p = filename.c_str();
-        remove(p);
-        rename("temp.txt", p);
+        create_settings_file();
     }
-    return 0;
 }
 
 void replace_setting(std::string path, std::string erase_line, unsigned new_value) {
@@ -184,9 +149,68 @@ void replace_char_setting(std::string path, std::string erase_line, char new_val
     rename("temp.txt", p);
 }
 
+void create_settings_file() {
+    std::ofstream temp;
+    temp.open("temp.txt");
+
+    temp <<
+        R"(map_length=20
+map_width=20
+solid_wall=0
+score=1
+bonus_apples=1
+view_mode=2
+reset_length=0
+key_up=72
+key_left=75
+key_down=80
+key_right=77
+key_pause=27
+key_enter=10
+key_teleport=116
+key_wall=119
+key_empty=101
+ai_mode=0
+snake_color=2
+empty_color=0
+wall_color=60
+teleport_color=67
+bonus_color=1
+antibonus_color=3
+speed_bonus_color=4
+speed_antibonus_color=5
+speed=2)";
+
+    temp.close();
+
+    const char *p = kSettingsFile.c_str();
+    remove(p);
+    rename("temp.txt", p);
+}
+
+void create_map_file() {
+    std::ofstream file(kMapFile);
+    for (unsigned j = 20 - 2; j >= 1; j--) {
+        for (unsigned i = 1; i < 20 - 1; i++) {
+            file << 'E';
+        }
+        file << '\n';
+    }
+    file.close();
+}
+
 void copy_file(std::string from, std::string to) {
     std::ifstream src(from);
+    if (!src.is_open()) {
+        if (to == kMapFile) {
+            create_map_file();
+        } else if (to == kSettingsFile) {
+            create_settings_file();
+        }
+        return;
+    }
     std::ofstream dst(to);
+
     dst << src.rdbuf();
     src.close();
     dst.close();

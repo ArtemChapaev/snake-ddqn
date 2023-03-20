@@ -1334,23 +1334,23 @@ unsigned SavedSettingsMenu::update(unsigned int &string_num, std::stack<std::uni
                 break;
             case enter:
                 if (string_num == save1) {
-                    copy_file("settings.txt", "presets/settings1.txt");
-                    copy_file("map.txt", "presets/map1.txt");
+                    copy_file(SETTINGS_FILE, "presets/settings1.txt");
+                    copy_file(MAP_FILE, "presets/map1.txt");
                 } else if (string_num == save2) {
-                    copy_file("settings.txt", "presets/settings2.txt");
-                    copy_file("map.txt", "presets/map2.txt");
+                    copy_file(SETTINGS_FILE, "presets/settings2.txt");
+                    copy_file(MAP_FILE, "presets/map2.txt");
                 } else if (string_num == save3) {
-                    copy_file("settings.txt", "presets/settings3.txt");
-                    copy_file("map.txt", "presets/map3.txt");
+                    copy_file(SETTINGS_FILE, "presets/settings3.txt");
+                    copy_file(MAP_FILE, "presets/map3.txt");
                 } else if (string_num == read1) {
-                    copy_file("presets/settings1.txt", "settings.txt");
-                    copy_file("presets/map1.txt", "map.txt");
+                    copy_file("presets/settings1.txt", SETTINGS_FILE);
+                    copy_file("presets/map1.txt", MAP_FILE);
                 } else if (string_num == read2) {
-                    copy_file("presets/settings2.txt", "settings.txt");
-                    copy_file("presets/map2.txt", "map.txt");
+                    copy_file("presets/settings2.txt", SETTINGS_FILE);
+                    copy_file("presets/map2.txt", MAP_FILE);
                 } else if (string_num == read3) {
-                    copy_file("presets/settings3.txt", "settings.txt");
-                    copy_file("presets/map3.txt", "map.txt");
+                    copy_file("presets/settings3.txt", SETTINGS_FILE);
+                    copy_file("presets/map3.txt", MAP_FILE);
                 } else if (string_num == exit) {
                     string_num = 0;
                     menus.pop();
