@@ -2,16 +2,16 @@
 
 Keys aiControl::get_direction(unsigned s, Keys a, unsigned r, unsigned n_s) {
     /*
-         double loss = network.compute_loss(s, a, r, n_s);
-         network.update_weights(s, a, r, n_s);
+         network.backward(s, a, r, n_s);
+         network.update_weights();
 
-         Qvalues next_qvalues = network.predict(n_s);
+         Qvalues next_qvalues = network.forward(n_s);
 
          Keys next_action = Keys::up;
          // e-greedy algorithm
          if ((rand() % 10) / 10 < epsilon) {
-             rand() % 4 because we pick random direction
-         next_action = static_cast<Keys>(rand() % 4);
+            // rand() % 4 because we pick random direction
+            next_action = static_cast<Keys>(rand() % 4);
          } else {
              double max_qvalue = 0;
              [max_qvalue, next_action] = find_max_qvalue(next_qvalues);
@@ -44,27 +44,35 @@ std::tuple<double, Keys> find_max_qvalue(Qvalues qvalues) {
 */
 
 /*
-double calculate_mean_MSE(Qvalues predicted_qvalues, Qvalues target_qvalues) {
-    double up_qvalue_delta = predicted_qvalues.up_qvalue - target_qvalues.up_qvalue;
-    double right_qvalue_delta = predicted_qvalues.right_qvalue - target_qvalues.right_qvalue;
-    double down_qvalue_delta = predicted_qvalues.down_qvalue - target_qvalues.down_qvalue;
-    double left_qvalue_delta = predicted_qvalues.left_qvalue - target_qvalues.left_qvalue;
+<type> network::calculate_dE_dt_last(unsigned s, Keys a, unsigned r, unsigned n_s) {
+    // find target(y) of current state
+    Qvalues predicted_next_qvalues = predict(n_s);
+    auto [max_qvalue, next_action] = find_max_qvalue(predicted_next_qvalues);
+    double target = r + gamma * max_qvalue;
 
-    double mean_MSE = (up_qvalue_delta * up_qvalue_delta + right_qvalue_delta * right_qvalue_delta +
-                        down_qvalue_delta * down_qvalue_delta + left_qvalue_delta * left_qvalue_delta) / 4;
+    // bring to Qvalues for next calculating loss
+    // Qvalues target_qvalues{target, target, target, target};
+
+
+    // calculate sequentially for each dE_dt_last = dE_dz_i * dz_dt_last
+
+    Qvalues predicted_current_qvalues = predict(s);
+
+    <type> dE_dt_last;
+    for (int i = 0;i < 4;++i) {
+        double dE_dz_i = predicted_current_qvalues[i] * (predicted_current_qvalues[i] - target) / 2;
+        double dz_dt_last = predicted_current_qvalues[i] * (1 - predicted_current_qvalues[i]);
+        dE_dt_last[i] = dE_dz_i * dz_dt_last;
+    }
+
+    return dE_dt_last;
 }
 */
 
 /*
-double Network::compute_loss(unsigned s, Keys a, unsigned r, unsigned n_s) {
-    Qvalues predicted_next_qvalues = network.predict(n_s);
-    auto [max_qvalue, next_action] = find_max_qvalue(predicted_next_qvalues);
-    double target = r + gamma * next_qvalue;
+void network::backward(unsigned s, Keys a, unsigned r, unsigned n_s) {
+    <type> dE_dt_last = calculate_dE_dt_last(s, a, r, n_s);
+    // TO DO
 
-    // bring to Qvalues for next calculating loss
-    Qvalues target_qvalues{target, target, target, target};
-    Qvalues predicted_current_qvalues = network.predict(s);
-
-    return calculate_mean_MSE(predicted_current_qvalues, target_qvalues);
 }
 */
