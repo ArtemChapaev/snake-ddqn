@@ -2,6 +2,7 @@
 
 #include "control.h"
 #include "snake.h"
+#include "neuralNetwork.h"
 
 class aiControl : public Control {
    public:
@@ -11,5 +12,5 @@ class aiControl : public Control {
 
    private:
     double epsilon;
-    // Network network;
+    Network1 network;
 };
