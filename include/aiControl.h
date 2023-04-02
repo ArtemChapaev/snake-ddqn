@@ -1,8 +1,8 @@
 #pragma once
 
 #include "control.h"
-#include "snake.h"
 #include "neuralNetwork.h"
+#include "snake.h"
 
 class aiControl : public Control {
    public:

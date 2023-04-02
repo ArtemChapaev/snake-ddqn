@@ -1,41 +1,34 @@
 #include "perceptron.h"
 
-////////////////////////////////////////////
+void Network1::backward(unsigned s, Keys a, unsigned r, unsigned n_s) {
+    std::vector<double> dEdt_last = calculate_dEdt_last(s, a, r, n_s);
+    std::vector<double> dEdW_last = multiply_vectors(outputs[num_layers - 2], dEdt_last);
+    std::vector<double> dEdb_last = dEdt_last;
 
-std::vector<double> matrix_times_vector(const std::vector<std::vector<double>>& matrix,
-                                        const std::vector<double>& vector) {
-    std::vector<double> result(matrix.size(), 0.0);
+    std::vector<double> dEdt_prev = dEdb_last;
+    // TODO
+    // for (int i = num_layers - 2; i >= 0; i--) {
+    //     std::vector<double> dEdh = matrix_multiply_vector(transpose_matrix(weights[i + 1]), dEdt_prev);
+    //     std::vector<double> dEdt = multiply_vectors(dEdh, relu_deriv(inputs[i]));
 
-    for (int i = 0; i < matrix.size(); i++) {
-        for (int j = 0; j < vector.size(); j++) {
-            result[i] += matrix[i][j] * vector[j];
-        }
-    }
-
-    return result;
+    //      dEdt_prev = dEdt;
+    // }
 }
-
-std::vector<std::vector<double>> matrix_plus_vector(const std::vector<std::vector<double>>& matrix,
-                                                    const std::vector<double>& vector) {
-
-    std::vector<std::vector<double>> result(matrix.size(), std::vector<double>(matrix[0].size()));
-
-    for (int i = 0; i < matrix.size(); i++) {
-        for (int j = 0; j < matrix[i].size(); j++) {
-            result[i][j] = matrix[i][j] + vector[j];
-        }
-    }
-
-    return result;
-}
-
-///////////////////////////////////////////
 
 std::vector<double> Network1::forward(vector<double> input) {
     outputs[0] = input;
-    for (int i = 0; i < num_layers - 1; i++) {
-        outputs[i + 1] = relu(matrix_plus_vector(matrix_times_vector(weights[i], outputs[i]), biases[i]));
+    inputs[0] = input;
+
+    for (int i = 0; i < num_layers - 2; i++) {
+        inputs[i + 1] = vector_plus_vector(matrix_multiply_vector(weights[i], outputs[i]), biases[i]);
+        outputs[i + 1] = relu(inputs[i + 1]);
     }
+
+    // on exit layer function of activation is softmax
+    inputs[num_layers - 1] = vector_plus_vector(
+        matrix_multiply_vector(weights[num_layers - 2], outputs[num_layers - 2]), biases[num_layers - 2]);
+    outputs[num_layers - 1] = softmax(inputs[num_layers - 1]);
+
     return outputs[num_layers - 1];
 }
 
@@ -44,7 +37,6 @@ Network1::Network1(std::vector<int> layers) {
     this->layers = layers;
     num_layers = layers.size();
 
-    // initialize weights and biases
     for (int i = 0; i < num_layers - 1; i++) {
         int rows = layers[i + 1];
         int cols = layers[i];
@@ -70,7 +62,7 @@ Network1::Network1(std::vector<int> layers) {
         biases.push_back(b);
     }
 
-    // initialize outputs and errors
+    // initialize outputs and errors with zeros
     for (int i = 0; i < num_layers; i++) {
         int nodes = layers[i];
 
@@ -78,7 +70,7 @@ Network1::Network1(std::vector<int> layers) {
         std::vector<double> e(nodes, 0.0);
 
         outputs.push_back(o);
-        errors.push_back(e);
+        inputs.push_back(e);
     }
 }
 
@@ -114,14 +106,12 @@ double Network1::calculate_dEdt_last(unsigned s, Keys a, unsigned r, unsigned n_
 
     std::vector<double> predicted_current_qvalues = forward(s);
 
-    double dEdt_last;
+    std::vector<double> dEdt_last;
     for (int i = 0; i < 4; ++i) {
         double dE_dz_i = predicted_current_qvalues[i] * (predicted_current_qvalues[i] - target) / 2;
         double dz_dt_last = predicted_current_qvalues[i] * (1 - predicted_current_qvalues[i]);
-        dE_dt_last[i] = dE_dz_i * dz_dt_last;
+        dEdt_last.push_back(dE_dz_i * dz_dt_last);
     }
 
     return dEdt_last;
 }
-
-double Network1::relu(double x) { return std::max(0.0, x); }

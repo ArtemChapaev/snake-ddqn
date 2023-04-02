@@ -1,17 +1,17 @@
 #pragma once
 
-#include <vector>
-
 #include <snake.h>
 
+#include <vector>
+
 class NeuralNetwork {
-    public:
-        // calculating errors and updating network parameters
-        virtual void backward(unsigned s, Keys a, unsigned r, unsigned n_s);
+   public:
+    // calculating errors and updating network parameters
+    virtual void backward(unsigned s, Keys a, unsigned r, unsigned n_s);
 
-        // takes input values of network and returns an output as vector
-        virtual std::vector<double> forward(std::vector<double> input);
+    // takes input values of network and returns an output as vector
+    virtual std::vector<double> forward(std::vector<double> input);
 
-        // updating weights
-        virtual void update_weights();        
+    // updating weights
+    virtual void update_weights();
 }
