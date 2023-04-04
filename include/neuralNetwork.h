@@ -11,7 +11,4 @@ class NeuralNetwork {
 
     // takes input values of network and returns an output as vector
     virtual std::vector<double> forward(std::vector<double> input);
-
-    // updating weights
-    virtual void update_weights();
 }
