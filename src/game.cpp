@@ -15,7 +15,7 @@ int Game::start_learning(unsigned episodes_total) {
 
     Snake snake(settings, snake_length);
     KeyboardControl control(settings);
-    aiControl ai;
+    // aiControl ai;
     ConsoleUI console;
     MapModel map_model = read_map_from_file(settings);
     MapView map_view(map_model, settings);
@@ -43,8 +43,9 @@ int Game::start_learning(unsigned episodes_total) {
     while (!is_exit) {
         Keys last_dir = snake.get_direction();
 
-        Keys pressed_key = control.read_key(last_dir);                   // for pause
-        Keys new_key = ai.get_direction(0, static_cast<Keys>(0), 0, 0);  // for AI
+        Keys pressed_key = control.read_key(last_dir);  // for pause
+        Keys new_key = pressed_key; // TO DELETE
+        // Keys new_key = ai.get_direction(0, static_cast<Keys>(0), 0, 0);  // for AI
 
         if (new_key == Keys::error || new_key == Keys::enter || new_key == Keys::teleport ||
             new_key == Keys::wall || new_key == Keys::empty) {

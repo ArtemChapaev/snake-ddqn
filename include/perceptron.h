@@ -16,13 +16,15 @@ class Network1 : public NeuralNetwork {
     std::vector<int> layers;
     int num_layers;
 
-    std::tuple<double, Keys> find_max_qvalue(Qvalues qvalues);
-    double calculate_dEdt_last(unsigned s, Keys a, unsigned r, unsigned n_s);
+    std::vector<double> calculate_dEdt_last(std::vector<double> s, Keys a, unsigned r,
+                                            std::vector<double> n_s);
 
     double learning_rate;
+    double gamma;
 
    public:
-    Network1(vector<int> layers, double learning_rate);
-    void backward(unsigned s, Keys a, unsigned r, unsigned n_s) override;
+    Network1(std::vector<int> layers, double learning_rate, double gamma);
+    void backward(std::vector<double> s, Keys a, unsigned r, std::vector<double> n_s) override;
+    std::tuple<double, Keys> find_max_qvalue(std::vector<double> qvalues);
     std::vector<double> forward(std::vector<double> input) override;
-}
+};

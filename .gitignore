@@ -1,6 +1,7 @@
 cmake-*/
 build/
 .idea/
+.vscode/
 
 _deps
 CMakeFiles

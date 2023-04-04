@@ -22,6 +22,7 @@ add_executable(snake /
         src/main.cpp /
         src/aiControl.cpp /
         src/perceptron.cpp /
+        src/mylib.cpp /
         )
 
 target_link_libraries(snake PRIVATE cpp-terminal)

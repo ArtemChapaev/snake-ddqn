@@ -8,7 +8,7 @@
 #include "cpp-terminal/base.hpp"
 
 const std::string kMapFile = "map.txt";
-const std::string kSettingsFile = "map.txt";
+const std::string kSettingsFile = "settings.txt";
 
 struct Settings {
     Settings(unsigned mL = 20, unsigned mW = 20, float sp = 1, bool sW = 0, bool sc = 1, bool bA = 1,

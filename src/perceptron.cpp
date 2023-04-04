@@ -1,6 +1,6 @@
 #include "perceptron.h"
 
-void Network1::backward(unsigned s, Keys a, unsigned r, unsigned n_s) {
+void Network1::backward(std::vector<double> s, Keys a, unsigned r, std::vector<double> n_s) {
     // calculations for last layer
     std::vector<double> dEdt_last = calculate_dEdt_last(s, a, r, n_s);
     std::vector<std::vector<double>> dEdW_last = calculate_dEdW(outputs[num_layers - 1], dEdt_last);
@@ -8,7 +8,7 @@ void Network1::backward(unsigned s, Keys a, unsigned r, unsigned n_s) {
 
     // stores calculated errors
     std::vector<std::vector<std::vector<double>>> dEdW;
-    std::vector<std::vector> dEdb;
+    std::vector<std::vector<double>> dEdb;
     dEdW.push_back(dEdW_last);
     dEdb.push_back(dEdb_last);
 
@@ -37,7 +37,7 @@ void Network1::backward(unsigned s, Keys a, unsigned r, unsigned n_s) {
     }
 }
 
-std::vector<double> Network1::forward(vector<double> input) {
+std::vector<double> Network1::forward(std::vector<double> input) {
     outputs[0] = input;
     inputs[0] = input;
 
@@ -54,11 +54,9 @@ std::vector<double> Network1::forward(vector<double> input) {
     return outputs[num_layers];
 }
 
-// example argument: {24, 12, 4} - 2 layers here
-Network1::Network1(std::vector<int> layers, double learning_rate) {
-    this->layers = layers;
-    this->learning_rate = learning_rate;
-
+// example "layers" argument: {24, 12, 4} - 2 layers here
+Network1::Network1(std::vector<int> layers, double learning_rate = 0.01, double gamma = 0.99)
+    : layers(layers), learning_rate(learning_rate), gamma(gamma) {
     num_layers = layers.size() - 1;
 
     for (int i = 0; i < num_layers; i++) {
@@ -98,37 +96,33 @@ Network1::Network1(std::vector<int> layers, double learning_rate) {
     }
 }
 
-std::tuple<double, Keys> Network1::find_max_qvalue(Qvalues qvalues) {
-    double max_qvalue = qvalues.up_qvalue;
+std::tuple<double, Keys> Network1::find_max_qvalue(std::vector<double> qvalues) {
+    double max_qvalue = qvalues[0];
     Keys next_action = Keys::up;
 
-    if (next_qvalues.right_qvalue > max_qvalue) {
-        max_qvalue = next_qvalues.right_qvalue;
+    if (qvalues[1] > max_qvalue) {
+        max_qvalue = qvalues[1];
         next_action = Keys::right;
     }
-    if (next_qvalues.down_qvalue > max_qvalue) {
-        max_qvalue = next_qvalues.down_qvalue;
+    if (qvalues[2] > max_qvalue) {
+        max_qvalue = qvalues[2];
         next_action = Keys::down;
     }
-    if (next_qvalues.left_qvalue > max_qvalue) {
-        max_qvalue = next_qvalues.left_qvalue;
+    if (qvalues[3] > max_qvalue) {
+        max_qvalue = qvalues[3];
         next_action = Keys::left;
     }
     return std::make_tuple(max_qvalue, next_action);
 }
 
-double Network1::calculate_dEdt_last(unsigned s, Keys a, unsigned r, unsigned n_s) {
+std::vector<double> Network1::calculate_dEdt_last(std::vector<double> s, Keys a, unsigned r,
+                                                  std::vector<double> n_s) {
     // find target(y) of current state
     std::vector<double> predicted_next_qvalues = forward(n_s);
     auto [max_qvalue, next_action] = find_max_qvalue(predicted_next_qvalues);
-    int gamma = 0.1; // TO DELETE
     double target = r + gamma * max_qvalue;
 
-    // bring to Qvalues for next calculating loss
-    // Qvalues target_qvalues{target, target, target, target};
-
     // calculate sequentially for each dE_dt_last = dE_dz_i * dz_dt_last
-
     std::vector<double> predicted_current_qvalues = forward(s);
 
     std::vector<double> dEdt_last;

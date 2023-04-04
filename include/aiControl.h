@@ -1,14 +1,14 @@
 #pragma once
 
 #include "control.h"
-#include "neuralNetwork.h"
+#include "perceptron.h"
 #include "snake.h"
 
 class aiControl : public Control {
    public:
-    aiControl() : epsilon(0.5) {}
+    aiControl(std::vector<int> layers, double learning_rate, double gamma, double epsilon);
 
-    Keys get_direction(unsigned, Keys, unsigned, unsigned);
+    Keys get_direction(std::vector<double> s, Keys a, unsigned r, std::vector<double> n_s);
 
    private:
     double epsilon;
