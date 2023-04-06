@@ -68,7 +68,7 @@ std::vector<std::vector<double>> m_dot_m(const std::vector<std::vector<double>> 
     return result;
 }
 
-std::vector<double> m_mul_v(const std::vector<std::vector<double>> &matrix,
+std::vector<double> m_dot_v(const std::vector<std::vector<double>> &matrix,
                             const std::vector<double> &vector) {
     std::vector<double> result(matrix.size());
 

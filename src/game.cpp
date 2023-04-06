@@ -8,10 +8,7 @@ Game::Game(std::string file) : filename(file), highest_score(0), death_score(0),
 int Game::start_learning(unsigned episodes_total) {
     unsigned episodes_count = 0;
 
-    std::vector<int> layers(3);
-    layers[0] = 32;
-    layers[1] = 16;
-    layers[2] = 4;
+    std::vector<int> layers = {32, 16, 4};
     aiControl ai(layers);
 
     ConsoleUI console;
@@ -67,13 +64,14 @@ int Game::start_learning(unsigned episodes_total) {
 
             if (is_first_iteration) {
                 is_first_iteration = false;
-                action = snake.get_direction();
             } else {
                 Keys new_key = ai.get_direction(last_state, action, reward, state);
-                snake.set_direction(new_key);
-                action = new_key;
+                if (control.check_direction(snake.get_direction(), new_key)) {
+                    snake.set_direction(new_key);
+                }
                 reward = 0;
             }
+            action = snake.get_direction();
             last_state = state;
 
             Position next_cell = snake.get_next();
@@ -127,13 +125,14 @@ int Game::start_learning(unsigned episodes_total) {
                 case Cell::snake_c: {
                     if (snake.get_tail() == next_cell) {
                         snake.move();  // without clear_cell, bcs there will be the head in this cell in next
-                                       // move
+                        // move
                         map_model.put_snake(snake);
                         break;
                     }
                     // falls down
                 }
                 case Cell::wall_c: {
+                    reward = -1;
                     is_exit = true;
                     break;
                 }
@@ -170,8 +169,7 @@ int Game::start_learning(unsigned episodes_total) {
                 speed_of_bonus = 1.0;
             }
             ++moves_number_after_bonus;
-
-            sleep(1);
+            usleep(90000);
 
             episodes_count++;
 
@@ -401,7 +399,8 @@ int Game::start_game(bool random_apples) {
         if (settings.ai_mode == 0) {
             level_exit_code = start_level(level_number);
         } else if (settings.ai_mode == 1) {
-            level_exit_code = start_learning(10);
+            // NEED CONSTANT-VALUE
+            level_exit_code = start_learning(2000);
         } else if (settings.ai_mode == 2) {
             level_exit_code = 1;
         }

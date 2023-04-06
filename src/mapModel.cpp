@@ -130,7 +130,7 @@ std::vector<double> get_state(MapModel &map, Snake s) {
     unsigned x_head = s.get_head().get_x();
     unsigned y_head = s.get_head().get_y();
 
-    // need constant-value
+    // NEED CONSTANT-VALUE
     std::vector<double> state(32);
 
     // properties that related with walls

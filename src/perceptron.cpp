@@ -34,7 +34,8 @@ Network1::Network1(std::vector<int> &layers, double learning_rate, double gamma)
         for (int i = 0; i < neuron_from; i++) {
             std::vector<double> neuron_connections;
             for (int j = 0; j < neuron_to; j++) {
-                neuron_connections.push_back(static_cast<double>(rand()) / RAND_MAX);
+                // neuron_connections.push_back(static_cast<double>(rand()) / RAND_MAX);
+                neuron_connections.push_back(0);
             }
             neuron.push_back(neuron_connections);
         }
@@ -42,7 +43,8 @@ Network1::Network1(std::vector<int> &layers, double learning_rate, double gamma)
         // initialize biases with random in [0;1]
         std::vector<double> b;
         for (int i = 0; i < neuron_to; i++) {
-            b.push_back(static_cast<double>(rand()) / RAND_MAX);
+            // b.push_back(static_cast<double>(rand()) / RAND_MAX);
+            b.push_back(0);
         }
 
         weights.push_back(neuron);
@@ -76,11 +78,11 @@ void Network1::backward(std::vector<double> &s, Keys a, unsigned r, std::vector<
     std::vector<double> dEdt_prev = dEdb_last;
 
     // from penultimate layer to 0s
-    for (int i = num_layers - 2; i > 0; i--) {
-        std::vector<double> dEdh_i = m_mul_v(transpose_m(weights[i + 1]), dEdt_prev);
+    for (int i = num_layers - 2; i >= 0; i--) {
+        std::vector<double> dEdh_i = m_dot_v(transpose_m(weights[i + 1]), dEdt_prev);
         std::vector<double> dEdt_i = v_mul_v(dEdh_i, relu_deriv(inputs[i]));
 
-        std::vector<std::vector<double>> dEdW_i = calculate_dEdW(outputs[i - 1], dEdt_i);
+        std::vector<std::vector<double>> dEdW_i = calculate_dEdW(outputs[i], dEdt_i);
         std::vector<double> dEdb_i = dEdt_i;
         dEdt_prev = dEdt_i;
 
@@ -89,7 +91,7 @@ void Network1::backward(std::vector<double> &s, Keys a, unsigned r, std::vector<
     }
 
     // updating weights
-    for (int i = 0; i < num_layers - 1; i++) {
+    for (int i = 0; i <= num_layers - 1; i++) {
         weights[i] = m_minus_m(weights[i], m_mul_scal(dEdW.back(), learning_rate));
         biases[i] = v_minus_v(biases[i], v_mul_scal(dEdb.back(), learning_rate));
 
@@ -103,13 +105,13 @@ std::vector<double> Network1::forward(std::vector<double> &input) {
     inputs[0] = input;
 
     for (int i = 1; i < num_layers; i++) {
-        inputs[i] = v_plus_v(m_mul_v(weights[i - 1], outputs[i - 1]), biases[i - 1]);
+        inputs[i] = v_plus_v(m_dot_v(transpose_m(weights[i - 1]), outputs[i - 1]), biases[i - 1]);
         outputs[i] = relu(inputs[i]);
     }
 
     // on exit layer function of activation is softmax
     inputs[num_layers] =
-        v_plus_v(m_mul_v(weights[num_layers - 1], outputs[num_layers - 1]), biases[num_layers - 1]);
+        v_plus_v(m_dot_v(transpose_m(weights[num_layers - 1]), outputs[num_layers - 1]), biases[num_layers - 1]);
     outputs[num_layers] = softmax(inputs[num_layers]);
 
     return outputs[num_layers];
