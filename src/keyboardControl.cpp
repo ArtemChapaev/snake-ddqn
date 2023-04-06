@@ -14,7 +14,9 @@ KeyboardControl::KeyboardControl(Settings settings)
     enable_specific_enter();
 }
 
-KeyboardControl::~KeyboardControl() { disable_specific_enter(); }
+KeyboardControl::~KeyboardControl() {
+    disable_specific_enter();
+}
 
 void KeyboardControl::enable_specific_enter() {
     fcntl(0, F_SETFL, original_flags | O_NONBLOCK);

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdlib>
+#include <vector>
 
 #include "settings.h"
 #include "snake.h"
@@ -39,5 +40,6 @@ class MapModel {
     const unsigned width;
 };
 
+std::vector<double> get_state(MapModel &, Snake);
 MapModel read_map_from_file(Settings);
 void write_map_to_file(MapModel &);

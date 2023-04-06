@@ -42,6 +42,7 @@ class Snake {
     Position get_tail();
     std::list<Position> get_snake();
     Position get_next();
+    unsigned get_length();
     Keys get_direction();
     void set_direction(Keys dir);
     float get_speed_coef();

@@ -9,9 +9,13 @@ bool Position::operator==(Position other) {
     return false;
 }
 
-unsigned Position::get_x() { return x; }
+unsigned Position::get_x() {
+    return x;
+}
 
-unsigned Position::get_y() { return y; }
+unsigned Position::get_y() {
+    return y;
+}
 
 Snake::Snake(Settings settings, unsigned length = kSnakeLength)
     : length(length), direction(right), speed_coef(settings.speed) {
@@ -47,11 +51,17 @@ Snake::Snake(Settings settings, unsigned length = kSnakeLength)
     }
 }
 
-Position Snake::get_head() { return snake.front(); }
+Position Snake::get_head() {
+    return snake.front();
+}
 
-Position Snake::get_tail() { return snake.back(); }
+Position Snake::get_tail() {
+    return snake.back();
+}
 
-std::list<Position> Snake::get_snake() { return snake; }
+std::list<Position> Snake::get_snake() {
+    return snake;
+}
 
 Position Snake::get_next() {
     Position head = get_head();
@@ -72,11 +82,21 @@ Position Snake::get_next() {
     }
 }
 
-Keys Snake::get_direction() { return direction; }
+unsigned Snake::get_length() {
+    return length;
+}
 
-void Snake::set_direction(Keys dir) { direction = dir; }
+Keys Snake::get_direction() {
+    return direction;
+}
 
-float Snake::get_speed_coef() { return speed_coef; }
+void Snake::set_direction(Keys dir) {
+    direction = dir;
+}
+
+float Snake::get_speed_coef() {
+    return speed_coef;
+}
 
 Position Snake::move_in_cell(Position pos_for_next) {
     for (auto &s : snake) {
@@ -87,7 +107,9 @@ Position Snake::move_in_cell(Position pos_for_next) {
     return pos_for_next;  // pos of tail
 }
 
-Position Snake::move() { return move_in_cell(get_next()); }
+Position Snake::move() {
+    return move_in_cell(get_next());
+}
 
 int Snake::increase_length(Position pos_for_tail) {
     snake.push_back(pos_for_tail);

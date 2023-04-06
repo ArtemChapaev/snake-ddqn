@@ -36,9 +36,13 @@ void ConsoleUI::set_cursor(unsigned x, unsigned y) {
     std::cout << "\033[" << x << ";" << y << "H" << std::flush;
 }
 
-void ConsoleUI::reset() { std::cout << "\033[0m" << std::flush; }
+void ConsoleUI::reset() {
+    std::cout << "\033[0m" << std::flush;
+}
 
-void ConsoleUI::underline() { std::cout << "\033[4m" << std::flush; }
+void ConsoleUI::underline() {
+    std::cout << "\033[4m" << std::flush;
+}
 
 void ConsoleUI::highlight(unsigned count) {
     // argument means how many spaces to highlight (0 means all the following text)
@@ -47,9 +51,13 @@ void ConsoleUI::highlight(unsigned count) {
     reset();
 }
 
-void ConsoleUI::off_cursor() { std::cout << "\x1b[?25l" << std::flush; }
+void ConsoleUI::off_cursor() {
+    std::cout << "\x1b[?25l" << std::flush;
+}
 
-void ConsoleUI::on_cursor() { std::cout << "\x1b[?25h" << std::flush; }
+void ConsoleUI::on_cursor() {
+    std::cout << "\x1b[?25h" << std::flush;
+}
 
 unsigned ConsoleUI::comax() {
     struct winsize ww;

@@ -64,4 +64,6 @@ void MapView::print() {
     std::cout << "\033[0m" << std::flush;
 }
 
-MapView::~MapView() { delete graphics; }
+MapView::~MapView() {
+    delete graphics;
+}

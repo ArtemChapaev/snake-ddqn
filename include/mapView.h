@@ -8,7 +8,7 @@
 class MapView {
     // Class for map display
    public:
-    MapView(MapModel &map, Settings);
+    MapView(MapModel &, Settings);
     ~MapView();
 
     void print();

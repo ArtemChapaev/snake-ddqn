@@ -1385,7 +1385,9 @@ void CustomMapSettingsMenu::pure_draw() {
     std::cout << "Press enter for quit" << std::endl;
 }
 
-void CustomMapSettingsMenu::draw(unsigned string_num) { pure_draw(); }
+void CustomMapSettingsMenu::draw(unsigned string_num) {
+    pure_draw();
+}
 
 unsigned CustomMapSettingsMenu::update(unsigned &string_num, std::stack<std::unique_ptr<Menu>> &menus) {
     bool is_exit = false;

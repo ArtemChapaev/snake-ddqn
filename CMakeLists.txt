@@ -19,10 +19,10 @@ add_executable(snake /
         src/game.cpp /
         src/logos.cpp /
         src/menu.cpp /
-        src/main.cpp /
         src/aiControl.cpp /
+        src/math_funcs.cpp /
         src/perceptron.cpp /
-        src/mylib.cpp /
+        src/main.cpp /
         )
 
 target_link_libraries(snake PRIVATE cpp-terminal)
