@@ -14,6 +14,7 @@ struct Settings {
     Settings(unsigned mL = 20, unsigned mW = 20, float sp = 1, bool sW = 0, bool sc = 1, bool bA = 1,
              unsigned vM = 2, bool rL = 0, char kU = 72, char kD = 80, char kR = 77, char kL = 75,
              char kP = 27, char kEn = 10, char kT = 116, char kW = 119, char kEm = 101, unsigned aM = 0,
+             unsigned ep = 0,
 
              Term::Color4 sC = Term::Color4::GREEN, Term::Color4 eC = Term::Color4::BLACK,
              Term::Color4 wC = Term::Color4::GRAY, Term::Color4 tC = Term::Color4::WHITE_BRIGHT,
@@ -39,6 +40,7 @@ struct Settings {
           key_wall(kW),
           key_empty(kEm),
           ai_mode(aM),
+          epochs(ep),
 
           snake_color(sC),
           empty_color(eC),
@@ -67,6 +69,7 @@ struct Settings {
     char key_wall;
     char key_empty;
     unsigned ai_mode;
+    unsigned epochs;
     Term::Color4 snake_color;
     Term::Color4 empty_color;
     Term::Color4 wall_color;

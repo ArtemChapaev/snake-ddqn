@@ -9,7 +9,7 @@ void parser(Settings &settings, std::string &filename) {
 
     std::string var, map_length, map_width, speed, solid_wall, score, bonus_apples, view_mode, reset_length,
         key_up, key_down, key_left, key_right, key_pause, key_enter, key_teleport, key_wall, key_empty,
-        ai_mode, snake_color, empty_color, wall_color, teleport_color, bonus_color, antibonus_color,
+        ai_mode, epochs, snake_color, empty_color, wall_color, teleport_color, bonus_color, antibonus_color,
         speed_bonus_color, speed_antibonus_color;
 
     try {
@@ -33,6 +33,7 @@ void parser(Settings &settings, std::string &filename) {
             if (var == "key_wall") getline(file, key_wall);
             if (var == "key_empty") getline(file, key_empty);
             if (var == "ai_mode") getline(file, ai_mode);
+            if (var == "epochs") getline(file, epochs);
             if (var == "snake_color") getline(file, snake_color);
             if (var == "empty_color") getline(file, empty_color);
             if (var == "wall_color") getline(file, wall_color);
@@ -61,6 +62,7 @@ void parser(Settings &settings, std::string &filename) {
         settings.key_wall = stoi(key_wall);
         settings.key_empty = stoi(key_empty);
         settings.ai_mode = stoi(ai_mode);
+        settings.epochs = stoi(epochs);
         settings.snake_color = Term::Color4(stoi(snake_color));
         settings.empty_color = Term::Color4(stoi(empty_color));
         settings.wall_color = Term::Color4(stoi(wall_color));
@@ -171,6 +173,7 @@ key_teleport=116
 key_wall=119
 key_empty=101
 ai_mode=0
+epochs=0
 snake_color=2
 empty_color=0
 wall_color=60

@@ -126,177 +126,207 @@ void write_map_to_file(MapModel &map) {
     file.close();
 }
 
-std::vector<double> get_state(MapModel &map, Snake s) {
+State get_state(MapModel &map, Snake s) {
     unsigned x_head = s.get_head().get_x();
     unsigned y_head = s.get_head().get_y();
 
-    // NEED CONSTANT-VALUE
-    std::vector<double> state(32);
+    State state;
 
-    // properties that related with walls
-    {
-        state[0] = 1.0 / (map.get_width() - y_head);
-        state[1] = 1.0 / (map.get_width() - y_head + map.get_length() - x_head);
-        state[2] = 1.0 / (map.get_length() - x_head);
-        state[3] = 1.0 / (y_head + map.get_length() - x_head);
-        state[4] = 1.0 / y_head;
-        state[5] = 1.0 / (y_head + x_head);
-        state[6] = 1.0 / x_head;
-        state[7] = 1.0 / (map.get_width() - y_head + x_head);
+    // properties that related with bonus
+    unsigned x_bonus = 0;
+    unsigned y_bonus = 0;
+
+    for (unsigned j = map.get_width() - 2; j >= 1; j--) {
+        for (unsigned i = 1; i < map.get_length() - 1; i++) {
+            Cell cell_type = map.check_cell(j, i);
+            if (cell_type == Cell::bonus_c) {
+                x_bonus = i;
+                y_bonus = j;
+            }
+        }
+    }
+
+    if (x_bonus == x_head) {
+        if (y_bonus > y_head) {
+            // above head
+            double temp = 1.0 / (y_bonus - y_head);
+            state.dist_snake_up = std::max(temp, state.dist_snake_up);
+        } else {
+            // under head
+            double temp = 1.0 / (y_head - y_bonus);
+            state.dist_snake_down = std::max(temp, state.dist_snake_down);
+        }
+    } else if (y_bonus == y_head) {
+        if (x_bonus > x_head) {
+            // right head
+            double temp = 1.0 / (x_bonus - x_head);
+            state.dist_snake_right = std::max(temp, state.dist_snake_right);
+        } else {
+            // left head
+            double temp = 1.0 / (x_head - y_bonus);
+            state.dist_snake_left = std::max(temp, state.dist_snake_left);
+        }
+    } else if (y_bonus - x_bonus == y_head - x_head) {
+        if (y_bonus > y_head) {
+            // in left above head
+            double temp = 0.5 / (y_bonus - y_head);
+            state.dist_snake_up_left = std::max(temp, state.dist_snake_up_left);
+        } else {
+            // in right under head
+            double temp = 0.5 / (y_head - y_bonus);
+            state.dist_snake_down_right = std::max(temp, state.dist_snake_down_right);
+        }
+    } else if (y_bonus + x_bonus == y_head + x_head) {
+        if (y_bonus > y_head) {
+            // in right above head
+            double temp = 0.5 / (y_bonus - y_head);
+            state.dist_snake_up_right = std::max(temp, state.dist_snake_up_right);
+        } else {
+            // in left under head
+            double temp = 0.5 / (y_head - y_bonus);
+            state.dist_snake_down_left = std::max(temp, state.dist_snake_down_left);
+        }
     }
 
     // properties that related with snake body
-    {
-        auto snake = s.get_snake();
-        auto s_body = snake.begin();
-        // we don't check head, so ++s_body;
-        ++s_body;
+    auto snake = s.get_snake();
+    auto s_body = snake.begin();
+    // we don't check head, so ++s_body;
+    ++s_body;
 
-        for (; s_body != snake.end(); ++s_body) {
-            if (s_body->get_x() == x_head) {
-                if (s_body->get_y() > y_head) {
-                    // above head
-                    double temp = 1.0 / (s_body->get_y() - y_head);
-                    state[8] = std::max(temp, state[8]);
-                } else {
-                    // under head
-                    double temp = 1.0 / (y_head - s_body->get_y());
-                    state[12] = std::max(temp, state[12]);
-                }
-            } else if (s_body->get_y() == y_head) {
-                if (s_body->get_x() > x_head) {
-                    // right head
-                    double temp = 1.0 / (s_body->get_x() - x_head);
-                    state[10] = std::max(temp, state[10]);
-                } else {
-                    // left head
-                    double temp = 1.0 / (x_head - s_body->get_x());
-                    state[14] = std::max(temp, state[14]);
-                }
-            } else if (s_body->get_y() - s_body->get_x() == y_head - x_head) {
-                if (s_body->get_y() > y_head) {
-                    // in main diagonal above head
-                    double temp = 0.5 / (s_body->get_y() - y_head);
-                    state[15] = std::max(temp, state[15]);
-                } else {
-                    // in main diagonal under head
-                    double temp = 0.5 / (y_head - s_body->get_y());
-                    state[11] = std::max(temp, state[11]);
-                }
-            } else if (s_body->get_y() + s_body->get_x() == y_head + x_head) {
-                if (s_body->get_y() > y_head) {
-                    // in side diagonal above head
-                    double temp = 0.5 / (s_body->get_y() - y_head);
-                    state[9] = std::max(temp, state[9]);
-                } else {
-                    // in side diagonal under head
-                    double temp = 0.5 / (y_head - s_body->get_y());
-                    state[13] = std::max(temp, state[13]);
-                }
-            }
-        }
-    }
-
-    // properties that related with bonus
-    {
-        unsigned x_bonus = 0;
-        unsigned y_bonus = 0;
-
-        for (unsigned j = map.get_width() - 2; j >= 1; j--) {
-            for (unsigned i = 1; i < map.get_length() - 1; i++) {
-                Cell cell_type = map.check_cell(j, i);
-                if (cell_type == Cell::bonus_c) {
-                    x_bonus = i;
-                    y_bonus = j;
-                }
-            }
-        }
-
-        if (x_bonus == x_head) {
-            if (y_bonus > y_head) {
+    for (; s_body != snake.end(); ++s_body) {
+        if (s_body->get_x() == x_head) {
+            if (s_body->get_y() > y_head) {
                 // above head
-                double temp = 1.0 / (y_bonus - y_head);
-                state[16] = std::max(temp, state[16]);
+                double temp = 1.0 / (s_body->get_y() - y_head);
+                state.dist_snake_up = std::max(temp, state.dist_snake_up);
             } else {
                 // under head
-                double temp = 1.0 / (y_head - y_bonus);
-                state[20] = std::max(temp, state[20]);
+                double temp = 1.0 / (y_head - s_body->get_y());
+                state.dist_snake_down = std::max(temp, state.dist_snake_down);
             }
-        } else if (y_bonus == y_head) {
-            if (x_bonus > x_head) {
+        } else if (s_body->get_y() == y_head) {
+            if (s_body->get_x() > x_head) {
                 // right head
-                double temp = 1.0 / (x_bonus - x_head);
-                state[18] = std::max(temp, state[18]);
+                double temp = 1.0 / (s_body->get_x() - x_head);
+                state.dist_snake_right = std::max(temp, state.dist_snake_right);
             } else {
                 // left head
-                double temp = 1.0 / (x_head - y_bonus);
-                state[22] = std::max(temp, state[22]);
+                double temp = 1.0 / (x_head - s_body->get_x());
+                state.dist_snake_left = std::max(temp, state.dist_snake_left);
             }
-        } else if (y_bonus - x_bonus == y_head - x_head) {
-            if (y_bonus > y_head) {
-                // in main diagonal above head
-                double temp = 0.5 / (y_bonus - y_head);
-                state[23] = std::max(temp, state[23]);
+        } else if (s_body->get_y() - s_body->get_x() == y_head - x_head) {
+            if (s_body->get_y() > y_head) {
+                // in left above head
+                double temp = 0.5 / (s_body->get_y() - y_head);
+                state.dist_snake_up_left = std::max(temp, state.dist_snake_up_left);
             } else {
-                // in main diagonal under head
-                double temp = 0.5 / (y_head - y_bonus);
-                state[19] = std::max(temp, state[19]);
+                // in right under head
+                double temp = 0.5 / (y_head - s_body->get_y());
+                state.dist_snake_down_right = std::max(temp, state.dist_snake_down_right);
             }
-        } else if (y_bonus + x_bonus == y_head + x_head) {
-            if (y_bonus > y_head) {
-                // in side diagonal above head
-                double temp = 0.5 / (y_bonus - y_head);
-                state[17] = std::max(temp, state[17]);
+        } else if (s_body->get_y() + s_body->get_x() == y_head + x_head) {
+            if (s_body->get_y() > y_head) {
+                // in right above head
+                double temp = 0.5 / (s_body->get_y() - y_head);
+                state.dist_snake_up_right = std::max(temp, state.dist_snake_up_right);
             } else {
-                // in side diagonal under head
-                double temp = 0.5 / (y_head - y_bonus);
-                state[21] = std::max(temp, state[21]);
+                // in left under head
+                double temp = 0.5 / (y_head - s_body->get_y());
+                state.dist_snake_down_left = std::max(temp, state.dist_snake_down_left);
             }
         }
     }
 
-    // properties that related with direction of head and s
-    {
-        switch (s.get_direction()) {
-            case Keys::up: {
-                state[24] = 1.0;
-                break;
-            }
-            case Keys::right: {
-                state[25] = 1.0;
-                break;
-            }
-            case Keys::down: {
-                state[26] = 1.0;
-                break;
-            }
-                // Keys::left
-            default: {
-                state[27] = 1.0;
-                break;
-            }
+    // properties that related with walls
+    state.dist_wall_up = 1.0 / (map.get_width() - y_head);
+    state.dist_wall_up_right = 1.0 / (map.get_width() - y_head + map.get_length() - x_head);
+    state.dist_wall_right = 1.0 / (map.get_length() - x_head);
+    state.dist_wall_down_right = 1.0 / (y_head + map.get_length() - x_head);
+    state.dist_wall_down = 1.0 / y_head;
+    state.dist_wall_down_left = 1.0 / (y_head + x_head);
+    state.dist_wall_left = 1.0 / x_head;
+    state.dist_wall_up_left = 1.0 / (map.get_width() - y_head + x_head);
+
+    // properties that related with direction of head
+    switch (s.get_direction()) {
+        case Keys::up: {
+            state.head_direction_up = 1.0;
+            break;
         }
+        case Keys::right: {
+            state.head_direction_right = 1.0;
+            break;
+        }
+        case Keys::down: {
+            state.head_direction_down = 1.0;
+            break;
+        }
+            // Keys::left
+        default: {
+            state.head_direction_left = 1.0;
+            break;
+        }
+    }
 
-        Position second_body_cell = *std::next(s.get_snake().begin());
+    // properties that related with direction of snake body
+    Position second_body_cell = *std::next(s.get_snake().begin());
 
-        if (second_body_cell.get_x() == x_head) {
-            if (second_body_cell.get_y() > y_head) {
-                // above head
-                state[28] = 1.0;
-            } else {
-                // under head
-                state[30] = 1.0;
-            }
+    if (second_body_cell.get_x() == x_head) {
+        if (second_body_cell.get_y() > y_head) {
+            // above head
+            state.snake_direction_up = 1.0;
         } else {
-            if (second_body_cell.get_x() > x_head) {
-                // right head
-                state[29] = 1.0;
-            } else {
-                // left head
-                state[31] = 1.0;
-            }
+            // under head
+            state.snake_direction_down = 1.0;
+        }
+    } else {
+        if (second_body_cell.get_x() > x_head) {
+            // right head
+            state.snake_direction_right = 1.0;
+        } else {
+            // left head
+            state.snake_direction_left = 1.0;
         }
     }
 
     return state;
+}
+
+std::vector<double> state_struct_to_vector(const State &state) {
+    std::vector<double> result(32);
+    // тебе менять тут
+    result[0] = state.dist_bonus_up;
+    result[1] = state.dist_bonus_up_right;
+    result[2] = state.dist_bonus_right;
+    result[3] = state.dist_bonus_down_right;
+    result[4] = state.dist_bonus_down;
+    result[5] = state.dist_bonus_down_left;
+    result[6] = state.dist_bonus_left;
+    result[7] = state.dist_bonus_up_left;
+    result[8] = state.dist_wall_up;
+    result[9] = state.dist_wall_up_right;
+    result[10] = state.dist_wall_right;
+    result[11] = state.dist_wall_down_right;
+    result[12] = state.dist_wall_down;
+    result[13] = state.dist_wall_down_left;
+    result[14] = state.dist_wall_left;
+    result[15] = state.dist_wall_up_left;
+    result[16] = state.dist_snake_up;
+    result[17] = state.dist_snake_up_right;
+    result[18] = state.dist_snake_right;
+    result[19] = state.dist_snake_down_right;
+    result[20] = state.dist_snake_down;
+    result[21] = state.dist_snake_down_left;
+    result[22] = state.dist_snake_left;
+    result[23] = state.dist_snake_up_left;
+    result[24] = state.head_direction_up;
+    result[25] = state.head_direction_right;
+    result[26] = state.head_direction_down;
+    result[27] = state.head_direction_left;
+    result[28] = state.snake_direction_up;
+    result[29] = state.snake_direction_right;
+    result[30] = state.snake_direction_down;
+    result[31] = state.snake_direction_left;
+    return result;
 }

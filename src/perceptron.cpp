@@ -1,19 +1,28 @@
 #include "perceptron.h"
 
-std::tuple<double, Keys> find_max_qvalue(std::vector<double> &qvalues) {
-    double max_qvalue = qvalues[0];
+Qvalues vector_to_qvalues_struct(const std::vector<double> &qvalues) {
+    struct Qvalues result;
+    result.up = qvalues[0];
+    result.right = qvalues[1];
+    result.down = qvalues[2];
+    result.left = qvalues[3];
+    return result;
+}
+
+std::tuple<double, Keys> find_max_qvalue(const Qvalues &qvalues) {
+    double max_qvalue = qvalues.up;
     Keys next_action = Keys::up;
 
-    if (qvalues[1] > max_qvalue) {
-        max_qvalue = qvalues[1];
+    if (qvalues.right > max_qvalue) {
+        max_qvalue = qvalues.right;
         next_action = Keys::right;
     }
-    if (qvalues[2] > max_qvalue) {
-        max_qvalue = qvalues[2];
+    if (qvalues.down > max_qvalue) {
+        max_qvalue = qvalues.down;
         next_action = Keys::down;
     }
-    if (qvalues[3] > max_qvalue) {
-        max_qvalue = qvalues[3];
+    if (qvalues.left > max_qvalue) {
+        max_qvalue = qvalues.left;
         next_action = Keys::left;
     }
     return std::make_tuple(max_qvalue, next_action);
@@ -110,8 +119,8 @@ std::vector<double> Network1::forward(std::vector<double> &input) {
     }
 
     // on exit layer function of activation is softmax
-    inputs[num_layers] =
-        v_plus_v(m_dot_v(transpose_m(weights[num_layers - 1]), outputs[num_layers - 1]), biases[num_layers - 1]);
+    inputs[num_layers] = v_plus_v(m_dot_v(transpose_m(weights[num_layers - 1]), outputs[num_layers - 1]),
+                                  biases[num_layers - 1]);
     outputs[num_layers] = softmax(inputs[num_layers]);
 
     return outputs[num_layers];
@@ -120,7 +129,7 @@ std::vector<double> Network1::forward(std::vector<double> &input) {
 std::vector<double> Network1::calculate_dEdt_last(std::vector<double> &s, Keys a, unsigned r,
                                                   std::vector<double> &n_s) {
     // find target(y) of current state
-    std::vector<double> predicted_next_qvalues = forward(n_s);
+    struct Qvalues predicted_next_qvalues = vector_to_qvalues_struct(forward(n_s));
     auto [max_qvalue, _] = find_max_qvalue(predicted_next_qvalues);
 
     double predicted_qvalue = forward(s)[a];

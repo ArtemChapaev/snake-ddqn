@@ -48,13 +48,14 @@ class Game {
     ~Game();
 
     int start_game(bool);
+
     int start_level(unsigned);
     int start_learning(unsigned);
+
     int pause_game();
     int print_deathscreen();
     int write_to_leaderboard();
     void print_control_error_screen();
-    int get_ai_mode();
 
    private:
     std::string filename;

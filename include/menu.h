@@ -97,7 +97,7 @@ class SettingsSnakeMenu : public Menu {
     void pure_draw() override;
     void print_logo() override;
 
-    enum options { ai_mode, speed, reset_length, exit };
+    enum options { ai_mode, speed, reset_length, epochs, exit };
     const unsigned options_count;
 };
 

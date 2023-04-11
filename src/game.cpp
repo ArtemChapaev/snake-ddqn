@@ -12,7 +12,7 @@ int Game::start_learning(unsigned episodes_total) {
     aiControl ai(layers);
 
     ConsoleUI console;
-    while (episodes_count < episodes_total) {
+    while (episodes_count < episodes_total || episodes_total == 0) {
         unsigned snake_length = kSnakeLength;
 
         // main creatures
@@ -23,14 +23,12 @@ int Game::start_learning(unsigned episodes_total) {
 
         // part of neural network
         bool is_first_iteration = true;
-        std::vector<double> last_state;
+        State last_state;
         Keys action = Keys::right;
         int reward = 0;
 
         // game process variables
         bool is_exit = false;
-        unsigned moves_number_after_bonus = 0;
-        float speed_of_bonus = 1.0;
 
         // game preparing
         map_model.put_snake(snake);
@@ -60,15 +58,13 @@ int Game::start_learning(unsigned episodes_total) {
                 }
             }
 
-            std::vector<double> state = get_state(map_model, snake);
+            State state = get_state(map_model, snake);
 
             if (is_first_iteration) {
                 is_first_iteration = false;
             } else {
                 Keys new_key = ai.get_direction(last_state, action, reward, state);
-                if (control.check_direction(snake.get_direction(), new_key)) {
-                    snake.set_direction(new_key);
-                }
+                snake.set_direction(new_key);
                 reward = 0;
             }
             action = snake.get_direction();
@@ -85,41 +81,14 @@ int Game::start_learning(unsigned episodes_total) {
                     reward = 1;
                     break;
                 }
+                    // no need for bonuses when learning AI
                 case Cell::antibonus_c: {
-                    Position last_tail = snake.move();
-                    map_model.clear_cell(last_tail);
-
-                    last_tail = snake.decrease_length();
-                    map_model.clear_cell(last_tail);
-
-                    map_model.put_snake(snake);
-                    map_model.generate_bonus(antibonus_c);
-
-                    if (snake.get_length() == 0) {
-                        is_exit = true;
-                    }
-                    break;
                 }
                 case Cell::speed_bonus_c: {
-                    Position last_tail = snake.move();
-                    map_model.clear_cell(last_tail);
-
-                    map_model.put_snake(snake);
-                    map_model.generate_bonus(speed_bonus_c);
-
-                    moves_number_after_bonus = 0;
-                    speed_of_bonus = kBonusSpeedForSnake;
-                    break;
+                }
+                case Cell::teleport_c: {
                 }
                 case Cell::speed_antibonus_c: {
-                    Position last_tail = snake.move();
-                    map_model.clear_cell(last_tail);
-
-                    map_model.put_snake(snake);
-                    map_model.generate_bonus(speed_antibonus_c);
-
-                    moves_number_after_bonus = 0;
-                    speed_of_bonus = 1.0 / kBonusSpeedForSnake;
                     break;
                 }
                 case Cell::snake_c: {
@@ -134,13 +103,7 @@ int Game::start_learning(unsigned episodes_total) {
                 case Cell::wall_c: {
                     reward = -1;
                     is_exit = true;
-                    break;
-                }
-                case Cell::teleport_c: {
-                    Position last_tail = snake.relocate_snake(settings);
-                    map_model.clear_cell(last_tail);
-
-                    map_model.put_snake(snake);
+                    episodes_count++;
                     break;
                 }
                 case Cell::empty_c: {
@@ -154,33 +117,23 @@ int Game::start_learning(unsigned episodes_total) {
                     break;
             }
 
-            death_score =
-                (int)(snake.get_length() - kSnakeLength) > 0 ? snake.get_length() - kSnakeLength : 0;
-            highest_score = death_score > highest_score ? death_score : highest_score;
-
             if (settings.score) {
-                unsigned score = death_score;
                 console.clear_line(settings.map_width + 1);
-                console.set_cursor(settings.map_width + 1, settings.map_length - 5);
-                std::cout << "SCORE: " << score << std::endl;
+                console.set_cursor(settings.map_width + 1, settings.map_length - 7);
+                std::cout << "CURRENT SCORE: " << snake.get_length() - kSnakeLength << std::endl;
             }
 
-            if (moves_number_after_bonus == kMovesForSpeedBonus) {
-                speed_of_bonus = 1.0;
-            }
-            ++moves_number_after_bonus;
-            usleep(90000);
+            // metrics for AI
+            console.clear_line(settings.map_width + 2);
+            console.set_cursor(settings.map_width + 2, settings.map_length - 7);
+            std::cout << "EPOCH: " << episodes_count + 1 << " OF ";
+            episodes_total == 0 ? std::cout << "∞" << std::endl : std::cout << episodes_total << std::endl;
 
-            episodes_count++;
-
-            console.clear_full_display();
+            console.set_cursor(1, 1);
             map_view.print();
-        }
-    }
 
-    if (episodes_count == episodes_total) {
-        console.clear_full_display();
-        std::cout << "Finished learning" << std::flush;
+            usleep(200000);
+        }
     }
 
     return 1;
@@ -399,10 +352,9 @@ int Game::start_game(bool random_apples) {
         if (settings.ai_mode == 0) {
             level_exit_code = start_level(level_number);
         } else if (settings.ai_mode == 1) {
-            // NEED CONSTANT-VALUE
-            level_exit_code = start_learning(2000);
+            level_exit_code = start_learning(settings.epochs);
         } else if (settings.ai_mode == 2) {
-            level_exit_code = 1;
+            level_exit_code = 1;  // TODO
         }
         ++level_number;
         usleep(kLevelPause);
@@ -515,10 +467,6 @@ void Game::print_control_error_screen() {
     console.set_cursor(settings.map_width + 3, 1);
     std::cout << "Wrong key was pressed. Please, check controls settings" << std::endl;
     usleep(500000);
-}
-
-int Game::get_ai_mode() {
-    return settings.ai_mode;
 }
 
 Game::~Game() {

@@ -5,7 +5,18 @@
 #include <cstdlib>
 #include <vector>
 
-std::tuple<double, Keys> find_max_qvalue(std::vector<double> &);
+struct Qvalues {
+    Qvalues(double up = 0, double down = 0, double left = 0, double right = 0)
+        : up(up), down(down), left(left), right(right){};
+
+    double up;
+    double down;
+    double left;
+    double right;
+};
+
+Qvalues vector_to_qvalues_struct(const std::vector<double> &);
+std::tuple<double, Keys> find_max_qvalue(const Qvalues &);
 
 class Network1 : public NeuralNetwork {
    public:
