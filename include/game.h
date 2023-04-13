@@ -33,12 +33,14 @@ const unsigned kMovePause = 300000;
 
 const double kBonusSpeedForSnake = 1.5;
 
-const unsigned kPlaytimeStringLength = 20;
-const unsigned kHighscoreStringLength = 16;
-const unsigned kFinalscoreStringLength = 13;
+const unsigned kPlayTimeStringLength = 20;
+const unsigned kHighScoreStringLength = 16;
+const unsigned kFinalScoreStringLength = 13;
 
 const std::string kWinString = "LEVEL UP!";
 const std::string kLeaderboardFile = "leaderboard.txt";
+
+const unsigned kEpisodesForOutput = 10000;
 
 class Game {
     /// A controller class that connects the model and the display of the game.
@@ -50,7 +52,8 @@ class Game {
     int start_game(bool);
 
     int start_level(unsigned);
-    int start_learning(unsigned);
+    int start_ai_learning(unsigned);
+    int start_ai_game(unsigned);
 
     int pause_game();
     int print_deathscreen();

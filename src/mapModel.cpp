@@ -295,7 +295,7 @@ State get_state(MapModel &map, Snake s) {
 
 std::vector<double> state_struct_to_vector(const State &state) {
     std::vector<double> result(32);
-    // тебе менять тут
+
     result[0] = state.dist_bonus_up;
     result[1] = state.dist_bonus_up_right;
     result[2] = state.dist_bonus_right;

@@ -5,7 +5,7 @@
 #include "perceptron.h"
 #include "snake.h"
 
-const double kEpsilonCoef = 0.9999;
+const double kEpsilonCoef = 0.99999;
 
 class aiControl : public Control {
    public:

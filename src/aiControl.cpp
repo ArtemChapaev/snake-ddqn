@@ -20,7 +20,7 @@ Keys aiControl::get_direction(const State &s, Keys a, unsigned r, const State &n
     } else {
         std::tie(max_qvalue, next_action) = find_max_qvalue(next_qvalues);
     }
-    // NEED CONSTANT-VALUE
+
     epsilon *= kEpsilonCoef;
 
     return next_action;
