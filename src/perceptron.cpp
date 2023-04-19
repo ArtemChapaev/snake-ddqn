@@ -29,7 +29,7 @@ std::tuple<double, Keys> find_max_qvalue(const Qvalues &qvalues) {
 }
 
 // example "layers" argument: {24, 12, 4} - 2 layers here
-Network1::Network1(std::vector<int> &layers, double learning_rate, double gamma)
+Perceptron::Perceptron(std::vector<int> &layers, double learning_rate, double gamma)
     : layers(layers), learning_rate(learning_rate), gamma(gamma) {
     num_layers = layers.size() - 1;
 
@@ -39,21 +39,55 @@ Network1::Network1(std::vector<int> &layers, double learning_rate, double gamma)
 
         std::vector<std::vector<double>> neuron;
 
-        // initialize weights with random in [0;1]
-        for (int i = 0; i < neuron_from; i++) {
-            std::vector<double> neuron_connections;
-            for (int j = 0; j < neuron_to; j++) {
-                // neuron_connections.push_back(static_cast<double>(rand()) / RAND_MAX);
-                neuron_connections.push_back(0);
-            }
-            neuron.push_back(neuron_connections);
-        }
+        // initialize weights with random in [0, 1]
+        // for (int i = 0; i < neuron_from; i++) {
+        //     std::vector<double> neuron_connections;
+        //     for (int j = 0; j < neuron_to; j++) {
+        //         neuron_connections.push_back(static_cast<double>(rand()) / RAND_MAX);
+        //     }
+        //     neuron.push_back(neuron_connections);
+        // }
 
+        // hardcoded priority weights for {32, 16, 4}
+        if (i == 0) {
+            for (int i = 0; i < 8; i++) {
+                std::vector<double> neuron_connections;
+                for (int j = 0; j < neuron_to; j++) {
+                    neuron_connections.push_back(static_cast<double>(rand()) / RAND_MAX * 0.5);  // [0, 0.5]
+                }
+                neuron.push_back(neuron_connections);
+            }
+
+            for (int i = 8; i < 24; i++) {
+                std::vector<double> neuron_connections;
+                for (int j = 0; j < neuron_to; j++) {
+                    neuron_connections.push_back(-1 * static_cast<double>(rand()) / RAND_MAX *
+                                                 0.5);  // [-0.5, 0]
+                }
+                neuron.push_back(neuron_connections);
+            }
+
+            for (int i = 24; i < 32; i++) {
+                std::vector<double> neuron_connections;
+                for (int j = 0; j < neuron_to; j++) {
+                    neuron_connections.push_back(static_cast<double>(rand()) / RAND_MAX);  // [0, 1]
+                }
+                neuron.push_back(neuron_connections);
+            }
+
+        } else {
+            for (int i = 0; i < neuron_from; i++) {
+                std::vector<double> neuron_connections;
+                for (int j = 0; j < neuron_to; j++) {
+                    neuron_connections.push_back(static_cast<double>(rand()) / RAND_MAX);
+                }
+                neuron.push_back(neuron_connections);
+            }
+        }
         // initialize biases with random in [0;1]
         std::vector<double> b;
         for (int i = 0; i < neuron_to; i++) {
-            // b.push_back(static_cast<double>(rand()) / RAND_MAX);
-            b.push_back(0);
+            b.push_back(static_cast<double>(rand()) / RAND_MAX);
         }
 
         weights.push_back(neuron);
@@ -72,7 +106,7 @@ Network1::Network1(std::vector<int> &layers, double learning_rate, double gamma)
     }
 }
 
-void Network1::backward(std::vector<double> &s, Keys a, unsigned r, std::vector<double> &n_s) {
+void Perceptron::backward(std::vector<double> &s, Keys a, unsigned r, std::vector<double> &n_s) {
     // calculations for last layer
     std::vector<double> dEdt_last = calculate_dEdt_last(s, a, r, n_s);
     std::vector<std::vector<double>> dEdW_last = calculate_dEdW(outputs[num_layers - 1], dEdt_last);
@@ -88,8 +122,8 @@ void Network1::backward(std::vector<double> &s, Keys a, unsigned r, std::vector<
 
     // from penultimate layer to 0s
     for (int i = num_layers - 2; i >= 0; i--) {
-        std::vector<double> dEdh_i = m_dot_v(transpose_m(weights[i + 1]), dEdt_prev);
-        std::vector<double> dEdt_i = v_mul_v(dEdh_i, relu_deriv(inputs[i]));
+        std::vector<double> dEdh_i = v_dot_m(dEdt_prev, transpose_m(weights[i + 1]));
+        std::vector<double> dEdt_i = v_mul_v(dEdh_i, relu_deriv(inputs[i + 1]));
 
         std::vector<std::vector<double>> dEdW_i = calculate_dEdW(outputs[i], dEdt_i);
         std::vector<double> dEdb_i = dEdt_i;
@@ -109,25 +143,25 @@ void Network1::backward(std::vector<double> &s, Keys a, unsigned r, std::vector<
     }
 }
 
-std::vector<double> Network1::forward(std::vector<double> &input) {
+std::vector<double> Perceptron::forward(std::vector<double> &input) {
     outputs[0] = input;
     inputs[0] = input;
 
     for (int i = 1; i < num_layers; i++) {
-        inputs[i] = v_plus_v(m_dot_v(transpose_m(weights[i - 1]), outputs[i - 1]), biases[i - 1]);
+        inputs[i] = v_plus_v(v_dot_m(outputs[i - 1], weights[i - 1]), biases[i - 1]);
         outputs[i] = relu(inputs[i]);
     }
 
     // on exit layer function of activation is softmax
-    inputs[num_layers] = v_plus_v(m_dot_v(transpose_m(weights[num_layers - 1]), outputs[num_layers - 1]),
-                                  biases[num_layers - 1]);
+    inputs[num_layers] =
+        v_plus_v(v_dot_m(outputs[num_layers - 1], weights[num_layers - 1]), biases[num_layers - 1]);
     outputs[num_layers] = softmax(inputs[num_layers]);
 
     return outputs[num_layers];
 }
 
-std::vector<double> Network1::calculate_dEdt_last(std::vector<double> &s, Keys a, unsigned r,
-                                                  std::vector<double> &n_s) {
+std::vector<double> Perceptron::calculate_dEdt_last(std::vector<double> &s, Keys a, unsigned r,
+                                                    std::vector<double> &n_s) {
     // find target(y) of current state
     struct Qvalues predicted_next_qvalues = vector_to_qvalues_struct(forward(n_s));
     auto [max_qvalue, _] = find_max_qvalue(predicted_next_qvalues);
@@ -142,8 +176,8 @@ std::vector<double> Network1::calculate_dEdt_last(std::vector<double> &s, Keys a
     return dEdt_last;
 }
 
-std::vector<std::vector<double>> Network1::calculate_dEdW(const std::vector<double> &output,
-                                                          const std::vector<double> &dEdt) {
+std::vector<std::vector<double>> Perceptron::calculate_dEdW(const std::vector<double> &output,
+                                                            const std::vector<double> &dEdt) {
     std::vector<std::vector<double>> result(output.size(), std::vector<double>(dEdt.size()));
 
     for (int i = 0; i < output.size(); i++) {
@@ -153,4 +187,20 @@ std::vector<std::vector<double>> Network1::calculate_dEdW(const std::vector<doub
     }
 
     return result;
+}
+
+std::vector<std::vector<std::vector<double>>> Perceptron::get_weights() {
+    return weights;
+}
+
+std::vector<std::vector<double>> Perceptron::get_biases() {
+    return biases;
+}
+
+void Perceptron::set_weights(const std::vector<std::vector<std::vector<double>>> &_weights) {
+    weights = _weights;
+}
+
+void Perceptron::set_biases(const std::vector<std::vector<double>> &_biases) {
+    biases = _biases;
 }

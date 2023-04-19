@@ -171,7 +171,7 @@ int Game::start_level(unsigned level_number) {
         map_view.print();
 
         death_score =
-                static_cast<int>(snake.get_length() - kSnakeLength) > 0 ? snake.get_length() - kSnakeLength : 0;
+            static_cast<int>(snake.get_length() - kSnakeLength) > 0 ? snake.get_length() - kSnakeLength : 0;
 
         highest_score = death_score > highest_score ? death_score : highest_score;
 
@@ -212,8 +212,9 @@ int Game::start_ai_learning(unsigned episodes_total) {
     double total_reward = 0;
     unsigned output_line = 0;
 
-    std::vector<int> layers = {32, 16, 4};
+    std::vector<int> layers = {LAYERS};
     aiControl ai(layers);
+    ai.load_network_hyperparameters();
 
     ConsoleUI console;
     console.clear_full_display();
@@ -270,8 +271,8 @@ int Game::start_ai_learning(unsigned episodes_total) {
 
                     map_model.put_snake(snake);
                     map_model.generate_bonus(bonus_c);
-                    reward = 1;
-                    total_reward += 1.0;
+                    reward = kRewardPositive;
+                    total_reward += (double)kRewardPositive;
                     break;
                 }
                     // no need for bonuses when learning AI
@@ -291,8 +292,8 @@ int Game::start_ai_learning(unsigned episodes_total) {
                     // falls down
                 }
                 case Cell::wall_c: {
-                    reward = -1;
-                    total_reward -= 1.0;
+                    reward = kRewardNegative;
+                    total_reward += (double)kRewardNegative;
                     is_exit = true;
                     episodes_count++;
                     break;
@@ -312,7 +313,7 @@ int Game::start_ai_learning(unsigned episodes_total) {
             if (episodes_count % kEpisodesForOutput == kEpisodesForOutput - 1 && is_exit) {
                 console.clear_line(output_line + 5);
                 console.set_cursor(output_line + 5, settings.map_length - 15);
-                std::cout << (episodes_count + 1) / kEpisodesForOutput << ") Average reword for last "
+                std::cout << (episodes_count + 1) / kEpisodesForOutput << ") Average reward for last "
                           << kEpisodesForOutput << " episodes: " << total_reward / kEpisodesForOutput;
 
                 output_line = (output_line + 1) % 10;
@@ -320,8 +321,12 @@ int Game::start_ai_learning(unsigned episodes_total) {
 
                 console.clear_line(15);
                 console.set_cursor(15, settings.map_length - 5);
-                std::cout << "EPOCH: " << episodes_count + 1 << " OF " <<
-                          (episodes_total == 0 ? "∞" : std::to_string(episodes_total)) << std::flush;
+                std::cout << "EPOCH: " << episodes_count + 1 << " OF "
+                          << (episodes_total == 0 ? "∞" : std::to_string(episodes_total)) << std::flush;
+            }
+
+            if (episodes_count % kEpisodesForSaveHyperparams == kEpisodesForSaveHyperparams - 1 && is_exit) {
+                ai.save_network_hyperparameters();
             }
         }
     }
@@ -332,8 +337,9 @@ int Game::start_ai_learning(unsigned episodes_total) {
 int Game::start_ai_game(unsigned episodes_total) {
     unsigned episodes_count = 0;
 
-    std::vector<int> layers = {32, 16, 4};
+    std::vector<int> layers = {LAYERS};
     aiControl ai(layers);
+    ai.load_network_hyperparameters();
 
     ConsoleUI console;
     while (episodes_count < episodes_total || episodes_total == 0) {
@@ -402,7 +408,7 @@ int Game::start_ai_game(unsigned episodes_total) {
 
                     map_model.put_snake(snake);
                     map_model.generate_bonus(bonus_c);
-                    reward = 1;
+                    reward = kRewardPositive;
                     break;
                 }
                     // no need for bonuses when learning AI
@@ -422,7 +428,7 @@ int Game::start_ai_game(unsigned episodes_total) {
                     // falls down
                 }
                 case Cell::wall_c: {
-                    reward = -1;
+                    reward = kRewardNegative;
                     is_exit = true;
                     episodes_count++;
                     break;
@@ -447,13 +453,17 @@ int Game::start_ai_game(unsigned episodes_total) {
             // metrics for AI
             console.clear_line(settings.map_width + 2);
             console.set_cursor(settings.map_width + 2, settings.map_length - 7);
-            std::cout << "EPOCH: " << episodes_count + 1 << " OF " <<
-                      (episodes_total == 0 ? "∞" : std::to_string(episodes_total));
+            std::cout << "EPOCH: " << episodes_count + 1 << " OF "
+                      << (episodes_total == 0 ? "∞" : std::to_string(episodes_total));
 
             console.set_cursor(1, 1);
             map_view.print();
 
             usleep(200000);
+
+            if (episodes_count % kEpisodesForSaveHyperparams == kEpisodesForSaveHyperparams - 1 && is_exit) {
+                ai.save_network_hyperparameters();
+            }
         }
     }
 
@@ -469,7 +479,7 @@ int Game::pause_game() {
     unsigned prev_string_num = string_num;
     int return_code = 0;
 
-    Menu *m = new PauseMenu(filename);
+    Menu* m = new PauseMenu(filename);
     menus.push(std::unique_ptr<Menu>(m));
     menus.top().get()->draw(string_num);
     while (return_code == 0) {
@@ -481,7 +491,7 @@ int Game::pause_game() {
     }
 
     std::chrono::duration<float> pause_duration =
-            std::chrono::high_resolution_clock::now() - pause_start_time;
+        std::chrono::high_resolution_clock::now() - pause_start_time;
     pause_time += pause_duration.count();
 
     return return_code;
@@ -538,7 +548,7 @@ int Game::write_to_leaderboard() {
         return -1;
     }
 
-    for (auto entry: leaderboard) {
+    for (auto entry : leaderboard) {
         in_file << std::get<0>(entry) << ';' << std::to_string(std::get<1>(entry)) << '\n';
     }
     in_file.close();

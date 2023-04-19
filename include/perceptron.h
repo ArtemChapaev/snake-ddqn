@@ -18,11 +18,18 @@ struct Qvalues {
 Qvalues vector_to_qvalues_struct(const std::vector<double> &);
 std::tuple<double, Keys> find_max_qvalue(const Qvalues &);
 
-class Network1 : public NeuralNetwork {
+class Perceptron : public NeuralNetwork {
    public:
-    Network1(std::vector<int> &layers, double learning_rate = 0.01, double gamma = 0.99);
+    Perceptron(std::vector<int> &layers, double learning_rate = 0.01, double gamma = 0.99);
+
     void backward(std::vector<double> &, Keys, unsigned, std::vector<double> &) override;
     std::vector<double> forward(std::vector<double> &) override;
+
+    std::vector<std::vector<std::vector<double>>> get_weights();
+    std::vector<std::vector<double>> get_biases();
+
+    void set_weights(const std::vector<std::vector<std::vector<double>>> &);
+    void set_biases(const std::vector<std::vector<double>> &);
 
    private:
     std::vector<double> calculate_dEdt_last(std::vector<double> &, Keys, unsigned, std::vector<double> &);

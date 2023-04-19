@@ -1,5 +1,7 @@
 #include <algorithm>
 #include <cmath>
+#include <stdexcept>
+#include <string>
 #include <vector>
 
 std::vector<double> relu(const std::vector<double> &);
@@ -15,8 +17,8 @@ std::vector<std::vector<double>> transpose_m(const std::vector<std::vector<doubl
 std::vector<std::vector<double>> m_dot_m(const std::vector<std::vector<double>> &,
                                          const std::vector<std::vector<double>> &);
 
-std::vector<double> m_dot_v(const std::vector<std::vector<double>> &matrix,
-                            const std::vector<double> &vector);
+std::vector<double> v_dot_m(const std::vector<double> &vector,
+                            const std::vector<std::vector<double>> &matrix);
 
 std::vector<double> v_mul_v(const std::vector<double> &, const std::vector<double> &);
 

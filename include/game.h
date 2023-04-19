@@ -23,6 +23,7 @@
 #include "snake.h"
 
 #define LEVEL_SPEED(level_number) (1. + level_number * 0.1)
+#define LAYERS 32, 16, 4
 
 const unsigned kBonusesForNewLevel = 5;
 const unsigned kMovesForSpeedBonus = 15;
@@ -40,7 +41,12 @@ const unsigned kFinalScoreStringLength = 13;
 const std::string kWinString = "LEVEL UP!";
 const std::string kLeaderboardFile = "leaderboard.txt";
 
+// subject to change into doubles
+const int kRewardPositive = 1;
+const int kRewardNegative = -1;
+
 const unsigned kEpisodesForOutput = 10000;
+const unsigned kEpisodesForSaveHyperparams = 1;
 
 class Game {
     /// A controller class that connects the model and the display of the game.

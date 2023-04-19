@@ -17,3 +17,5 @@ presets
 leaderboard.txt
 map.txt
 settings.txt
+weights.txt
+biases.txt
