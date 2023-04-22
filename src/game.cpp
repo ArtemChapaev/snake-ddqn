@@ -213,7 +213,7 @@ int Game::start_ai_learning(unsigned episodes_total) {
     unsigned output_line = 0;
 
     std::vector<int> layers = {LAYERS};
-    aiControl ai(layers);
+    AiControl ai(layers);
     ai.load_network_hyperparameters();
 
     ConsoleUI console;
@@ -316,7 +316,8 @@ int Game::start_ai_learning(unsigned episodes_total) {
                 console.clear_line(output_line + 5);
                 console.set_cursor(output_line + 5, settings.map_length - 15);
                 std::cout << (episodes_count + 1) / kEpisodesForOutput << ") Average reward for last "
-                          << kEpisodesForOutput << " episodes: " << total_reward / kEpisodesForOutput / kRewardPositive;
+                          << kEpisodesForOutput
+                          << " episodes: " << total_reward / kEpisodesForOutput / kRewardPositive;
 
                 output_line = (output_line + 1) % 10;
                 total_reward = 0.0;
@@ -342,7 +343,7 @@ int Game::start_ai_game(unsigned episodes_total) {
     unsigned episodes_count = 0;
 
     std::vector<int> layers = {LAYERS};
-    aiControl ai(layers);
+    AiControl ai(layers);
     ai.load_network_hyperparameters();
 
     ConsoleUI console;

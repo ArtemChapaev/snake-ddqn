@@ -45,7 +45,7 @@ const std::string kLeaderboardFile = "leaderboard.txt";
 const double kRewardPositive = 0.5;
 const double kRewardNegative = -0.5;
 
-const unsigned kEpisodesForOutput = 10000;
+const unsigned kEpisodesForOutput = 200;
 const unsigned kEpisodesForSaveHyperparams = 1;
 
 class Game {

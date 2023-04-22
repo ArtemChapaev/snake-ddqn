@@ -1,15 +1,16 @@
 #include "consoleUI.h"
 
 void ConsoleUI::clear_full_display() {
-    set_cursor(1, 1);
-    for (unsigned j = 1; j <= romax(); ++j) {
-        for (unsigned i = 1; i <= comax(); ++i) {
-            std::cout << ' ';
-        }
-        std::cout << std::endl;
-    }
-    set_cursor(1, 1);
-    std::cout << std::flush;
+    //    set_cursor(1, 1);
+    //    for (unsigned j = 1; j <= romax(); ++j) {
+    //        for (unsigned i = 1; i <= comax(); ++i) {
+    //            std::cout << ' ';
+    //        }
+    //        std::cout << std::endl;
+    //    }
+    //    set_cursor(1, 1);
+    //    std::cout << std::flush;
+    std::cout << "\033[3J\033[H\033[2J" << std::flush;
 }
 
 void ConsoleUI::clear_line(unsigned j) {

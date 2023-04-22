@@ -6,7 +6,7 @@
 
 struct Qvalues {
     Qvalues(double up = 0, double down = 0, double left = 0, double right = 0)
-            : up(up), down(down), left(left), right(right){};
+        : up(up), down(down), left(left), right(right){};
 
     double up;
     double down;

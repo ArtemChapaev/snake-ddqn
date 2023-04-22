@@ -1,16 +1,35 @@
 #include "aiControl.h"
 
-aiControl::aiControl(std::vector<int> layers, double learning_rate, double gamma, double epsilon)
-        : network(layers, learning_rate, gamma), epsilon(epsilon) {}
+AiControl::AiControl(std::vector<int> layers, double learning_rate, double gamma, double epsilon,
+                     bool use_batch)
+    : network(layers, learning_rate, gamma), epsilon(epsilon), use_batch(use_batch) {}
 
-void aiControl::train_nn(const State &s, Keys a, double r, const State &n_s) {
+void AiControl::train_nn(const State &s, Keys a, double r, const State &n_s) {
     auto st = state_struct_to_vector(s);
     auto n_st = state_struct_to_vector(n_s);
+
+    if (use_batch) {
+        std::vector<Sample> batch;
+        if (samples.size() < kBatchSize) {
+            batch = samples;
+        } else {
+            batch.resize(kBatchSize);
+            unsigned n_samples = samples.size();
+            for (int i = 0; i < kBatchSize; ++i) {
+                batch[i] = samples[rand() % n_samples];
+            }
+        }
+        unsigned n_samples = samples.size();
+        for (auto &[b_n_st, b_a, b_r, b_st] : batch) {
+            network.backward(b_st, b_a, b_r, b_n_st);
+        }
+        samples.emplace_back(st, a, r, n_st);
+    }
 
     network.backward(st, a, r, n_st);
 }
 
-Keys aiControl::get_direction(const State &s, Keys last_direction) {
+Keys AiControl::get_direction(const State &s, Keys last_direction) {
     auto st = state_struct_to_vector(s);
 
     Keys next_action = Keys::up;
@@ -37,7 +56,11 @@ Keys aiControl::get_direction(const State &s, Keys last_direction) {
     return next_action;
 }
 
-void aiControl::save_network_hyperparameters() {
+void AiControl::set_use_batch(bool use_b) {
+    use_batch = use_b;
+}
+
+void AiControl::save_network_hyperparameters() {
     std::vector<std::vector<std::vector<double>>> weights = network.get_weights();
     std::vector<std::vector<double>> biases = network.get_biases();
 
@@ -46,9 +69,9 @@ void aiControl::save_network_hyperparameters() {
         throw std::ios_base::failure("invalid weights file");
     }
 
-    for (const auto &outer_vec: weights) {
-        for (const auto &middle_vec: outer_vec) {
-            for (const auto &value: middle_vec) {
+    for (const auto &outer_vec : weights) {
+        for (const auto &middle_vec : outer_vec) {
+            for (const auto &value : middle_vec) {
                 file_weights << value << " ";
             }
             file_weights << std::endl;
@@ -63,8 +86,8 @@ void aiControl::save_network_hyperparameters() {
         throw std::ios_base::failure("invalid biases file");
     }
 
-    for (const auto &outer_vec: biases) {
-        for (const auto &value: outer_vec) {
+    for (const auto &outer_vec : biases) {
+        for (const auto &value : outer_vec) {
             file_biases << value << " ";
         }
         file_biases << std::endl << std::endl;
@@ -73,7 +96,7 @@ void aiControl::save_network_hyperparameters() {
     file_biases.close();
 }
 
-int aiControl::load_network_hyperparameters() {
+int AiControl::load_network_hyperparameters() {
     std::ifstream file_biases(kBiasesFile);
     if (!file_biases) {
         return 0;

@@ -157,7 +157,7 @@ State get_state(MapModel &map, Snake s) {
     } else if (y_bonus == y_head) {
         if (x_bonus > x_head) {
             // right head
-            state.dist_bonus_right  = 1.0;
+            state.dist_bonus_right = 1.0;
         } else {
             // left head
             state.dist_bonus_left = 1.0;
@@ -168,15 +168,15 @@ State get_state(MapModel &map, Snake s) {
             state.dist_bonus_up_right = 1.0;
         } else {
             // in right under head
-            state.dist_bonus_down_right  = 1.0;
+            state.dist_bonus_down_right = 1.0;
         }
     } else {
         if (y_bonus > y_head) {
             // in left above head
-            state.dist_bonus_up_left  = 1.0;
+            state.dist_bonus_up_left = 1.0;
         } else {
             // in left under head
-            state.dist_bonus_down_left  = 1.0;
+            state.dist_bonus_down_left = 1.0;
         }
     }
 
