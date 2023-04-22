@@ -87,9 +87,9 @@ std::vector<double> v_dot_m(const std::vector<double> &vector,
     }
 
     if (matrix.size() != vector.size()) {
-        std::string sizes = std::to_string(matrix.size()) + "x" + std::to_string(matrix[0].size()) + " and " +
-                            std::to_string(vector.size());
-        throw std::invalid_argument("matrix and vector are not compatible for multiplication (v_dot_m): " +
+        std::string sizes = std::to_string(vector.size()) + " and " + std::to_string(matrix.size()) + "x" +
+                            std::to_string(matrix[0].size());
+        throw std::invalid_argument("vector and matrix are not compatible for multiplication (v_dot_m): " +
                                     sizes);
     }
 

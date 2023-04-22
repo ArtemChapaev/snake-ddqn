@@ -21,7 +21,7 @@ add_executable(snake /
         src/menu.cpp /
         src/aiControl.cpp /
         src/math_funcs.cpp /
-        src/perceptron.cpp /
+        src/simpleNN.cpp /
         src/main.cpp /
         )
 

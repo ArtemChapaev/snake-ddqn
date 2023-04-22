@@ -1,24 +1,35 @@
 #include "aiControl.h"
 
 aiControl::aiControl(std::vector<int> layers, double learning_rate, double gamma, double epsilon)
-    : network(layers, learning_rate, gamma), epsilon(epsilon) {}
+        : network(layers, learning_rate, gamma), epsilon(epsilon) {}
 
-Keys aiControl::get_direction(const State &s, Keys a, unsigned r, const State &n_s) {
+void aiControl::train_nn(const State &s, Keys a, double r, const State &n_s) {
     auto st = state_struct_to_vector(s);
     auto n_st = state_struct_to_vector(n_s);
 
     network.backward(st, a, r, n_st);
+}
 
-    Qvalues next_qvalues = vector_to_qvalues_struct(network.forward(n_st));
+Keys aiControl::get_direction(const State &s, Keys last_direction) {
+    auto st = state_struct_to_vector(s);
 
     Keys next_action = Keys::up;
-    double max_qvalue = 0;
-
     // e-greedy algorithm
     if ((rand() % 10) / 10.0 < epsilon) {
-        next_action = static_cast<Keys>(rand() % 4);  // rand() % 4 because we pick random direction
+        // use only if next_action isn't opposite last action(a)
+        bool is_good_dir = false;
+        while (!is_good_dir) {
+            // rand() % 4 because we pick random direction
+            next_action = static_cast<Keys>(rand() % 4);
+            if (check_direction(last_direction, next_action)) {
+                is_good_dir = true;
+            }
+        }
     } else {
-        std::tie(max_qvalue, next_action) = find_max_qvalue(next_qvalues);
+        Qvalues qvalues = vector_to_qvalues_struct(network.forward(st));
+
+        double max_qvalue = 0;
+        std::tie(max_qvalue, next_action) = find_max_qvalue(qvalues);
     }
 
     epsilon *= kEpsilonCoef;
@@ -35,9 +46,9 @@ void aiControl::save_network_hyperparameters() {
         throw std::ios_base::failure("invalid weights file");
     }
 
-    for (const auto &outer_vec : weights) {
-        for (const auto &middle_vec : outer_vec) {
-            for (const auto &value : middle_vec) {
+    for (const auto &outer_vec: weights) {
+        for (const auto &middle_vec: outer_vec) {
+            for (const auto &value: middle_vec) {
                 file_weights << value << " ";
             }
             file_weights << std::endl;
@@ -52,8 +63,8 @@ void aiControl::save_network_hyperparameters() {
         throw std::ios_base::failure("invalid biases file");
     }
 
-    for (const auto &outer_vec : biases) {
-        for (const auto &value : outer_vec) {
+    for (const auto &outer_vec: biases) {
+        for (const auto &value: outer_vec) {
             file_biases << value << " ";
         }
         file_biases << std::endl << std::endl;
@@ -70,7 +81,7 @@ int aiControl::load_network_hyperparameters() {
 
     std::vector<std::vector<double>> biases;
     std::vector<double> b_outer_vec;
-    double b_value;
+    double b_value = 0;
     std::string b_line;
 
     while (std::getline(file_biases, b_line)) {
@@ -95,7 +106,7 @@ int aiControl::load_network_hyperparameters() {
     std::vector<std::vector<std::vector<double>>> weights;
     std::vector<std::vector<double>> w_outer_vec;
     std::vector<double> w_middle_vec;
-    double w_value;
+    double w_value = 0;
     std::string w_line;
 
     while (std::getline(file_weights, w_line)) {

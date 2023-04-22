@@ -149,42 +149,34 @@ State get_state(MapModel &map, Snake s) {
     if (x_bonus == x_head) {
         if (y_bonus > y_head) {
             // above head
-            double temp = 1.0 / (y_bonus - y_head);
-            state.dist_snake_up = std::max(temp, state.dist_snake_up);
+            state.dist_bonus_up = 1.0;
         } else {
             // under head
-            double temp = 1.0 / (y_head - y_bonus);
-            state.dist_snake_down = std::max(temp, state.dist_snake_down);
+            state.dist_bonus_down = 1.0;
         }
     } else if (y_bonus == y_head) {
         if (x_bonus > x_head) {
             // right head
-            double temp = 1.0 / (x_bonus - x_head);
-            state.dist_snake_right = std::max(temp, state.dist_snake_right);
+            state.dist_bonus_right  = 1.0;
         } else {
             // left head
-            double temp = 1.0 / (x_head - y_bonus);
-            state.dist_snake_left = std::max(temp, state.dist_snake_left);
+            state.dist_bonus_left = 1.0;
         }
-    } else if (y_bonus - x_bonus == y_head - x_head) {
-        if (y_bonus > y_head) {
-            // in left above head
-            double temp = 0.5 / (y_bonus - y_head);
-            state.dist_snake_up_left = std::max(temp, state.dist_snake_up_left);
-        } else {
-            // in right under head
-            double temp = 0.5 / (y_head - y_bonus);
-            state.dist_snake_down_right = std::max(temp, state.dist_snake_down_right);
-        }
-    } else if (y_bonus + x_bonus == y_head + x_head) {
+    } else if (x_bonus > x_head) {
         if (y_bonus > y_head) {
             // in right above head
-            double temp = 0.5 / (y_bonus - y_head);
-            state.dist_snake_up_right = std::max(temp, state.dist_snake_up_right);
+            state.dist_bonus_up_right = 1.0;
+        } else {
+            // in right under head
+            state.dist_bonus_down_right  = 1.0;
+        }
+    } else {
+        if (y_bonus > y_head) {
+            // in left above head
+            state.dist_bonus_up_left  = 1.0;
         } else {
             // in left under head
-            double temp = 0.5 / (y_head - y_bonus);
-            state.dist_snake_down_left = std::max(temp, state.dist_snake_down_left);
+            state.dist_bonus_down_left  = 1.0;
         }
     }
 
@@ -215,24 +207,24 @@ State get_state(MapModel &map, Snake s) {
                 double temp = 1.0 / (x_head - s_body->get_x());
                 state.dist_snake_left = std::max(temp, state.dist_snake_left);
             }
-        } else if (s_body->get_y() - s_body->get_x() == y_head - x_head) {
-            if (s_body->get_y() > y_head) {
-                // in left above head
-                double temp = 0.5 / (s_body->get_y() - y_head);
-                state.dist_snake_up_left = std::max(temp, state.dist_snake_up_left);
-            } else {
-                // in right under head
-                double temp = 0.5 / (y_head - s_body->get_y());
-                state.dist_snake_down_right = std::max(temp, state.dist_snake_down_right);
-            }
-        } else if (s_body->get_y() + s_body->get_x() == y_head + x_head) {
+        } else if (s_body->get_x() > x_head) {
             if (s_body->get_y() > y_head) {
                 // in right above head
-                double temp = 0.5 / (s_body->get_y() - y_head);
+                double temp = 1.0 / (s_body->get_x() - x_head + s_body->get_y() - y_head);
                 state.dist_snake_up_right = std::max(temp, state.dist_snake_up_right);
             } else {
+                // in right under head
+                double temp = 1.0 / (s_body->get_x() - x_head + y_head - s_body->get_y());
+                state.dist_snake_down_right = std::max(temp, state.dist_snake_down_right);
+            }
+        } else {
+            if (s_body->get_y() > y_head) {
+                // in left above head
+                double temp = 1.0 / (x_head - s_body->get_x() + s_body->get_y() - y_head);
+                state.dist_snake_up_left = std::max(temp, state.dist_snake_up_left);
+            } else {
                 // in left under head
-                double temp = 0.5 / (y_head - s_body->get_y());
+                double temp = 1.0 / (x_head - s_body->get_x() + y_head - s_body->get_y());
                 state.dist_snake_down_left = std::max(temp, state.dist_snake_down_left);
             }
         }
