@@ -258,7 +258,7 @@ int Game::start_ai_learning(unsigned episodes_total) {
             } else {
                 ai.train_nn(last_state, action, reward, state);
                 // last_direction == action
-                Keys new_key = ai.get_direction(last_state, action);
+                Keys new_key = ai.get_direction(last_state, action, true);
                 snake.set_direction(new_key);
                 reward = 0.0;
             }
@@ -398,7 +398,7 @@ int Game::start_ai_game(unsigned episodes_total) {
             if (is_first_iteration) {
                 is_first_iteration = false;
             } else {
-                Keys new_key = ai.get_direction(last_state, action);
+                Keys new_key = ai.get_direction(last_state, action, false);
                 snake.set_direction(new_key);
                 reward = 0.0;
             }

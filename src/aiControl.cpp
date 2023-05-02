@@ -2,11 +2,20 @@
 
 AiControl::AiControl(std::vector<int> layers, double learning_rate, double gamma, double epsilon,
                      bool use_batch)
-    : network(layers, learning_rate, gamma), epsilon(epsilon), use_batch(use_batch) {}
+    : network(layers, learning_rate, gamma),
+      target_network(layers, learning_rate, gamma),
+      epsilon(epsilon),
+      use_batch(use_batch),
+      n_steps(0) {}
 
 void AiControl::train_nn(const State &s, Keys a, double r, const State &n_s) {
     auto st = state_struct_to_vector(s);
     auto n_st = state_struct_to_vector(n_s);
+
+    if (n_steps == kStepsForNetworkSwap) {
+        n_steps = 0;
+        target_network = network;
+    }
 
     if (use_batch) {
         std::vector<Sample> batch;
@@ -19,22 +28,23 @@ void AiControl::train_nn(const State &s, Keys a, double r, const State &n_s) {
                 batch[i] = samples[rand() % n_samples];
             }
         }
-        unsigned n_samples = samples.size();
         for (auto &[b_n_st, b_a, b_r, b_st] : batch) {
-            network.backward(b_st, b_a, b_r, b_n_st);
+            network.backward(b_st, b_a, b_r, b_n_st, target_network);
         }
         samples.emplace_back(st, a, r, n_st);
     }
 
-    network.backward(st, a, r, n_st);
+    network.backward(st, a, r, n_st, target_network);
+    ++n_steps;
 }
 
-Keys AiControl::get_direction(const State &s, Keys last_direction) {
+Keys AiControl::get_direction(const State &s, Keys last_direction, bool is_learning) {
     auto st = state_struct_to_vector(s);
 
     Keys next_action = Keys::up;
+
     // e-greedy algorithm
-    if ((rand() % 10) / 10.0 < epsilon) {
+    if (is_learning && (rand() % 10) / 10.0 < epsilon) {
         // use only if next_action isn't opposite last action(a)
         bool is_good_dir = false;
         while (!is_good_dir) {

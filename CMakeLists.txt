@@ -20,7 +20,7 @@ add_executable(snake /
         src/logos.cpp /
         src/menu.cpp /
         src/aiControl.cpp /
-        src/math_funcs.cpp /
+        src/mathFuncs.cpp /
         src/simpleNN.cpp /
         src/main.cpp /
         )

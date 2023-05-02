@@ -43,7 +43,6 @@ std::tuple<double, Keys> find_max_qvalue(const Qvalues &qvalues) {
     return std::make_tuple(max_qvalue, next_action);
 }
 
-// example "layers" argument: {32, 16, 4} - 2 layers here
 SimpleNN::SimpleNN(std::vector<int> &layers, double learning_rate, double gamma)
     : layers(layers), num_layers(layers.size() - 1), learning_rate(learning_rate), gamma(gamma) {
     weights.resize(num_layers);
@@ -53,20 +52,20 @@ SimpleNN::SimpleNN(std::vector<int> &layers, double learning_rate, double gamma)
     int neuron_to = layers[1];
     weights[0].resize(neuron_from);
 
-    // init first layer with 32 neurons
+    // init first layer with neuron_from neurons
     for (int i = 0; i < neuron_from; i++) {
         if (i < 8) {
             // bonus neurons
-            weights[0][i] = std::move(get_random_vector_from_range(neuron_to, 0.5, 1));
+            weights[0][i] = std::move(get_random_vector_from_range(neuron_to, 0.25, 0.5));
         } else if (i < 24) {
             // snake body and weights neurons
             weights[0][i] = std::move(get_random_vector_from_range(neuron_to, -0.5, 0));
         } else {
             // direction neurons
-            weights[0][i] = std::move(get_random_vector_from_range(neuron_to, -0.5, 0.5));
+            weights[0][i] = std::move(get_random_vector_from_range(neuron_to, -0.25, 0.25));
         }
     }
-    biases[0] = std::move(get_random_vector_from_range(neuron_to, -0.5, 0.5));
+    biases[0] = std::move(get_random_vector_from_range(neuron_to, -0.25, 0.25));
 
     // init rest layers
     for (int t = 1; t < num_layers; t++) {
@@ -84,14 +83,44 @@ SimpleNN::SimpleNN(std::vector<int> &layers, double learning_rate, double gamma)
     for (int i = 0; i < num_layers + 1; i++) {
         int nodes = layers[i];
 
-        outputs.push_back(std::vector<double>(nodes));
-        inputs.push_back(std::vector<double>(nodes));
+        outputs.emplace_back(nodes);
+        inputs.emplace_back(nodes);
     }
 }
 
-void SimpleNN::backward(std::vector<double> &s, Keys a, double r, std::vector<double> &n_s) {
+SimpleNN &SimpleNN::operator=(SimpleNN const &other) {
+    layers = other.layers;
+    num_layers = other.num_layers;
+
+    weights.resize(num_layers);
+    biases.resize(num_layers);
+
+    // update all layers
+    for (int i = 0; i < num_layers; ++i) {
+        int neuron_from = layers[i];
+        weights[i].resize(neuron_from);
+
+        for (int j = 0; j < neuron_from; j++) {
+            weights[i][j] = other.weights[i][j];
+        }
+        biases[i] = other.biases[i];
+    }
+
+    // update outputs and errors with zeros
+    inputs.resize(num_layers + 1);
+    outputs.resize(num_layers + 1);
+    for (int i = 0; i < num_layers + 1; ++i) {
+        inputs = other.inputs;
+        outputs = other.outputs;
+    }
+
+    return *this;
+}
+
+void SimpleNN::backward(std::vector<double> &s, Keys a, double r, std::vector<double> &n_s,
+                        NeuralNetwork &target_network) {
     // calculations for last layer
-    std::vector<double> dEdt_last = calculate_dEdt_last(s, a, r, n_s);
+    std::vector<double> dEdt_last = calculate_dEdt_last(s, a, r, n_s, target_network);
     std::vector<std::vector<double>> dEdW_last = calculate_dEdW(outputs[num_layers - 1], dEdt_last);
     std::vector<double> dEdb_last = dEdt_last;
 
@@ -144,17 +173,20 @@ std::vector<double> SimpleNN::forward(std::vector<double> &input) {
 }
 
 std::vector<double> SimpleNN::calculate_dEdt_last(std::vector<double> &s, Keys a, double r,
-                                                  std::vector<double> &n_s) {
+                                                  std::vector<double> &n_s, NeuralNetwork &target_network) {
     // find target(y) of current state
-    struct Qvalues predicted_next_qvalues = vector_to_qvalues_struct(forward(n_s));
+    struct Qvalues predicted_next_qvalues = vector_to_qvalues_struct(target_network.forward(n_s));
     auto [max_qvalue, _] = find_max_qvalue(predicted_next_qvalues);
 
     double predicted_qvalue = forward(s)[a];
     double target = r + gamma * max_qvalue;
 
     std::vector<double> dEdt_last = std::vector<double>(4);
-    dEdt_last[a] =
+    double grad =
         2 * (predicted_qvalue - target) * predicted_qvalue * predicted_qvalue * (1 - predicted_qvalue);
+    if (!std::isnan(grad)) {
+        dEdt_last[a] = grad;
+    }
 
     return dEdt_last;
 }
@@ -172,7 +204,9 @@ std::vector<std::vector<double>> SimpleNN::calculate_dEdW(const std::vector<doub
     return result;
 }
 
-std::vector<std::vector<std::vector<double>>> SimpleNN::get_weights() {
+std::vector<std::vector<std::vector<double>>>
+
+SimpleNN::get_weights() {
     return weights;
 }
 

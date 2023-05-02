@@ -1,4 +1,4 @@
-#include <math_funcs.h>
+#include <mathFuncs.h>
 #include <neuralNetwork.h>
 #include <snake.h>
 
@@ -9,7 +9,9 @@ class SimpleNN : public NeuralNetwork {
    public:
     SimpleNN(std::vector<int> &layers, double learning_rate = 0.01, double gamma = 0.99);
 
-    void backward(std::vector<double> &, Keys, double, std::vector<double> &) override;
+    SimpleNN &operator=(SimpleNN const &);
+
+    void backward(std::vector<double> &, Keys, double, std::vector<double> &, NeuralNetwork &) override;
     std::vector<double> forward(std::vector<double> &) override;
 
     std::vector<std::vector<std::vector<double>>> get_weights();
@@ -19,7 +21,8 @@ class SimpleNN : public NeuralNetwork {
     void set_biases(const std::vector<std::vector<double>> &);
 
    private:
-    std::vector<double> calculate_dEdt_last(std::vector<double> &, Keys, double, std::vector<double> &);
+    std::vector<double> calculate_dEdt_last(std::vector<double> &, Keys, double, std::vector<double> &,
+                                            NeuralNetwork &);
 
     std::vector<std::vector<double>> calculate_dEdW(const std::vector<double> &, const std::vector<double> &);
 

@@ -1,4 +1,4 @@
-#include "math_funcs.h"
+#include "mathFuncs.h"
 
 std::vector<double> relu(const std::vector<double> &vector) {
     std::vector<double> result(vector.size());

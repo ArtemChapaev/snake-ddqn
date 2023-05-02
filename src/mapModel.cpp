@@ -260,33 +260,11 @@ State get_state(MapModel &map, Snake s) {
             break;
         }
     }
-
-    // properties that related with direction of snake body
-    Position second_body_cell = *std::next(s.get_snake().begin());
-
-    if (second_body_cell.get_x() == x_head) {
-        if (second_body_cell.get_y() > y_head) {
-            // above head
-            state.snake_direction_up = 1.0;
-        } else {
-            // under head
-            state.snake_direction_down = 1.0;
-        }
-    } else {
-        if (second_body_cell.get_x() > x_head) {
-            // right head
-            state.snake_direction_right = 1.0;
-        } else {
-            // left head
-            state.snake_direction_left = 1.0;
-        }
-    }
-
     return state;
 }
 
 std::vector<double> state_struct_to_vector(const State &state) {
-    std::vector<double> result(32);
+    std::vector<double> result(28);
 
     result[0] = state.dist_bonus_up;
     result[1] = state.dist_bonus_up_right;
@@ -316,9 +294,5 @@ std::vector<double> state_struct_to_vector(const State &state) {
     result[25] = state.head_direction_right;
     result[26] = state.head_direction_down;
     result[27] = state.head_direction_left;
-    result[28] = state.snake_direction_up;
-    result[29] = state.snake_direction_right;
-    result[30] = state.snake_direction_down;
-    result[31] = state.snake_direction_left;
     return result;
 }

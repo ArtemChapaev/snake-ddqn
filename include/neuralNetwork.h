@@ -20,8 +20,8 @@ std::tuple<double, Keys> find_max_qvalue(const Qvalues &);
 class NeuralNetwork {
    public:
     // calculating errors and updating network parameters
-    virtual void backward(std::vector<double> &s, Keys a, double r, std::vector<double> &n_s) = 0;
+    virtual void backward(std::vector<double> &, Keys, double, std::vector<double> &, NeuralNetwork &) = 0;
 
     // takes input values of network and returns an output as vector
-    virtual std::vector<double> forward(std::vector<double> &input) = 0;
+    virtual std::vector<double> forward(std::vector<double> &) = 0;
 };
