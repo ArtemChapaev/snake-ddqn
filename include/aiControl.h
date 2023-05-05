@@ -7,7 +7,7 @@
 #include "simpleNN.h"
 #include "snake.h"
 
-const unsigned kBatchSize = 100;
+const unsigned kBatchSize = 50;
 const unsigned kStepsForNetworkSwap = 5000;
 
 struct Sample {
@@ -22,14 +22,14 @@ struct Sample {
     std::vector<double> n_s;
 };
 
-const double kEpsilonCoef = 0.9999;
+const double kEpsilonCoef = 0.99994;
 
 const std::string kWeightsFile = "weights.txt";
 const std::string kBiasesFile = "biases.txt";
 
 class AiControl : public Control {
    public:
-    AiControl(std::vector<int> layers, double learning_rate = 0.01, double gamma = 0.99, double epsilon = 0.4,
+    AiControl(std::vector<int> layers, double learning_rate = 0.001, double gamma = 0.99, double epsilon = 0.6,
               bool use_batch = true);
 
     void train_nn(const State &, Keys, double, const State &);

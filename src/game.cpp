@@ -317,7 +317,7 @@ int Game::start_ai_learning(unsigned episodes_total) {
                 console.set_cursor(output_line + 5, settings.map_length - 15);
                 std::cout << (episodes_count + 1) / kEpisodesForOutput << ") Average reward for last "
                           << kEpisodesForOutput
-                          << " episodes: " << total_reward / kEpisodesForOutput / kRewardPositive;
+                          << " episodes: " << total_reward / kEpisodesForOutput;
 
                 output_line = (output_line + 1) % 10;
                 total_reward = 0.0;
@@ -398,6 +398,7 @@ int Game::start_ai_game(unsigned episodes_total) {
             if (is_first_iteration) {
                 is_first_iteration = false;
             } else {
+                ai.train_nn(last_state, action, reward, state);
                 Keys new_key = ai.get_direction(last_state, action, false);
                 snake.set_direction(new_key);
                 reward = 0.0;

@@ -183,7 +183,7 @@ std::vector<double> SimpleNN::calculate_dEdt_last(std::vector<double> &s, Keys a
 
     std::vector<double> dEdt_last = std::vector<double>(4);
     double grad =
-        2 * (predicted_qvalue - target) * predicted_qvalue * predicted_qvalue * (1 - predicted_qvalue);
+        10 * 2 * (predicted_qvalue - target) * predicted_qvalue * predicted_qvalue * (1 - predicted_qvalue);
     if (!std::isnan(grad)) {
         dEdt_last[a] = grad;
     }
