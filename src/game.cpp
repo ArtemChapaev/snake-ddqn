@@ -171,7 +171,7 @@ int Game::start_level(unsigned level_number) {
         map_view.print();
 
         death_score =
-            static_cast<int>(snake.get_length() - kSnakeLength) > 0 ? snake.get_length() - kSnakeLength : 0;
+                static_cast<int>(snake.get_length() - kSnakeLength) > 0 ? snake.get_length() - kSnakeLength : 0;
 
         highest_score = death_score > highest_score ? death_score : highest_score;
 
@@ -257,12 +257,12 @@ int Game::start_ai_learning(unsigned episodes_total) {
                 is_first_iteration = false;
             } else {
                 ai.train_nn(last_state, action, reward, state);
-                // last_direction == action
-                Keys new_key = ai.get_direction(last_state, action, true);
-                snake.set_direction(new_key);
                 reward = 0.0;
             }
-            action = snake.get_direction();
+            // second parameter show last_direction (action is equal with last_direction)
+            action = ai.get_direction(state, action, true);
+            snake.set_direction(action);
+
             last_state = state;
 
             Position next_cell = snake.get_next();
@@ -286,8 +286,7 @@ int Game::start_ai_learning(unsigned episodes_total) {
                 }
                 case Cell::snake_c: {
                     if (snake.get_tail() == next_cell) {
-                        snake.move();  // without clear_cell, bcs there will be the head in this cell in next
-                        // move
+                        snake.move();  // without clear_cell, bcs there will be the head in this cell in next move
                         map_model.put_snake(snake);
                         break;
                     }
@@ -327,6 +326,12 @@ int Game::start_ai_learning(unsigned episodes_total) {
                 std::cout << "EPOCH: " << episodes_count + 1 << " OF "
                           << (episodes_total == 0 ? "∞" : std::to_string(episodes_total)) << std::flush;
             }
+
+            //if (episodes_count == 15) {
+            //    ai.set_use_batch(true);
+            //}
+
+            // usleep(70000);
 
             if (episodes_count % kEpisodesForSaveHyperparams == kEpisodesForSaveHyperparams - 1 && is_exit) {
                 ai.save_network_hyperparameters();
@@ -394,16 +399,9 @@ int Game::start_ai_game(unsigned episodes_total) {
             }
 
             State state = get_state(map_model, snake);
+            action = ai.get_direction(state, action, false);
+            snake.set_direction(action);
 
-            if (is_first_iteration) {
-                is_first_iteration = false;
-            } else {
-                ai.train_nn(last_state, action, reward, state);
-                Keys new_key = ai.get_direction(last_state, action, false);
-                snake.set_direction(new_key);
-                reward = 0.0;
-            }
-            action = snake.get_direction();
             last_state = state;
 
             Position next_cell = snake.get_next();
@@ -485,7 +483,7 @@ int Game::pause_game() {
     unsigned prev_string_num = string_num;
     int return_code = 0;
 
-    Menu* m = new PauseMenu(filename);
+    Menu *m = new PauseMenu(filename);
     menus.push(std::unique_ptr<Menu>(m));
     menus.top().get()->draw(string_num);
     while (return_code == 0) {
@@ -497,7 +495,7 @@ int Game::pause_game() {
     }
 
     std::chrono::duration<float> pause_duration =
-        std::chrono::high_resolution_clock::now() - pause_start_time;
+            std::chrono::high_resolution_clock::now() - pause_start_time;
     pause_time += pause_duration.count();
 
     return return_code;
@@ -554,7 +552,7 @@ int Game::write_to_leaderboard() {
         return -1;
     }
 
-    for (auto entry : leaderboard) {
+    for (auto entry: leaderboard) {
         in_file << std::get<0>(entry) << ';' << std::to_string(std::get<1>(entry)) << '\n';
     }
     in_file.close();

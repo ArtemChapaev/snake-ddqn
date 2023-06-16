@@ -13,30 +13,9 @@ std::vector<double> relu(const std::vector<double> &vector) {
 std::vector<double> relu_deriv(const std::vector<double> &vector) {
     std::vector<double> result(vector.size());
     for (int i = 0; i < vector.size(); i++) {
-        vector[i] < 0 ? result[i] = 0 : result[i] = 1;
+        result[i] = vector[i] < 0 ?  0 : 1;
     }
     return result;
-}
-
-std::vector<double> softmax(const std::vector<double> &vector) {
-    std::vector<double> result(vector.size());
-    double sum = 0.0;
-
-    for (int i = 0; i < vector.size(); i++) {
-        sum += std::exp(vector[i]);
-    }
-
-    for (int i = 0; i < vector.size(); i++) {
-        result[i] = std::exp(vector[i]) / sum;
-    }
-
-    return result;
-}
-
-std::vector<double> softmax_deriv(const std::vector<double> &vector) {
-    std::vector<double> ones(vector.size(), 1.0);
-
-    return v_mul_v(vector, v_minus_v(ones, vector));
 }
 
 std::vector<std::vector<double>> transpose_m(const std::vector<std::vector<double>> &matrix) {
@@ -129,6 +108,12 @@ std::vector<std::vector<double>> m_mul_scal(const std::vector<std::vector<double
 
     for (int i = 0; i < matrix.size(); i++) {
         for (int j = 0; j < matrix[0].size(); j++) {
+            if (std::isnan(number * matrix[i][j])) {
+                throw std::invalid_argument("number * matrix[i][j] is NaN (m_mul_scal)");
+            }
+            if (std::isinf(number * matrix[i][j])) {
+                throw std::invalid_argument("number * matrix[i][j] is Inf (m_mul_scal)");
+            }
             result[i][j] = number * matrix[i][j];
         }
     }

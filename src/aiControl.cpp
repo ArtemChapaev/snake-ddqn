@@ -1,7 +1,6 @@
 #include "aiControl.h"
 
-AiControl::AiControl(std::vector<int> layers, double learning_rate, double gamma, double epsilon,
-                     bool use_batch)
+AiControl::AiControl(std::vector<int> &layers, bool use_batch, double learning_rate, double gamma, double epsilon)
         : network(layers, learning_rate, gamma),
           target_network(layers, learning_rate, gamma),
           epsilon(epsilon),
@@ -116,13 +115,19 @@ int AiControl::load_network_hyperparameters() {
     std::string b_line;
 
     while (std::getline(file_biases, b_line)) {
+        // if empty str
+        if (b_line.empty()) {
+            biases.push_back(b_outer_vec);
+            b_outer_vec.clear();
+            continue;
+        }
         std::stringstream ss(b_line);
+
         while (ss >> b_value) {
             b_outer_vec.push_back(b_value);
         }
-        if (!b_outer_vec.empty()) {
-            biases.push_back(b_outer_vec);
-            b_outer_vec.clear();
+        if (b_outer_vec.empty()) {
+            return 0;
         }
     }
 
@@ -141,17 +146,19 @@ int AiControl::load_network_hyperparameters() {
     std::string w_line;
 
     while (std::getline(file_weights, w_line)) {
+        // if empty str
+        if (w_line.empty()) {
+            weights.push_back(w_outer_vec);
+            w_outer_vec.clear();
+            continue;
+        }
+
         std::stringstream ss(w_line);
         while (ss >> w_value) {
             w_middle_vec.push_back(w_value);
         }
-        if (!w_middle_vec.empty()) {
-            w_outer_vec.push_back(w_middle_vec);
-            w_middle_vec.clear();
-        } else {
-            weights.push_back(w_outer_vec);
-            w_outer_vec.clear();
-        }
+        w_outer_vec.push_back(w_middle_vec);
+        w_middle_vec.clear();
     }
 
     file_weights.close();

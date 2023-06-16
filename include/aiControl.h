@@ -8,7 +8,7 @@
 #include "snake.h"
 
 const unsigned kBatchSize = 50;
-const unsigned kStepsForNetworkSwap = 5000;
+const unsigned kStepsForNetworkSwap = 200;
 
 struct Sample {
     Sample() : a(Keys::right), r(0.0) {}
@@ -22,15 +22,14 @@ struct Sample {
     std::vector<double> n_s;
 };
 
-const double kEpsilonCoef = 0.99994;
+const double kEpsilonCoef = 0.9999;
 
 const std::string kWeightsFile = "weights.txt";
 const std::string kBiasesFile = "biases.txt";
 
 class AiControl : public Control {
    public:
-    AiControl(std::vector<int> layers, double learning_rate = 0.001, double gamma = 0.99, double epsilon = 0.6,
-              bool use_batch = true);
+    AiControl(std::vector<int> &layers, bool use_batch = true, double learning_rate = 0.001, double gamma = 0.98, double epsilon = 0.6);
 
     void train_nn(const State &, Keys, double, const State &);
     Keys get_direction(const State &, Keys, bool);
