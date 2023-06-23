@@ -48,9 +48,7 @@ void write_map_to_file(MapModel &);
 
 struct State {
     State(double bu = 0, double bur = 0, double br = 0, double bdr = 0, double bd = 0, double bdl = 0,
-          double bl = 0, double bul = 0, double dbu = 0, double dbur = 0, double dbr = 0, double dbdr = 0,
-          double dbd = 0, double dbdl = 0, double dbl = 0, double dbul = 0, double dtu = 0, double dtl = 0,
-          double dtur = 0, double dtr = 0, double dtdr = 0, double ddl = 0, double dtdl = 0, double dtul = 0)
+          double bl = 0, double bul = 0, double dbu = 0, double dbr = 0, double dbd = 0, double dbl = 0)
         : bonus_up(bu),
           bonus_up_right(bur),
           bonus_right(br),
@@ -60,13 +58,9 @@ struct State {
           bonus_left(bl),
           bonus_up_left(bul),
           dist_barrier_up(dbu),
-          dist_barrier_up_right(dbur),
           dist_barrier_right(dbr),
-          dist_barrier_down_right(dbdr),
           dist_barrier_down(dbd),
-          dist_barrier_down_left(dbdl),
-          dist_barrier_left(dbl),
-          dist_barrier_up_left(dbul) {};
+          dist_barrier_left(dbl) {};
 
     double bonus_up;
     double bonus_up_right;
@@ -77,13 +71,9 @@ struct State {
     double bonus_left;
     double bonus_up_left;
     double dist_barrier_up;
-    double dist_barrier_up_right;
     double dist_barrier_right;
-    double dist_barrier_down_right;
     double dist_barrier_down;
-    double dist_barrier_down_left;
     double dist_barrier_left;
-    double dist_barrier_up_left;
 };
 
 State get_state(MapModel &, Snake);

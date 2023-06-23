@@ -23,7 +23,7 @@
 #include "snake.h"
 
 #define LEVEL_SPEED(level_number) (1. + level_number * 0.1)
-#define LAYERS 16, 24, 4
+#define LAYERS 12, 18, 4
 
 const unsigned kBonusesForNewLevel = 5;
 const unsigned kMovesForSpeedBonus = 15;
