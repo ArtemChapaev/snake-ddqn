@@ -1,11 +1,12 @@
 #include "aiControl.h"
 
-AiControl::AiControl(std::vector<int> &layers, bool use_batch, double learning_rate, double gamma, double epsilon)
-        : network(layers, learning_rate, gamma),
-          target_network(layers, learning_rate, gamma),
-          epsilon(epsilon),
-          use_batch(use_batch),
-          n_steps(0) {}
+AiControl::AiControl(std::vector<int> &layers, bool use_batch, double learning_rate, double gamma,
+                     double epsilon)
+    : network(layers, learning_rate, gamma),
+      target_network(layers, learning_rate, gamma),
+      epsilon(epsilon),
+      use_batch(use_batch),
+      n_steps(0) {}
 
 void AiControl::train_nn(const State &s, Keys a, double r, const State &n_s) {
     auto st = state_struct_to_vector(s);
@@ -27,7 +28,7 @@ void AiControl::train_nn(const State &s, Keys a, double r, const State &n_s) {
                 batch[i] = samples[rand() % n_samples];
             }
         }
-        for (auto &[b_n_st, b_a, b_r, b_st]: batch) {
+        for (auto &[b_n_st, b_a, b_r, b_st] : batch) {
             network.backward(b_st, b_a, b_r, b_n_st, target_network);
         }
         samples.emplace_back(st, a, r, n_st);
@@ -76,9 +77,9 @@ void AiControl::save_network_hyperparameters() {
         throw std::ios_base::failure("invalid weights file");
     }
 
-    for (const auto &outer_vec: weights) {
-        for (const auto &middle_vec: outer_vec) {
-            for (const auto &value: middle_vec) {
+    for (const auto &outer_vec : weights) {
+        for (const auto &middle_vec : outer_vec) {
+            for (const auto &value : middle_vec) {
                 file_weights << value << " ";
             }
             file_weights << std::endl;
@@ -93,8 +94,8 @@ void AiControl::save_network_hyperparameters() {
         throw std::ios_base::failure("invalid biases file");
     }
 
-    for (const auto &outer_vec: biases) {
-        for (const auto &value: outer_vec) {
+    for (const auto &outer_vec : biases) {
+        for (const auto &value : outer_vec) {
             file_biases << value << " ";
         }
         file_biases << std::endl << std::endl;

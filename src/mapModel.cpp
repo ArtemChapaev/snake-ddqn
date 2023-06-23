@@ -136,51 +136,56 @@ State get_state(MapModel &map, Snake s) {
     unsigned x_bonus = 0;
     unsigned y_bonus = 0;
 
+    // find bonus position
     for (unsigned j = map.get_width() - 2; j >= 1; j--) {
         for (unsigned i = 1; i < map.get_length() - 1; i++) {
             Cell cell_type = map.check_cell(j, i);
             if (cell_type == Cell::bonus_c) {
                 x_bonus = i;
                 y_bonus = j;
+                break;
             }
+        }
+        if (x_bonus != 0) {
+            break;
         }
     }
 
     if (x_bonus == x_head) {
         if (y_bonus > y_head) {
             // above head
-            state.dist_bonus_up = 1.0;
+            state.bonus_up = 1.0;
         } else {
             // under head
-            state.dist_bonus_down = 1.0;
+            state.bonus_down = 1.0;
         }
     } else if (y_bonus == y_head) {
         if (x_bonus > x_head) {
             // right head
-            state.dist_bonus_right = 1.0;
+            state.bonus_right = 1.0;
         } else {
             // left head
-            state.dist_bonus_left = 1.0;
+            state.bonus_left = 1.0;
         }
     } else if (x_bonus > x_head) {
         if (y_bonus > y_head) {
             // in right above head
-            state.dist_bonus_up_right = 1.0;
+            state.bonus_up_right = 1.0;
         } else {
             // in right under head
-            state.dist_bonus_down_right = 1.0;
+            state.bonus_down_right = 1.0;
         }
     } else {
         if (y_bonus > y_head) {
             // in left above head
-            state.dist_bonus_up_left = 1.0;
+            state.bonus_up_left = 1.0;
         } else {
             // in left under head
-            state.dist_bonus_down_left = 1.0;
+            state.bonus_down_left = 1.0;
         }
     }
 
-    // properties that related with snake body
+    // properties that related with snake body and walls
     auto snake = s.get_snake();
     auto s_body = snake.begin();
     // we don't check head, so ++s_body;
@@ -266,14 +271,14 @@ State get_state(MapModel &map, Snake s) {
 std::vector<double> state_struct_to_vector(const State &state) {
     std::vector<double> result(28);
 
-    result[0] = state.dist_bonus_up;
-    result[1] = state.dist_bonus_up_right;
-    result[2] = state.dist_bonus_right;
-    result[3] = state.dist_bonus_down_right;
-    result[4] = state.dist_bonus_down;
-    result[5] = state.dist_bonus_down_left;
-    result[6] = state.dist_bonus_left;
-    result[7] = state.dist_bonus_up_left;
+    result[0] = state.bonus_up;
+    result[1] = state.bonus_up_right;
+    result[2] = state.bonus_right;
+    result[3] = state.bonus_down_right;
+    result[4] = state.bonus_down;
+    result[5] = state.bonus_down_left;
+    result[6] = state.bonus_left;
+    result[7] = state.bonus_up_left;
     result[8] = state.dist_wall_up;
     result[9] = state.dist_wall_up_right;
     result[10] = state.dist_wall_right;

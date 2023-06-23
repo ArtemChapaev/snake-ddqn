@@ -5,6 +5,8 @@
 #include <cstdlib>
 #include <vector>
 
+const double kNetworkInitialValue = 0.25;
+
 class SimpleNN : public NeuralNetwork {
    public:
     SimpleNN(std::vector<int> &layers, double learning_rate = 0.01, double gamma = 0.99);

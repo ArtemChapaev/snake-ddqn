@@ -15,27 +15,30 @@ SimpleNN::SimpleNN(std::vector<int> &layers, double learning_rate, double gamma)
     for (int i = 0; i < neuron_from; i++) {
         if (i < 8) {
             // bonus neurons
-            weights[0][i] = std::move(get_random_vector_from_range(neuron_to, 0.5, 1.0));
+            weights[0][i] = std::move(
+                get_random_vector_from_range(neuron_to, kNetworkInitialValue, kNetworkInitialValue * 2.0));
         } else if (i < 24) {
             // snake body and weights neurons
-            weights[0][i] = std::move(get_random_vector_from_range(neuron_to, -1.0, 0.0));
+            weights[0][i] = std::move(get_random_vector_from_range(neuron_to, -kNetworkInitialValue, 0));
         } else {
             // direction neurons
-            weights[0][i] = std::move(get_random_vector_from_range(neuron_to, -0.5, 0.5));
+            weights[0][i] = std::move(get_random_vector_from_range(neuron_to, -kNetworkInitialValue / 2.0,
+                                                                   kNetworkInitialValue / 2.0));
         }
     }
-    biases[0] = std::move(get_random_vector_from_range(neuron_to, -0.5, 0.5));
+    biases[0] = std::move(std::vector<double>(neuron_to, 0.0));
 
-    // init rest layers
+    // init other layers
     for (int t = 1; t < num_layers; t++) {
         neuron_from = layers[t];
         neuron_to = layers[t + 1];
         weights[t].resize(neuron_from);
 
         for (int i = 0; i < neuron_from; i++) {
-            weights[t][i] = std::move(get_random_vector_from_range(neuron_to, -1.0, 1.0));
+            weights[t][i] = std::move(get_random_vector_from_range(neuron_to, -kNetworkInitialValue / 2.0,
+                                                                   kNetworkInitialValue / 2.0));
         }
-        biases[t] = std::move(get_random_vector_from_range(neuron_to, -1.0, 1.0));
+        biases[t] = std::move(std::vector<double>(neuron_to, 0.0));
     }
 
     // initialize outputs and errors with zeros
@@ -106,8 +109,8 @@ void SimpleNN::backward(std::vector<double> &s, Keys a, double r, std::vector<do
 
     // updating weights
     for (int i = 0; i <= num_layers - 1; i++) {
-        weights[i] = m_minus_m(weights[i], m_mul_scal(dEdW.back(), learning_rate));
-        biases[i] = v_minus_v(biases[i], v_mul_scal(dEdb.back(), learning_rate));
+        weights[i] = m_plus_m(weights[i], m_mul_scal(dEdW.back(), learning_rate));
+        biases[i] = v_plus_v(biases[i], v_mul_scal(dEdb.back(), learning_rate));
 
         dEdW.pop_back();
         dEdb.pop_back();
@@ -141,7 +144,7 @@ std::vector<double> SimpleNN::calculate_dEdt_last(std::vector<double> &s, Keys a
     double predicted_qvalue = forward(s)[a];
 
     std::vector<double> dEdt_last = std::vector<double>(4);
-    double grad = 2 * (predicted_qvalue - target) * predicted_qvalue;
+    double grad = (target - predicted_qvalue);
     if (!std::isnan(grad)) {
         dEdt_last[a] = grad;
     }

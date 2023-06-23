@@ -42,8 +42,8 @@ const std::string kWinString = "LEVEL UP!";
 const std::string kLeaderboardFile = "leaderboard.txt";
 
 // subject to change into doubles
-const double kRewardPositive = 1;
-const double kRewardNegative = -1;
+const double kRewardPositive = 1.0;
+const double kRewardNegative = -1.0;
 
 const unsigned kEpisodesForOutput = 50;
 const unsigned kEpisodesForSaveHyperparams = 100;

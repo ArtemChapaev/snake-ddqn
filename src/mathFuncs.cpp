@@ -10,10 +10,14 @@ std::vector<double> relu(const std::vector<double> &vector) {
     return result;
 }
 
+double relu_deriv(double value) {
+    return value < 0 ? 0 : 1;
+}
+
 std::vector<double> relu_deriv(const std::vector<double> &vector) {
     std::vector<double> result(vector.size());
     for (int i = 0; i < vector.size(); i++) {
-        result[i] = vector[i] < 0 ?  0 : 1;
+        result[i] = vector[i] < 0 ? 0 : 1;
     }
     return result;
 }
@@ -109,12 +113,12 @@ std::vector<std::vector<double>> m_mul_scal(const std::vector<std::vector<double
     for (int i = 0; i < matrix.size(); i++) {
         for (int j = 0; j < matrix[0].size(); j++) {
             if (std::isnan(number * matrix[i][j])) {
-                throw std::invalid_argument("number * matrix[i][j] is NaN (m_mul_scal)");
-            }
-            if (std::isinf(number * matrix[i][j])) {
+                result[i][j] = 0;
+            } else if (std::isinf(number * matrix[i][j])) {
                 throw std::invalid_argument("number * matrix[i][j] is Inf (m_mul_scal)");
+            } else {
+                result[i][j] = number * matrix[i][j];
             }
-            result[i][j] = number * matrix[i][j];
         }
     }
     return result;
@@ -131,7 +135,13 @@ std::vector<double> v_mul_scal(const std::vector<double> &vector, double num) {
     std::vector<double> result(vector.size());
 
     for (int i = 0; i < vector.size(); i++) {
-        result[i] = num * vector[i];
+        if (std::isnan(num * vector[i])) {
+            result[i] = 0;
+        } else if (std::isinf(num * vector[i])) {
+            throw std::invalid_argument("number * vector[i] is Inf (v_mul_scal)");
+        } else {
+            result[i] = num * vector[i];
+        }
     }
 
     return result;

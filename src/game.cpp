@@ -171,7 +171,7 @@ int Game::start_level(unsigned level_number) {
         map_view.print();
 
         death_score =
-                static_cast<int>(snake.get_length() - kSnakeLength) > 0 ? snake.get_length() - kSnakeLength : 0;
+            static_cast<int>(snake.get_length() - kSnakeLength) > 0 ? snake.get_length() - kSnakeLength : 0;
 
         highest_score = death_score > highest_score ? death_score : highest_score;
 
@@ -286,7 +286,8 @@ int Game::start_ai_learning(unsigned episodes_total) {
                 }
                 case Cell::snake_c: {
                     if (snake.get_tail() == next_cell) {
-                        snake.move();  // without clear_cell, bcs there will be the head in this cell in next move
+                        snake.move();  // without clear_cell, bcs there will be the head in this cell in next
+                        // move
                         map_model.put_snake(snake);
                         break;
                     }
@@ -312,11 +313,14 @@ int Game::start_ai_learning(unsigned episodes_total) {
 
             // metrics for AI
             if (episodes_count % kEpisodesForOutput == kEpisodesForOutput - 1 && is_exit) {
+                //                if (total_reward / kEpisodesForOutput > 0.75) {
+                //                    ai.set_use_batch(true);
+                //                }
+
                 console.clear_line(output_line + 5);
                 console.set_cursor(output_line + 5, settings.map_length - 15);
                 std::cout << (episodes_count + 1) / kEpisodesForOutput << ") Average reward for last "
-                          << kEpisodesForOutput
-                          << " episodes: " << total_reward / kEpisodesForOutput;
+                          << kEpisodesForOutput << " episodes: " << total_reward / kEpisodesForOutput;
 
                 output_line = (output_line + 1) % 10;
                 total_reward = 0.0;
@@ -326,10 +330,6 @@ int Game::start_ai_learning(unsigned episodes_total) {
                 std::cout << "EPOCH: " << episodes_count + 1 << " OF "
                           << (episodes_total == 0 ? "∞" : std::to_string(episodes_total)) << std::flush;
             }
-
-            //if (episodes_count == 15) {
-            //    ai.set_use_batch(true);
-            //}
 
             // usleep(70000);
 
@@ -495,7 +495,7 @@ int Game::pause_game() {
     }
 
     std::chrono::duration<float> pause_duration =
-            std::chrono::high_resolution_clock::now() - pause_start_time;
+        std::chrono::high_resolution_clock::now() - pause_start_time;
     pause_time += pause_duration.count();
 
     return return_code;
@@ -552,7 +552,7 @@ int Game::write_to_leaderboard() {
         return -1;
     }
 
-    for (auto entry: leaderboard) {
+    for (auto entry : leaderboard) {
         in_file << std::get<0>(entry) << ';' << std::to_string(std::get<1>(entry)) << '\n';
     }
     in_file.close();
