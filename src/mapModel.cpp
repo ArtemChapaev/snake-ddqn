@@ -81,6 +81,17 @@ bool MapModel::validate_teleports(unsigned y, unsigned x) {
     return true;
 }
 
+std::pair<unsigned, unsigned> MapModel::get_bonus_coords() {
+    for (unsigned j = width - 2; j >= 1; j--) {
+        for (unsigned i = 1; i < length - 1; i++) {
+            Cell cell_type = check_cell(j, i);
+            if (cell_type == Cell::bonus_c) {
+                return std::make_pair(i, j);
+            }
+        }
+    }
+}
+
 MapModel read_map_from_file(Settings settings) {
     MapModel map(settings);
     std::ifstream file(kMapFile);
@@ -133,23 +144,7 @@ State get_state(MapModel &map, Snake s) {
     State state;
 
     // properties that related with bonus
-    unsigned x_bonus = 0;
-    unsigned y_bonus = 0;
-
-    // find bonus position
-    for (unsigned j = map.get_width() - 2; j >= 1; j--) {
-        for (unsigned i = 1; i < map.get_length() - 1; i++) {
-            Cell cell_type = map.check_cell(j, i);
-            if (cell_type == Cell::bonus_c) {
-                x_bonus = i;
-                y_bonus = j;
-                break;
-            }
-        }
-        if (x_bonus != 0) {
-            break;
-        }
-    }
+    auto [x_bonus, y_bonus] = map.get_bonus_coords();
 
     if (x_bonus == x_head) {
         if (y_bonus > y_head) {
@@ -185,7 +180,17 @@ State get_state(MapModel &map, Snake s) {
         }
     }
 
-    // properties that related with snake body and walls
+    // properties that related with walls
+    state.dist_barrier_up = 1.0 / (map.get_width() - y_head);
+    state.dist_barrier_up_right = 1.0 / (map.get_width() - y_head + map.get_length() - x_head);
+    state.dist_barrier_right = 1.0 / (map.get_length() - x_head);
+    state.dist_barrier_down_right = 1.0 / (y_head + map.get_length() - x_head);
+    state.dist_barrier_down = 1.0 / y_head;
+    state.dist_barrier_down_left = 1.0 / (y_head + x_head);
+    state.dist_barrier_left = 1.0 / x_head;
+    state.dist_barrier_up_left = 1.0 / (map.get_width() - y_head + x_head);
+
+    // properties that related with snake body
     auto snake = s.get_snake();
     auto s_body = snake.begin();
     // we don't check head, so ++s_body;
@@ -196,80 +201,49 @@ State get_state(MapModel &map, Snake s) {
             if (s_body->get_y() > y_head) {
                 // above head
                 double temp = 1.0 / (s_body->get_y() - y_head);
-                state.dist_snake_up = std::max(temp, state.dist_snake_up);
+                state.dist_barrier_up = std::max(temp, state.dist_barrier_up);
             } else {
                 // under head
                 double temp = 1.0 / (y_head - s_body->get_y());
-                state.dist_snake_down = std::max(temp, state.dist_snake_down);
+                state.dist_barrier_down = std::max(temp, state.dist_barrier_down);
             }
         } else if (s_body->get_y() == y_head) {
             if (s_body->get_x() > x_head) {
                 // right head
                 double temp = 1.0 / (s_body->get_x() - x_head);
-                state.dist_snake_right = std::max(temp, state.dist_snake_right);
+                state.dist_barrier_right = std::max(temp, state.dist_barrier_right);
             } else {
                 // left head
                 double temp = 1.0 / (x_head - s_body->get_x());
-                state.dist_snake_left = std::max(temp, state.dist_snake_left);
+                state.dist_barrier_left = std::max(temp, state.dist_barrier_left);
             }
         } else if (s_body->get_x() > x_head) {
             if (s_body->get_y() > y_head) {
                 // in right above head
                 double temp = 1.0 / (s_body->get_x() - x_head + s_body->get_y() - y_head);
-                state.dist_snake_up_right = std::max(temp, state.dist_snake_up_right);
+                state.dist_barrier_up_right = std::max(temp, state.dist_barrier_up_right);
             } else {
                 // in right under head
                 double temp = 1.0 / (s_body->get_x() - x_head + y_head - s_body->get_y());
-                state.dist_snake_down_right = std::max(temp, state.dist_snake_down_right);
+                state.dist_barrier_down_right = std::max(temp, state.dist_barrier_down_right);
             }
         } else {
             if (s_body->get_y() > y_head) {
                 // in left above head
                 double temp = 1.0 / (x_head - s_body->get_x() + s_body->get_y() - y_head);
-                state.dist_snake_up_left = std::max(temp, state.dist_snake_up_left);
+                state.dist_barrier_up_left = std::max(temp, state.dist_barrier_up_left);
             } else {
                 // in left under head
                 double temp = 1.0 / (x_head - s_body->get_x() + y_head - s_body->get_y());
-                state.dist_snake_down_left = std::max(temp, state.dist_snake_down_left);
+                state.dist_barrier_down_left = std::max(temp, state.dist_barrier_down_left);
             }
-        }
-    }
-
-    // properties that related with walls
-    state.dist_wall_up = 1.0 / (map.get_width() - y_head);
-    state.dist_wall_up_right = 1.0 / (map.get_width() - y_head + map.get_length() - x_head);
-    state.dist_wall_right = 1.0 / (map.get_length() - x_head);
-    state.dist_wall_down_right = 1.0 / (y_head + map.get_length() - x_head);
-    state.dist_wall_down = 1.0 / y_head;
-    state.dist_wall_down_left = 1.0 / (y_head + x_head);
-    state.dist_wall_left = 1.0 / x_head;
-    state.dist_wall_up_left = 1.0 / (map.get_width() - y_head + x_head);
-
-    // properties that related with direction of head
-    switch (s.get_direction()) {
-        case Keys::up: {
-            state.head_direction_up = 1.0;
-            break;
-        }
-        case Keys::right: {
-            state.head_direction_right = 1.0;
-            break;
-        }
-        case Keys::down: {
-            state.head_direction_down = 1.0;
-            break;
-        }
-            // Keys::left
-        default: {
-            state.head_direction_left = 1.0;
-            break;
         }
     }
     return state;
 }
 
 std::vector<double> state_struct_to_vector(const State &state) {
-    std::vector<double> result(28);
+    std::vector<double> result(16);
 
     result[0] = state.bonus_up;
     result[1] = state.bonus_up_right;
@@ -279,25 +253,13 @@ std::vector<double> state_struct_to_vector(const State &state) {
     result[5] = state.bonus_down_left;
     result[6] = state.bonus_left;
     result[7] = state.bonus_up_left;
-    result[8] = state.dist_wall_up;
-    result[9] = state.dist_wall_up_right;
-    result[10] = state.dist_wall_right;
-    result[11] = state.dist_wall_down_right;
-    result[12] = state.dist_wall_down;
-    result[13] = state.dist_wall_down_left;
-    result[14] = state.dist_wall_left;
-    result[15] = state.dist_wall_up_left;
-    result[16] = state.dist_snake_up;
-    result[17] = state.dist_snake_up_right;
-    result[18] = state.dist_snake_right;
-    result[19] = state.dist_snake_down_right;
-    result[20] = state.dist_snake_down;
-    result[21] = state.dist_snake_down_left;
-    result[22] = state.dist_snake_left;
-    result[23] = state.dist_snake_up_left;
-    result[24] = state.head_direction_up;
-    result[25] = state.head_direction_right;
-    result[26] = state.head_direction_down;
-    result[27] = state.head_direction_left;
+    result[8] = state.dist_barrier_up;
+    result[9] = state.dist_barrier_up_right;
+    result[10] = state.dist_barrier_right;
+    result[11] = state.dist_barrier_down_right;
+    result[12] = state.dist_barrier_down;
+    result[13] = state.dist_barrier_down_left;
+    result[14] = state.dist_barrier_left;
+    result[15] = state.dist_barrier_up_left;
     return result;
 }

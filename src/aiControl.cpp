@@ -1,7 +1,6 @@
 #include "aiControl.h"
 
-AiControl::AiControl(std::vector<int> &layers, bool use_batch, double learning_rate, double gamma,
-                     double epsilon)
+AiControl::AiControl(std::vector<int> &layers, bool use_batch, double epsilon, double learning_rate, double gamma)
     : network(layers, learning_rate, gamma),
       target_network(layers, learning_rate, gamma),
       epsilon(epsilon),

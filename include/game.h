@@ -23,7 +23,7 @@
 #include "snake.h"
 
 #define LEVEL_SPEED(level_number) (1. + level_number * 0.1)
-#define LAYERS 28, 16, 4
+#define LAYERS 16, 24, 4
 
 const unsigned kBonusesForNewLevel = 5;
 const unsigned kMovesForSpeedBonus = 15;
@@ -45,7 +45,7 @@ const std::string kLeaderboardFile = "leaderboard.txt";
 const double kRewardPositive = 1.0;
 const double kRewardNegative = -1.0;
 
-const unsigned kEpisodesForOutput = 50;
+const unsigned kEpisodesForOutput = 10;
 const unsigned kEpisodesForSaveHyperparams = 100;
 
 class Game {

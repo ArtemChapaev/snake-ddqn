@@ -209,7 +209,7 @@ int Game::start_level(unsigned level_number) {
 
 int Game::start_ai_learning(unsigned episodes_total) {
     unsigned episodes_count = 0;
-    double total_reward = 0;
+    int bonus_count = 0;
     unsigned output_line = 0;
 
     std::vector<int> layers = {LAYERS};
@@ -274,14 +274,7 @@ int Game::start_ai_learning(unsigned episodes_total) {
                     map_model.put_snake(snake);
                     map_model.generate_bonus(bonus_c);
                     reward = kRewardPositive;
-                    total_reward += kRewardPositive;
-                    break;
-                }
-                    // no need for bonuses when learning AI
-                case Cell::antibonus_c:
-                case Cell::speed_bonus_c:
-                case Cell::teleport_c:
-                case Cell::speed_antibonus_c: {
+                    bonus_count += 1;
                     break;
                 }
                 case Cell::snake_c: {
@@ -295,7 +288,6 @@ int Game::start_ai_learning(unsigned episodes_total) {
                 }
                 case Cell::wall_c: {
                     reward = kRewardNegative;
-                    total_reward += kRewardNegative;
                     is_exit = true;
                     episodes_count++;
                     break;
@@ -304,6 +296,10 @@ int Game::start_ai_learning(unsigned episodes_total) {
                     Position last_tail = snake.move();
                     map_model.clear_cell(last_tail);
 
+                    auto [x_bonus, y_bonus] = map_model.get_bonus_coords();
+                    double snake_bonus_dist = std::sqrt((next_cell.get_x() - x_bonus) * (next_cell.get_x() - x_bonus) + (next_cell.get_y() - y_bonus) * (next_cell.get_y() - y_bonus));
+
+                    reward = kRewardPositive / snake_bonus_dist;
                     map_model.put_snake(snake);
                     break;
                 }
@@ -313,17 +309,17 @@ int Game::start_ai_learning(unsigned episodes_total) {
 
             // metrics for AI
             if (episodes_count % kEpisodesForOutput == kEpisodesForOutput - 1 && is_exit) {
-                //                if (total_reward / kEpisodesForOutput > 0.75) {
-                //                    ai.set_use_batch(true);
-                //                }
+                // if (static_cast<double>(bonus_count) / kEpisodesForOutput > 0.2) {
+                //     ai.set_use_batch(true);
+                // }
 
                 console.clear_line(output_line + 5);
                 console.set_cursor(output_line + 5, settings.map_length - 15);
-                std::cout << (episodes_count + 1) / kEpisodesForOutput << ") Average reward for last "
-                          << kEpisodesForOutput << " episodes: " << total_reward / kEpisodesForOutput;
+                std::cout << (episodes_count + 1) / kEpisodesForOutput << ") Average bonus count for last "
+                          << kEpisodesForOutput << " episodes: " << static_cast<double>(bonus_count) / kEpisodesForOutput;
 
                 output_line = (output_line + 1) % 10;
-                total_reward = 0.0;
+                bonus_count = 0;
 
                 console.clear_line(15);
                 console.set_cursor(15, settings.map_length - 5);
@@ -348,7 +344,7 @@ int Game::start_ai_game(unsigned episodes_total) {
     unsigned episodes_count = 0;
 
     std::vector<int> layers = {LAYERS};
-    AiControl ai(layers);
+    AiControl ai(layers, false, 0.0);
     ai.load_network_hyperparameters();
 
     ConsoleUI console;
@@ -362,23 +358,14 @@ int Game::start_ai_game(unsigned episodes_total) {
         MapView map_view(map_model, settings);
 
         // part of neural network
-        bool is_first_iteration = true;
-        State last_state;
         Keys action = Keys::right;
-        double reward = 0;
 
         // game process variables
         bool is_exit = false;
 
         // game preparing
         map_model.put_snake(snake);
-
         map_model.generate_bonus(bonus_c);
-        if (settings.bonus_apples) {
-            map_model.generate_bonus(antibonus_c);
-            map_model.generate_bonus(speed_bonus_c);
-            map_model.generate_bonus(speed_antibonus_c);
-        }
 
         console.set_cursor(1, 1);
         console.clear_full_display();
@@ -402,8 +389,6 @@ int Game::start_ai_game(unsigned episodes_total) {
             action = ai.get_direction(state, action, false);
             snake.set_direction(action);
 
-            last_state = state;
-
             Position next_cell = snake.get_next();
             switch (map_model.check_cell(next_cell.get_y(), next_cell.get_x())) {
                 case Cell::bonus_c: {
@@ -412,14 +397,6 @@ int Game::start_ai_game(unsigned episodes_total) {
 
                     map_model.put_snake(snake);
                     map_model.generate_bonus(bonus_c);
-                    reward = kRewardPositive;
-                    break;
-                }
-                    // no need for bonuses when learning AI
-                case Cell::antibonus_c:
-                case Cell::speed_bonus_c:
-                case Cell::teleport_c:
-                case Cell::speed_antibonus_c: {
                     break;
                 }
                 case Cell::snake_c: {
@@ -432,7 +409,6 @@ int Game::start_ai_game(unsigned episodes_total) {
                     // falls down
                 }
                 case Cell::wall_c: {
-                    reward = kRewardNegative;
                     is_exit = true;
                     episodes_count++;
                     break;
@@ -464,10 +440,6 @@ int Game::start_ai_game(unsigned episodes_total) {
             map_view.print();
 
             usleep(200000);
-
-            if (episodes_count % kEpisodesForSaveHyperparams == kEpisodesForSaveHyperparams - 1 && is_exit) {
-                ai.save_network_hyperparameters();
-            }
         }
     }
 

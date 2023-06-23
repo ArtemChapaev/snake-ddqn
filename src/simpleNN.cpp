@@ -17,14 +17,9 @@ SimpleNN::SimpleNN(std::vector<int> &layers, double learning_rate, double gamma)
             // bonus neurons
             weights[0][i] = std::move(
                 get_random_vector_from_range(neuron_to, kNetworkInitialValue, kNetworkInitialValue * 2.0));
-        } else if (i < 24) {
-            // snake body and weights neurons
+        } else
+            // barriers neurons
             weights[0][i] = std::move(get_random_vector_from_range(neuron_to, -kNetworkInitialValue, 0));
-        } else {
-            // direction neurons
-            weights[0][i] = std::move(get_random_vector_from_range(neuron_to, -kNetworkInitialValue / 2.0,
-                                                                   kNetworkInitialValue / 2.0));
-        }
     }
     biases[0] = std::move(std::vector<double>(neuron_to, 0.0));
 
