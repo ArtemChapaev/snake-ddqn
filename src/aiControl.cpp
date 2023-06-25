@@ -1,6 +1,7 @@
 #include "aiControl.h"
 
-AiControl::AiControl(std::vector<int> &layers, bool use_batch, double epsilon, double learning_rate, double gamma)
+AiControl::AiControl(std::vector<int> &layers, bool use_batch, double epsilon, double learning_rate,
+                     double gamma)
     : network(layers, learning_rate, gamma),
       target_network(layers, learning_rate, gamma),
       epsilon(epsilon),
@@ -26,9 +27,17 @@ void AiControl::train_nn(const State &s, Keys a, double r, const State &n_s) {
             for (int i = 0; i < kBatchSize; ++i) {
                 batch[i] = samples[rand() % n_samples];
             }
+            // erase old samples
+            if (samples.size() > 5 * kBatchSize + 10) {
+                auto end = samples.begin();
+                std::advance(end, 10);
+
+                samples.erase(samples.begin(), end);
+            }
         }
         for (auto &[b_n_st, b_a, b_r, b_st] : batch) {
             network.backward(b_st, b_a, b_r, b_n_st, target_network);
+            ++n_steps;
         }
         samples.emplace_back(st, a, r, n_st);
     }

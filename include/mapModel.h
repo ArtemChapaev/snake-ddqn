@@ -60,7 +60,7 @@ struct State {
           dist_barrier_up(dbu),
           dist_barrier_right(dbr),
           dist_barrier_down(dbd),
-          dist_barrier_left(dbl) {};
+          dist_barrier_left(dbl){};
 
     double bonus_up;
     double bonus_up_right;
