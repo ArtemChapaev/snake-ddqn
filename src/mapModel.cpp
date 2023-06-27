@@ -180,40 +180,21 @@ State get_state(MapModel &map, Snake s) {
         }
     }
 
-    // properties that related with walls
-    state.dist_barrier_up = 1.0 / (map.get_width() - y_head);
-    state.dist_barrier_right = 1.0 / (map.get_length() - x_head);
-    state.dist_barrier_down = 1.0 / y_head;
-    state.dist_barrier_left = 1.0 / x_head;
-
-    // properties that related with snake body
-    auto snake = s.get_snake();
-    auto s_body = snake.begin();
-    // we don't check head, so ++s_body;
-    ++s_body;
-
-    for (; s_body != snake.end(); ++s_body) {
-        if (s_body->get_x() == x_head) {
-            if (s_body->get_y() > y_head) {
-                // above head
-                double temp = 1.0 / (s_body->get_y() - y_head);
-                state.dist_barrier_up = std::max(temp, state.dist_barrier_up);
-            } else {
-                // under head
-                double temp = 1.0 / (y_head - s_body->get_y());
-                state.dist_barrier_down = std::max(temp, state.dist_barrier_down);
-            }
-        } else if (s_body->get_y() == y_head) {
-            if (s_body->get_x() > x_head) {
-                // right head
-                double temp = 1.0 / (s_body->get_x() - x_head);
-                state.dist_barrier_right = std::max(temp, state.dist_barrier_right);
-            } else {
-                // left head
-                double temp = 1.0 / (x_head - s_body->get_x());
-                state.dist_barrier_left = std::max(temp, state.dist_barrier_left);
-            }
-        }
+    if (map.check_cell(y_head, x_head + 1) == Cell::wall_c ||
+        map.check_cell(y_head, x_head + 1) == Cell::snake_c) {
+        state.barrier_right = 1.0;
+    }
+    if (map.check_cell(y_head, x_head - 1) == Cell::wall_c ||
+        map.check_cell(y_head, x_head - 1) == Cell::snake_c) {
+        state.barrier_left = 1.0;
+    }
+    if (map.check_cell(y_head + 1, x_head) == Cell::wall_c ||
+        map.check_cell(y_head + 1, x_head) == Cell::snake_c) {
+        state.barrier_up = 1.0;
+    }
+    if (map.check_cell(y_head - 1, x_head) == Cell::wall_c ||
+        map.check_cell(y_head - 1, x_head) == Cell::snake_c) {
+        state.barrier_down = 1.0;
     }
     return state;
 }
@@ -229,9 +210,9 @@ std::vector<double> state_struct_to_vector(const State &state) {
     result[5] = state.bonus_down_left;
     result[6] = state.bonus_left;
     result[7] = state.bonus_up_left;
-    result[8] = state.dist_barrier_up;
-    result[9] = state.dist_barrier_right;
-    result[10] = state.dist_barrier_down;
-    result[11] = state.dist_barrier_left;
+    result[8] = state.barrier_up;
+    result[9] = state.barrier_right;
+    result[10] = state.barrier_down;
+    result[11] = state.barrier_left;
     return result;
 }

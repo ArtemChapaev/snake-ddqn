@@ -401,7 +401,7 @@ int Game::start_ai_game(unsigned episodes_total) {
                 ai.train_nn(last_state, action, reward, state);
             }
             // second parameter show last_direction (action is equal with last_direction)
-            action = ai.get_direction(state, action, true);
+            action = ai.get_direction(state, action, false);
             snake.set_direction(action);
 
             last_state = state;
