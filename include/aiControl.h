@@ -30,7 +30,7 @@ const std::string kBiasesFile = "biases.txt";
 class AiControl : public Control {
    public:
     AiControl(std::vector<int> &layers, bool use_batch = true, double epsilon = 1,
-              double learning_rate = 0.00025, double gamma = 0.95);
+              double learning_rate = 0.00035, double gamma = 0.95);
 
     void train_nn(const State &, Keys, double, const State &);
     Keys get_direction(const State &, Keys, bool);

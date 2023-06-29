@@ -5,7 +5,7 @@
 #include <cstdlib>
 #include <vector>
 
-const double kNetworkInitialValue = 0.25;
+const double kNetworkInitialValue = 0.35;
 
 class SimpleNN : public NeuralNetwork {
    public:

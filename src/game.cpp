@@ -356,10 +356,11 @@ int Game::start_ai_game(unsigned episodes_total) {
     unsigned episodes_count = 0;
 
     std::vector<int> layers = {LAYERS};
-    AiControl ai(layers, false);
+    AiControl ai(layers, false, 0.03);
     ai.load_network_hyperparameters();
 
     ConsoleUI console;
+    console.clear_full_display();
     while (episodes_count < episodes_total || episodes_total == 0) {
         unsigned snake_length = kSnakeLength;
 
@@ -371,9 +372,7 @@ int Game::start_ai_game(unsigned episodes_total) {
 
         // part for AI
         bool is_first_iteration = true;
-        State last_state;
         Keys action = Keys::right;
-        double reward = 0.0;
         double last_snake_bonus_dist = 0.0;
 
         // game preparing
@@ -397,14 +396,9 @@ int Game::start_ai_game(unsigned episodes_total) {
 
             State state = get_state(map_model, snake);
 
-            if (!is_first_iteration) {
-                ai.train_nn(last_state, action, reward, state);
-            }
             // second parameter show last_direction (action is equal with last_direction)
             action = ai.get_direction(state, action, false);
             snake.set_direction(action);
-
-            last_state = state;
 
             Position next_cell = snake.get_next();
             switch (map_model.check_cell(next_cell.get_y(), next_cell.get_x())) {
@@ -414,7 +408,6 @@ int Game::start_ai_game(unsigned episodes_total) {
 
                     map_model.put_snake(snake);
                     map_model.generate_bonus(bonus_c);
-                    reward = kRewardPositive;
                     break;
                 }
                 case Cell::snake_c: {
@@ -427,35 +420,14 @@ int Game::start_ai_game(unsigned episodes_total) {
                     // falls down
                 }
                 case Cell::wall_c: {
-                    reward = kRewardNegative;
                     is_exit = true;
                     episodes_count++;
                     break;
                 }
                 case Cell::empty_c: {
-                    auto [x_bonus, y_bonus] = map_model.get_bonus_coords();
-
-                    if (is_first_iteration) {
-                        unsigned x_snake = snake.get_snake().begin()->get_x();
-                        unsigned y_snake = snake.get_snake().begin()->get_y();
-
-                        last_snake_bonus_dist = std::sqrt((x_snake - x_bonus) * (y_snake - x_bonus) +
-                                                          (x_snake - y_bonus) * (y_snake - y_bonus));
-                        is_first_iteration = false;
-                    }
-
                     Position last_tail = snake.move();
                     map_model.clear_cell(last_tail);
                     map_model.put_snake(snake);
-
-                    double snake_bonus_dist =
-                        std::sqrt((next_cell.get_x() - x_bonus) * (next_cell.get_x() - x_bonus) +
-                                  (next_cell.get_y() - y_bonus) * (next_cell.get_y() - y_bonus));
-
-                    reward = last_snake_bonus_dist > snake_bonus_dist ? kSmallRewardPositive
-                                                                      : kSmallRewardNegative;
-                    last_snake_bonus_dist = snake_bonus_dist;
-
                     break;
                 }
                 default:

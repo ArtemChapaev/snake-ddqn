@@ -57,10 +57,10 @@ struct State {
           bonus_down_left(bdl),
           bonus_left(bl),
           bonus_up_left(bul),
-          barrier_up(dbu),
-          barrier_right(dbr),
-          barrier_down(dbd),
-          barrier_left(dbl){};
+          dist_barrier_up(dbu),
+          dist_barrier_right(dbr),
+          dist_barrier_down(dbd),
+          dist_barrier_left(dbl){};
 
     double bonus_up;
     double bonus_up_right;
@@ -70,10 +70,10 @@ struct State {
     double bonus_down_left;
     double bonus_left;
     double bonus_up_left;
-    double barrier_up;
-    double barrier_right;
-    double barrier_down;
-    double barrier_left;
+    double dist_barrier_up;
+    double dist_barrier_right;
+    double dist_barrier_down;
+    double dist_barrier_left;
 };
 
 State get_state(MapModel &, Snake);

@@ -44,8 +44,8 @@ const std::string kLeaderboardFile = "leaderboard.txt";
 const double kRewardPositive = 1.0;
 const double kRewardNegative = -1.0;
 
-const double kSmallRewardPositive = 0.1;
-const double kSmallRewardNegative = -0.1;
+const double kSmallRewardPositive = 0.15;
+const double kSmallRewardNegative = -0.15;
 
 const unsigned kEpisodesForOutput = 10;
 const unsigned kEpisodesForSaveHyperparams = 20;

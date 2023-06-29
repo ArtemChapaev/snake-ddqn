@@ -52,7 +52,7 @@ Keys AiControl::get_direction(const State &s, Keys last_direction, bool is_learn
     Keys next_action = Keys::up;
 
     // e-greedy algorithm
-    if (is_learning && (rand() % 10) / 10.0 < epsilon) {
+    if ((rand() % 10) / 10.0 < epsilon) {
         // use only if next_action isn't opposite last action(a)
         bool is_good_dir = false;
         while (!is_good_dir) {
@@ -67,7 +67,9 @@ Keys AiControl::get_direction(const State &s, Keys last_direction, bool is_learn
         std::tie(max_qvalue, next_action) = find_max_qvalue(qvalues);
     }
 
-    epsilon *= kEpsilonCoef;
+    if (is_learning && epsilon > 0.03) {
+        epsilon *= kEpsilonCoef;
+    }
 
     return next_action;
 }

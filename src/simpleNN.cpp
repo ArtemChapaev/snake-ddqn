@@ -15,8 +15,8 @@ SimpleNN::SimpleNN(std::vector<int> &layers, double learning_rate, double gamma)
     for (int i = 0; i < neuron_from; i++) {
         if (i < 8) {
             // bonus neurons
-            weights[0][i] = std::move(
-                get_random_vector_from_range(neuron_to, kNetworkInitialValue, kNetworkInitialValue * 2.0));
+            weights[0][i] = std::move(get_random_vector_from_range(neuron_to, kNetworkInitialValue * 2.0,
+                                                                   kNetworkInitialValue * 3.0));
         } else
             // barriers neurons
             weights[0][i] = std::move(
