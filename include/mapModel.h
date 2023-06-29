@@ -47,29 +47,21 @@ MapModel read_map_from_file(Settings);
 void write_map_to_file(MapModel &);
 
 struct State {
-    State(double bu = 0, double bur = 0, double br = 0, double bdr = 0, double bd = 0, double bdl = 0,
-          double bl = 0, double bul = 0, double dbu = 0, double dbr = 0, double dbd = 0, double dbl = 0)
+    State(double bu = 0, double br = 0, double bd = 0, double bl = 0, double dbu = 0, double dbr = 0,
+          double dbd = 0, double dbl = 0)
         : bonus_up(bu),
-          bonus_up_right(bur),
           bonus_right(br),
-          bonus_down_right(bdr),
           bonus_down(bd),
-          bonus_down_left(bdl),
           bonus_left(bl),
-          bonus_up_left(bul),
           dist_barrier_up(dbu),
           dist_barrier_right(dbr),
           dist_barrier_down(dbd),
           dist_barrier_left(dbl){};
 
     double bonus_up;
-    double bonus_up_right;
     double bonus_right;
-    double bonus_down_right;
     double bonus_down;
-    double bonus_down_left;
     double bonus_left;
-    double bonus_up_left;
     double dist_barrier_up;
     double dist_barrier_right;
     double dist_barrier_down;

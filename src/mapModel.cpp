@@ -154,29 +154,25 @@ State get_state(MapModel &map, Snake s) {
             // under head
             state.bonus_down = 1.0;
         }
-    } else if (y_bonus == y_head) {
-        if (x_bonus > x_head) {
-            // right head
-            state.bonus_right = 1.0;
-        } else {
-            // left head
-            state.bonus_left = 1.0;
-        }
     } else if (x_bonus > x_head) {
         if (y_bonus > y_head) {
             // in right above head
-            state.bonus_up_right = 1.0;
+            state.bonus_up = 0.5;
+            state.bonus_right = 0.5;
         } else {
             // in right under head
-            state.bonus_down_right = 1.0;
+            state.bonus_down = 0.5;
+            state.bonus_right = 0.5;
         }
     } else {
         if (y_bonus > y_head) {
             // in left above head
-            state.bonus_up_left = 1.0;
+            state.bonus_up = 0.5;
+            state.bonus_left = 0.5;
         } else {
             // in left under head
-            state.bonus_down_left = 1.0;
+            state.bonus_down = 0.5;
+            state.bonus_left = 0.5;
         }
     }
 
@@ -219,19 +215,15 @@ State get_state(MapModel &map, Snake s) {
 }
 
 std::vector<double> state_struct_to_vector(const State &state) {
-    std::vector<double> result(12);
+    std::vector<double> result(8);
 
     result[0] = state.bonus_up;
-    result[1] = state.bonus_up_right;
-    result[2] = state.bonus_right;
-    result[3] = state.bonus_down_right;
-    result[4] = state.bonus_down;
-    result[5] = state.bonus_down_left;
-    result[6] = state.bonus_left;
-    result[7] = state.bonus_up_left;
-    result[8] = state.dist_barrier_up;
-    result[9] = state.dist_barrier_right;
-    result[10] = state.dist_barrier_down;
-    result[11] = state.dist_barrier_left;
+    result[1] = state.bonus_right;
+    result[2] = state.bonus_down;
+    result[3] = state.bonus_left;
+    result[4] = state.dist_barrier_up;
+    result[5] = state.dist_barrier_right;
+    result[6] = state.dist_barrier_down;
+    result[7] = state.dist_barrier_left;
     return result;
 }
