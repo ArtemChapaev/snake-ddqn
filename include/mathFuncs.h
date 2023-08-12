@@ -6,6 +6,8 @@
 
 std::vector<double> relu(const std::vector<double> &);
 
+double relu_deriv(double value);
+
 std::vector<double> relu_deriv(const std::vector<double> &);
 
 std::vector<double> softmax(const std::vector<double> &);

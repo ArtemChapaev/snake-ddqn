@@ -1,4 +1,4 @@
-#include "math_funcs.h"
+#include "mathFuncs.h"
 
 std::vector<double> relu(const std::vector<double> &vector) {
     std::vector<double> result(vector.size());
@@ -10,33 +10,16 @@ std::vector<double> relu(const std::vector<double> &vector) {
     return result;
 }
 
+double relu_deriv(double value) {
+    return value < 0 ? 0 : 1;
+}
+
 std::vector<double> relu_deriv(const std::vector<double> &vector) {
     std::vector<double> result(vector.size());
     for (int i = 0; i < vector.size(); i++) {
-        vector[i] < 0 ? result[i] = 0 : result[i] = 1;
+        result[i] = vector[i] < 0 ? 0 : 1;
     }
     return result;
-}
-
-std::vector<double> softmax(const std::vector<double> &vector) {
-    std::vector<double> result(vector.size());
-    double sum = 0.0;
-
-    for (int i = 0; i < vector.size(); i++) {
-        sum += std::exp(vector[i]);
-    }
-
-    for (int i = 0; i < vector.size(); i++) {
-        result[i] = std::exp(vector[i]) / sum;
-    }
-
-    return result;
-}
-
-std::vector<double> softmax_deriv(const std::vector<double> &vector) {
-    std::vector<double> ones(vector.size(), 1.0);
-
-    return v_mul_v(vector, v_minus_v(ones, vector));
 }
 
 std::vector<std::vector<double>> transpose_m(const std::vector<std::vector<double>> &matrix) {
@@ -87,9 +70,9 @@ std::vector<double> v_dot_m(const std::vector<double> &vector,
     }
 
     if (matrix.size() != vector.size()) {
-        std::string sizes = std::to_string(matrix.size()) + "x" + std::to_string(matrix[0].size()) + " and " +
-                            std::to_string(vector.size());
-        throw std::invalid_argument("matrix and vector are not compatible for multiplication (v_dot_m): " +
+        std::string sizes = std::to_string(vector.size()) + " and " + std::to_string(matrix.size()) + "x" +
+                            std::to_string(matrix[0].size());
+        throw std::invalid_argument("vector and matrix are not compatible for multiplication (v_dot_m): " +
                                     sizes);
     }
 
@@ -129,7 +112,13 @@ std::vector<std::vector<double>> m_mul_scal(const std::vector<std::vector<double
 
     for (int i = 0; i < matrix.size(); i++) {
         for (int j = 0; j < matrix[0].size(); j++) {
-            result[i][j] = number * matrix[i][j];
+            if (std::isnan(number * matrix[i][j])) {
+                result[i][j] = 0;
+            } else if (std::isinf(number * matrix[i][j])) {
+                throw std::invalid_argument("number * matrix[i][j] is Inf (m_mul_scal)");
+            } else {
+                result[i][j] = number * matrix[i][j];
+            }
         }
     }
     return result;
@@ -146,7 +135,13 @@ std::vector<double> v_mul_scal(const std::vector<double> &vector, double num) {
     std::vector<double> result(vector.size());
 
     for (int i = 0; i < vector.size(); i++) {
-        result[i] = num * vector[i];
+        if (std::isnan(num * vector[i])) {
+            result[i] = 0;
+        } else if (std::isinf(num * vector[i])) {
+            throw std::invalid_argument("number * vector[i] is Inf (v_mul_scal)");
+        } else {
+            result[i] = num * vector[i];
+        }
     }
 
     return result;
