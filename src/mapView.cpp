@@ -58,6 +58,7 @@ void MapView::print() {
                     graphics->print_speed_antibonus_cell();
                     break;
             }
+            usleep(1);
         }
         std::cout << std::endl;
     }

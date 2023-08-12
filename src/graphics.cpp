@@ -108,46 +108,37 @@ void EscSymGraphics::print_speed_antibonus_cell() {
 EscGraphics::EscGraphics(Settings settings) : ColorGraphics(settings) {}
 
 void EscGraphics::print_empty_cell() {
-    std::cout << Term::color_bg(empty_color) << ' ';
-    std::cout << Term::color_bg(empty_color) << ' ';
+    std::cout << Term::color_bg(empty_color) << "  ";
 }
 
 void EscGraphics::print_snake_cell() {
-    std::cout << Term::color_bg(snake_color) << ' ';
-    std::cout << Term::color_bg(snake_color) << ' ';
+    std::cout << Term::color_bg(snake_color) << "  ";
 }
 
 void EscGraphics::print_snake_head_cell() {
-    std::cout << Term::color_bg(snake_color) << ' ';
-    std::cout << Term::color_bg(snake_color) << ' ';
+    std::cout << Term::color_bg(snake_color) << "  ";
 }
 
 void EscGraphics::print_wall_cell() {
-    std::cout << Term::color_bg(wall_color) << ' ';
-    std::cout << Term::color_bg(wall_color) << ' ';
+    std::cout << Term::color_bg(wall_color) << "  ";
 }
 
 void EscGraphics::print_teleport_cell() {
-    std::cout << Term::color_bg(teleport_color) << ' ';
-    std::cout << Term::color_bg(teleport_color) << ' ';
+    std::cout << Term::color_bg(teleport_color) << "  ";
 }
 
 void EscGraphics::print_bonus_cell() {
-    std::cout << Term::color_bg(bonus_color) << ' ';
-    std::cout << Term::color_bg(bonus_color) << ' ';
+    std::cout << Term::color_bg(bonus_color) << "  ";
 }
 
 void EscGraphics::print_antibonus_cell() {
-    std::cout << Term::color_bg(antibonus_color) << ' ';
-    std::cout << Term::color_bg(antibonus_color) << ' ';
+    std::cout << Term::color_bg(antibonus_color) << "  ";
 }
 
 void EscGraphics::print_speed_bonus_cell() {
-    std::cout << Term::color_bg(speed_bonus_color) << ' ';
-    std::cout << Term::color_bg(speed_bonus_color) << ' ';
+    std::cout << Term::color_bg(speed_bonus_color) << "  ";
 }
 
 void EscGraphics::print_speed_antibonus_cell() {
-    std::cout << Term::color_bg(speed_antibonus_color) << ' ';
-    std::cout << Term::color_bg(speed_antibonus_color) << ' ';
+    std::cout << Term::color_bg(speed_antibonus_color) << "  ";
 }

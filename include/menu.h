@@ -20,6 +20,8 @@ class Menu {
     explicit Menu(std::string);
     virtual void draw(unsigned) = 0;  // after pure_draw() call draws selected underlined string
     virtual unsigned update(unsigned &, std::stack<std::unique_ptr<Menu>> &) = 0;  // handles clicks
+    virtual ~Menu() = default;
+
    protected:
     virtual void pure_draw() = 0;  // draws pure menu without option selection (without underlines)
     virtual void print_logo() = 0;

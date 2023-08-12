@@ -90,6 +90,9 @@ std::pair<unsigned, unsigned> MapModel::get_bonus_coords() {
             }
         }
     }
+
+    // unreachable code
+    return std::make_pair(-1, -1);
 }
 
 MapModel read_map_from_file(Settings settings) {
