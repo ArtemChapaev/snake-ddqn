@@ -6,8 +6,31 @@ User cannot stop the movement of snake. Program interface is implemented in UNIX
 
 In development process, following were used: MVC pattern, OOP principles (encapsulation, inheritance, dynamic polymorphism).
 
-## Showcase
 <img src='https://github.com/ArtemChapaev/Snake/blob/Linux_version/docs/gameplay.gif?raw=true'/>
+
+## DDQN Integration for Snake AI
+
+In addition to the classic gameplay, an advanced version of the Snake game has been developed, integrating an Artificial Neural Network (ANN) using the Double Deep Q-Network (DDQN) method. This integration was aimed at creating an AI that can play the Snake game autonomously, showcasing the application of machine learning techniques in game development.
+
+### DDQN Method
+The DDQN method is an enhancement of the standard Deep Q-Network (DQN). It addresses the overestimation of action values that DQN is prone to. The key improvement in DDQN is the use of two neural networks, the Q-network and the target Q-network, both having the same architecture but with different sets of weights. The Q-network is used to select the action, while the target Q-network is used to evaluate the action. This separation reduces the overestimation bias, leading to more stable and reliable training.
+
+<p align="center">
+  <img src="docs/ddqn.png">
+</p>
+
+### Implementation in the Snake Game
+For the Snake game, the DDQN algorithm was implemented to control the snake's movements. The input to the neural network consists of the game state, including the position of the snake, the walls, and the fruit. The output is the decision on the next move. The neural network was trained using game simulations, with the objective of maximizing the score (number of fruits eaten) while avoiding collisions.
+
+### Research Publication
+A research paper detailing the development, implementation, and results of incorporating the DDQN into the Snake game was published. This paper provides an in-depth analysis of the algorithm's performance, including the challenges faced and the strategies employed to overcome them.
+
+For more details on the DDQN method and its implementation in the Snake game, refer to the published research paper.
+
+[Link to the research paper](#)
+
+---
+
 
 ## Installation
 
