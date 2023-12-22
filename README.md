@@ -27,7 +27,7 @@ A research paper detailing the development, implementation, and results of incor
 
 For more details on the DDQN method and its implementation in the Snake game, refer to the published research paper.
 
-[Link to the research paper](#)
+[Link to the research paper](http://ptsj.ru/catalog/icec/inf_tech/952.html)
 
 ---
 
