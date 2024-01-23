@@ -13,16 +13,16 @@
 # you will see them accessed via {{ site.title }}, {{ site.email }}, and so on.
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
-title: Snake
+title: snake-ddqn
 description: >- # this means to ignore newlines until "baseurl:"
   Chapaev Artem and Fedotov Mihail's BMSTU practice project
-baseurl: Snake
+baseurl: snake-ddqn
 domain: ArtemChapaev.github.io
 url: https://ArtemChapaev.github.io
 github:
   is_user_page: Artem Chapaev
-  is_project_page: ArtemChapaev/Snake
-  repository_url: https://github.com/ArtemChapaev/Snake
+  is_project_page: ArtemChapaev/snake-ddqn
+  repository_url: https://github.com/ArtemChapaev/snake-ddqn
   owner_url: https://github.com/ArtemChapaev
 
 # Build settings
